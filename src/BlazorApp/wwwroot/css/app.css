@@ -13,6 +13,10 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 div#main {
   display: flex;
   flex-direction: column;
@@ -34,7 +38,7 @@ section.light {
   padding: 8rem 0;
 }
 
-section img.background {
+/*section img.background {
   width: 100vmax;
   height: 100%;
   z-index: -1;
@@ -44,7 +48,19 @@ section img.background {
   transform: translate(-50%, 0);
   pointer-events: none;
   object-fit: cover;
-}
+}*/
+    section img.background {
+        width: 100vmax;
+        height: 100%;
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+        pointer-events: none;
+        object-fit: cover;
+        object-position: 0 15%;
+    }
 
 h1 {
   font-weight: 300;
@@ -235,3 +251,23 @@ img.social-icon {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.language-badges {
+    text-align: center;
+    align-content: center;
+}
+
+.tech-badges {
+    text-align: center;
+    align-content: center;
+}

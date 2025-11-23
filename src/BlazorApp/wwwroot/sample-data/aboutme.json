@@ -1,12 +1,14 @@
 {
-  "description": "I'm a UI/UX student studying at Barnett Technical University. I enjoy creating unique and simplistic user interfaces in creative ways.",
+  "description": "Dynamic full-stack .NET developer with three years of experience with a focus on Blazor development.'.",
   "skills": [
-    "Web design",
-    "User experience",
-    "Inclusive design",
-    "Focus group testing",
-    "Mobile user interfaces",
-    "Graphic design"
+    "Microsoft Dotnet, C#, Blazor",
+    "Figma",
+    "Angular",
+    "MS SQL Server",
+    "Docker",
+    "Azure",
+    "Syncfusion",
+    "Dev Express reporting"
   ],
-  "detailOrQuote": "I am passionate about solving problems in new creative ways to drive innovation. By leveraging my UI/UX experience I continually look for new and better ways to make tech accessible by all."
+  "detailOrQuote": "🛠️ Recently led the full-stack buildout of an ERP system for a global nonprofit—streamlining employee management and delivering 20 custom reports utilized by 500+ staff. 🎨 In a prior role, championed UI-UX design with Figma and led development across four major applications using Blazor, MVC, Syncfusion, SQL Server, and Docker."
 }
