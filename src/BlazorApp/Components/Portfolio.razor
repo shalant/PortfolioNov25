@@ -1,20 +1,21 @@
-<section class="light" id="portfolio">
+@* <section class="light" id="portfolio">
     <h2>Portfolio</h2>
     <div class="portfolio-container">
-    @if (projects is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <div class="portfolio-hero">
-            @if (hero is not null)
-            {
+        @if (projects is null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            @* <div class="portfolio-hero">
+                @if (hero is not null)
+                {
                     <img src="@(hero.Src)" style="height: 90%; width: 100%; object-fit: cover; animation: 1s ease-out 0s 1 slideInLeft;" alt="@(hero.Alt)" />
-            }
-        </div>
-        <div class="container">
-            @foreach (var project in projects)
+                }
+            </div> *@
+
+            @* <div class="container glassy-background"> *@
+            @* @foreach (var project in projects)
             {
                 <div class="box" key="@project.Title">
                     <a href="@project.Url" target="_blank" rel="noopener noreferrer">
@@ -22,11 +23,45 @@
                     </a>
                     <p class="small">@project.Description</p>
                 </div>
-            }
-        </div>
-    }
+            } *@
+            @* @foreach (var project in projects)
+                {
+                    <div class="custom-card" key="@project.Title">
+                        <a href="@project.Url" target="_blank" rel="noopener noreferrer">
+                            <h3 style="flex-basis: 40px;">@project.Title</h3>
+                        </a>
+                        <p class="small">@project.Description</p>
+                    </div>
+                } *@
+
+            @* </div>
+        }
     </div>
-</section>
+</section> *@
+
+<div class="container custom-portfolio__container" id="portfolio">
+@if (projects is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @* <MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object"> *@
+    <MudCarousel Class="" Style="height:250px; width: 500px;" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object">
+        @foreach (var project in projects)
+        {
+            <MudCarouselItem Transition="transition" >
+                <div class="custom-card" key="@project.Title">
+                    <a href="@project.Url" target="_blank" rel="noopener noreferrer">
+                        <h3 style="flex-basis: 40px;">@project.Title</h3>
+                    </a>
+                    <p class="small">@project.Description</p>
+                </div>
+            </MudCarouselItem>
+        }
+    </MudCarousel>
+}
+</div>
 
 @code {
     [Parameter, EditorRequired]
@@ -37,6 +72,12 @@
 
     private List<Project>? projects;
     private HeroImage? hero;
+
+    private bool arrows = true;
+    private bool bullets = true;
+    private bool enableSwipeGesture = true;
+    private bool autocycle = true;
+    private Transition transition = Transition.Slide;
 
     protected override async Task OnInitializedAsync()
     {

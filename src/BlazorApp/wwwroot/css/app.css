@@ -254,11 +254,11 @@ img.social-icon {
 
 @keyframes slideInLeft {
     0% {
-        transform: translateX(-100%);
+        transform: translateX(-5%);
     }
 
     100% {
-        transform: translateX(0);
+        transform: translateX(-50%);
     }
 }
 
@@ -270,4 +270,40 @@ img.social-icon {
 .tech-badges {
     text-align: center;
     align-content: center;
+}
+
+.custom-card {
+    position: relative; /* Important for backdrop-filter to work correctly */
+    width: 500px;
+    height: 290px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 15px 45px;
+    margin: 10px 10px;
+
+    /* Glassmorphism properties */
+    background: rgba(255, 255, 255, 0.85); /* Semi-transparent white background */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(31, 38, 135, 0.1); /* Soft shadow */
+    transition: box-shadow 0.4s ease-in-out;
+}
+
+.glassy-background {
+
+}
+
+.custom-card:hover {
+    box-shadow: 4px 8px 32px rgba(31, 38, 135, 0.2); /* Soft shadow */
+}
+
+.custom-portfolio__container {
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    background-color: aquamarine
 }
