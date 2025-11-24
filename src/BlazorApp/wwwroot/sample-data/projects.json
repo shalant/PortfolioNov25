@@ -1,22 +1,32 @@
 [
   {
-    "title": "10 Things To Know About Azure Static Web Apps 🎉",
-    "description": "Collaboration to create a beginner friendly article to help explain Azure Static Web Apps and tooling to get started.",
-    "url": "https://dev.to/azure/10-things-to-know-about-azure-static-web-apps-3n4i"
+    "title": "Friar One, a custom ERP for the Franciscan Friars",
+    "description": "Built several modules, composed entire service layer",
+    "url": "https://friars.us",
+    "icons": "C#, Blazor, ASP.NET, Syncfusion, SQL, Azure",
+    "image": "/images/franciscan-frairs-logo-2023.jpg"
   },
   {
-    "title": "Web Development for Beginners",
-    "description": "Contributed sketch note imagery to accompany each lesson. These help provide visual representation of what is being taught.",
-    "url": "https://github.com/microsoft/web-dev-for-beginners"
+    "title": "Developed 4 applications, mainly front-end and design.",
+    "description": "Orchestrated end-to-end UI/UX design for four distinct applications, transforming initial requirements into sleek, user-friendly interfaces using Figma, .NET Blazor, Syncfusion controls, and custom CSS",
+    "url": "https://tackle.ai.png",
+    "icons": "Figma, Blazor, ASP.NET, Syncfusion, CSS",
+    "image": "/images/Tackle_Ai_SUA_logo.png"
   },
   {
-    "title": "My Resume Site",
-    "description": "Created from Microsoft's resume workshop and deployed to GitHub pages. Includes my experience and design abilities.",
-    "url": "https://github.com/microsoft/workshop-library/tree/main/full/build-resume-website"
+    "title": "Shift Communications",
+    "description": "Contributed to the ongoing evolution of BridgestoneMarketing.com—a complex B2B platform—by enhancing features across Angular frontend, three ASP.NET servers, SQL database, and Kendo UI components",
+    "url": "https://bridgestonemarketing.com",
+    "icons": "Angular, ASP.NET, Kendo UI, SQL",
+    "image": "/images/cropped-SHIFTLogo_4-C.png"
   },
   {
-    "title": "GitHub Codespaces and github.dev",
-    "description": "Video interview to explain when to use GitHub.dev versus GitHub Codespaces, and how best to use each tool.",
-    "url": "https://www.youtube.com/watch?v=c3hHhRME_XI"
+    "title": "TC Industries",
+    "description": "Engineered a robust, enterprise-grade ERP system for a global manufacturing firm—leveraged .NET Blazor, MudBlazor, SQL Server, and Azure to modernize operations from end to end",
+    "url": "https://github.com/microsoft/workshop-library/tree/main/full/build-resume-website",
+    "icons": "Blazor, ASP.NET, MudBlazor, SQL, Azure",
+    "image": "/images/Tc-logo-small.png"
   }
+  
 ]
+

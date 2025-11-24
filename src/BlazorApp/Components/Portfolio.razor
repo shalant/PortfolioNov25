@@ -14,8 +14,8 @@
                 }
             </div> *@
 
-            @* <div class="container glassy-background"> *@
-            @* @foreach (var project in projects)
+@* <div class="container glassy-background"> *@
+@* @foreach (var project in projects)
             {
                 <div class="box" key="@project.Title">
                     <a href="@project.Url" target="_blank" rel="noopener noreferrer">
@@ -24,7 +24,7 @@
                     <p class="small">@project.Description</p>
                 </div>
             } *@
-            @* @foreach (var project in projects)
+@* @foreach (var project in projects)
                 {
                     <div class="custom-card" key="@project.Title">
                         <a href="@project.Url" target="_blank" rel="noopener noreferrer">
@@ -34,33 +34,55 @@
                     </div>
                 } *@
 
-            @* </div>
+@* </div>
         }
     </div>
 </section> *@
 
 <div class="container custom-portfolio__container" id="portfolio">
-@if (projects is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    @* <MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object"> *@
-    <MudCarousel Class="" Style="height:250px; width: 500px;" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object">
-        @foreach (var project in projects)
-        {
-            <MudCarouselItem Transition="transition" >
-                <div class="custom-card" key="@project.Title">
-                    <a href="@project.Url" target="_blank" rel="noopener noreferrer">
-                        <h3 style="flex-basis: 40px;">@project.Title</h3>
-                    </a>
-                    <p class="small">@project.Description</p>
-                </div>
-            </MudCarouselItem>
-        }
-    </MudCarousel>
-}
+    <div class="row">
+        <h2>Experience</h2>
+    </div>
+    <div class="row">
+        @* <div class="portfolio-container"> *@
+        <div class="custom-portfolio__container">
+            @if (projects is null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                @* <MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object"> *@
+                <MudCarousel Class="custom-carousel" Style="" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object">
+                    @foreach (var project in projects)
+                    {
+                        <MudCarouselItem Transition="transition">
+                            @* <MudCarouselItem Transition="Transition.Custom" CustomTransitionEnter="rotateIn" CustomTransitionExit="rotateOut"> *@
+                            <div class="custom-card" key="@project.Title">
+                                <img src="@project.Image" style="max-width: 200px; max-height:100px;" />
+                                @* <img src="/images/franciscan-frairs-logo-2023.jpg" style="width: 200px;"/> *@
+                                <a href="@project.Url" target="_blank" rel="noopener noreferrer">
+                                    <h3 style="flex-basis: 40px;">@project.Title</h3>
+                                </a>
+                                <p class="small">@project.Description</p>
+                                @* <i class="@project.Icons"></i> *@
+                                <div class="d-flex">
+                                    @* @if (!string.IsNullOrEmpty(project.Icons))
+                                    { *@
+                                        @foreach (var chip in chips)
+                                        {
+                                            @* <MudChip T="string" >chip</MudChip> *@
+                                            <div class="custom-chip">@chip</div>
+                                        }
+                                    @* } *@
+                                </div>
+                            </div>
+                        </MudCarouselItem>
+                    }
+                </MudCarousel>
+            }
+        </div>
+    </div>
 </div>
 
 @code {
@@ -78,10 +100,39 @@ else
     private bool enableSwipeGesture = true;
     private bool autocycle = true;
     private Transition transition = Transition.Slide;
+    // private TimeSpan timeSpan = new TimeSpan(0,0,0.01);
+    private List<string> chips = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
         projects = await Http.GetFromJsonAsync<List<Project>>("sample-data/projects.json");
         hero = await HeroImageService.GetHeroAsync(img => img.Name is "portfolio");
+        
+        if (projects != null)
+        {
+            foreach (var item in projects)
+            {
+                if (!string.IsNullOrEmpty(item.Icons))
+                {
+                    chips = item.Icons.Split(",").ToList();
+                }
+            }
+        }
     }
 }
+
+<style>
+    .rotateIn {
+        opacity: 0;
+        animation-delay: 0.5s;
+        animation-duration: 0.5s;
+        animation-name: rotateIn;
+        animation-fill-mode: forwards;
+    }
+
+    .rotateOut {
+        animation-duration: 0.5s;
+        animation-name: rotateOut;
+        animation-fill-mode: forwards;
+    }
+</style>

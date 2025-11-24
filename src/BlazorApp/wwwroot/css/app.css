@@ -274,7 +274,8 @@ img.social-icon {
 
 .custom-card {
     position: relative; /* Important for backdrop-filter to work correctly */
-    width: 500px;
+    width: 100%;
+    min-height: 250px;
     height: 290px;
     display: flex;
     justify-content: center;
@@ -289,7 +290,6 @@ img.social-icon {
     -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
     border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
     border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 4px 20px rgba(31, 38, 135, 0.1); /* Soft shadow */
     transition: box-shadow 0.4s ease-in-out;
 }
 
@@ -298,12 +298,80 @@ img.social-icon {
 }
 
 .custom-card:hover {
-    box-shadow: 4px 8px 32px rgba(31, 38, 135, 0.2); /* Soft shadow */
 }
 
 .custom-portfolio__container {
+    display:flex;
+    flex-direction: column;
     align-content: center;
     align-items: center;
     justify-content: center;
-    background-color: aquamarine
+    /*background-color: aquamarine*/
 }
+
+
+.bounceIn {
+    opacity: 0;
+    animation-delay: 0.5s;
+    animation-duration: 0.5s;
+    animation-name: bounceIn;
+    animation-fill-mode: forwards;
+}
+
+.bounceOut {
+    animation-duration: 0.5s;
+    animation-name: bounceOut;
+    animation-fill-mode: forwards;
+}
+
+.backInDown {
+    opacity: 0;
+    animation-delay: 0.5s;
+    animation-duration: 0.5s;
+    animation-name: backInDown;
+    animation-fill-mode: forwards;
+}
+
+.backOutDown {
+    animation-duration: 0.5s;
+    animation-name: backOutDown;
+    animation-fill-mode: forwards;
+}
+
+.rotateIn {
+    opacity: 0;
+    animation-delay: 0.5s;
+    animation-duration: 0.5s;
+    animation-name: rotateIn;
+    animation-fill-mode: forwards;
+}
+
+.rotateOut {
+    animation-duration: 0.5s;
+    animation-name: rotateOut;
+    animation-fill-mode: forwards;
+}
+
+.custom-chip {
+    padding: 10px;
+    margin: 10px;
+    background-color: rgba(100,100,100,0.3);
+    border-radius: 16px;
+    box-shadow: 3px 3px 3px 3px rgba(131, 138, 145, 0.1); /* Soft shadow */
+    transition: background-color 0.4s ease-in-out;
+}
+
+    .custom-chip:hover {
+        /*background-color: rgba(10,10,10,0.8);*/
+        background-color: rgba(100,100,100,0.7);
+    }
+
+.custom-carousel {
+    height: 300px;
+    width: 800px;
+    box-shadow: 4px 4px 10px rgba(31, 38, 135, 0.4); /* Soft shadow */
+}
+
+    .custom-carousel:hover {
+        box-shadow: 4px 8px 32px rgba(31, 38, 135, 0.2); /* Soft shadow */
+    }
