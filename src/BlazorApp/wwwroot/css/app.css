@@ -285,12 +285,12 @@ img.social-icon {
     margin: 10px 10px;
 
     /* Glassmorphism properties */
-    background: rgba(255, 255, 255, 0.85); /* Semi-transparent white background */
+    background: rgba(250, 250, 250, 0.5); /* Semi-transparent white background */
     backdrop-filter: blur(10px); /* Frosted glass effect */
     -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
     border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
     border-radius: 5px; /* Rounded corners */
-    transition: box-shadow 0.4s ease-in-out;
+    transition: background 0.4s ease-in-out;
 }
 
 .glassy-background {
@@ -298,6 +298,7 @@ img.social-icon {
 }
 
 .custom-card:hover {
+    background: rgba(250, 250, 250, 0.85); /* Semi-transparent white background */
 }
 
 .custom-portfolio__container {
@@ -369,9 +370,12 @@ img.social-icon {
 .custom-carousel {
     height: 300px;
     width: 800px;
-    box-shadow: 4px 4px 10px rgba(31, 38, 135, 0.4); /* Soft shadow */
+    /*background-color: rgba(250,250,250,0.7);*/
+    box-shadow: 4px 4px 10px rgba(31, 38, 65, 0.2); /* Soft shadow */
+    transition: box-shadow 0.4s ease-in-out;
 }
 
     .custom-carousel:hover {
-        box-shadow: 4px 8px 32px rgba(31, 38, 135, 0.2); /* Soft shadow */
+        /*background-color: rgba(240,240,240,0.7);*/
+        box-shadow: 4px 8px 32px rgba(31, 38, 115, 0.4); /* Soft shadow */
     }
