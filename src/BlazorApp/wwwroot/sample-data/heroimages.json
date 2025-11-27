@@ -18,5 +18,10 @@
     "name": "casual",
     "src": "images/DrCyberPunk.png",
     "alt": "Doug as a Cyber Punk"
+  },
+  {
+    "name": "music",
+    "src": "images/dougRosenbergBetterThanTv.jpg",
+    "alt": "Doug Rosenberg Better Than TV"
   }
 ]

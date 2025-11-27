@@ -315,7 +315,7 @@ img.social-icon {
 }
 
 .custom-card3 {
-    background-color: rgba(250,250,250,0.8);
+    background-color: rgba(250,250,250,0.6);
     width: 65%;
     padding: 4rem;
     margin: 3rem auto;
@@ -419,10 +419,59 @@ img.social-icon {
 
 .art-deco {
     box-shadow: 4px 4px 10px rgba(31, 38, 65, 0.9); /* Soft shadow */
-    backdrop-filter: blur(100px);
+    /*backdrop-filter: blur(1px);*/
+    /*filter: blur(1px);*/
 }
 
 .art-deco:hover {
     backdrop-filter: contrast(10px);
-    background-blend-mode:color-burn;
+    /*background-blend-mode:color-burn;*/
+}
+
+.better-than-tv {
+    background-image: src("../images/dougRosenbergBetterThanTv.jpg");
+    background-repeat: repeat;
+}
+
+
+/*body {
+    margin: 0;
+    height: 100vh;
+    background: url('your-album-cover.jpg') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+}*/
+
+.background-overlay {
+    /*position: absolute;
+    top: 0;
+    left: 0;*/
+    /*width: 100%;*/
+    /*height: 1000px;*/
+    background: linear-gradient(135deg, rgba(50, 0, 80, 0.3), rgba(0, 0, 50, 0.3));
+    animation: moveGradient 30s ease-in-out infinite;
+    mix-blend-mode: overlay;
+    backdrop-filter: blur(2px);
+}
+
+@keyframes moveGradient {
+    0% {
+        background-position: 0% 50%;
+        opacity: 0.3;
+    }
+
+    50% {
+        background-position: 100% 50%;
+        opacity: 0.5;
+    }
+
+    100% {
+        background-position: 0% 50%;
+        opacity: 0.3;
+    }
+}
+
+.teal-backdrop {
+    background-image: src("../images/tealRectangle.png");
+    background-repeat: repeat;
 }

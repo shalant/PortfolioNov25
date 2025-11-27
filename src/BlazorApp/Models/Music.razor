@@ -1,0 +1,56 @@
+<section class="light " id="music">
+    @if (hero is not null)
+    {
+        @* <img class="better-than-tv" src="@(hero.Src)" alt="@(hero.Alt)" /> *@
+        @* <img class="background art-deco" src="/images/dougRosenbergBetterThanTv.jpg" alt="@(hero.Alt)" /> *@
+        <img class="background " src="~/images/tealRectangle.png" alt="@(hero.Alt)" />
+    }
+    <div class="custom-card3">
+        @* <div  style="background-image: src(.././wwwroot/images/artDecoBackground2.png); width: 65%; padding: 4rem; margin: 3rem auto; text-align: center;box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;"> *@
+        @* <div class="custom-card2" > *@
+        <div class="card-header">
+            <h2>Music</h2>
+        </div>
+        @if (music is null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <div class="card-body">
+                <p class="large">@music.Paragraph1</p>
+                <p class="large">@music.Paragraph2</p>
+                <p class="large">@music.Paragraph3</p>
+                <img width="300" src="/images/dougRosenbergBetterThanTv.jpg" />
+
+                @* <hr />
+                <ul style="text-align: left; columns: 2; font-size: 1.25rem; margin: 2rem 3rem; gap: 3rem;">
+                    @foreach (var skill in music.Hobbies)
+                    {
+                        <li key="@skill">@skill</li>
+                    }
+                </ul>
+                <hr />
+                <p style="padding: 1rem 3rem 0;">@music.DetailOrQuote</p> *@
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public required HttpClient Http { get; set; }
+
+    [Parameter, EditorRequired]
+    public required HeroImageService HeroImageService { get; set; }
+
+    private MusicModel? music;
+    private HeroImage? hero;
+
+    protected override async Task OnInitializedAsync()
+    {
+        music = await Http.GetFromJsonAsync<MusicModel>("sample-data/music.json");
+        hero = await HeroImageService.GetHeroAsync(img => img.Name is "music");
+
+    }
+}
