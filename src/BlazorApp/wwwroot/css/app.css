@@ -62,6 +62,34 @@ section.light {
         object-position: 0 15%;
     }
 
+    section img.background2 {
+        width: 100vmax;
+        height: 100%;
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+        pointer-events: none;
+        object-fit: cover;
+        object-position: 0 15%;
+        backdrop-filter: blur(50px);
+    }
+    
+    section img.background-music {
+        width: 100vmax;
+        height: 100%;
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+        pointer-events: none;
+        object-fit: cover;
+        object-position: 0 15%;
+        backdrop-filter: blur(5px);
+    }
+
 h1 {
   font-weight: 300;
   font-family: "Cormorant Garamond", serif;
@@ -262,6 +290,15 @@ img.social-icon {
     }
 }
 
+@keyframes unBlur {
+    0% {
+        filter: blur(50px);
+    }
+    100% {
+        filter: blur(0px);
+    }
+}
+
 .language-badges {
     text-align: center;
     align-content: center;
@@ -315,7 +352,7 @@ img.social-icon {
 }
 
 .custom-card3 {
-    background-color: rgba(250,250,250,0.6);
+    background-image: linear-gradient(90deg, rgba(250,250,250,0.4), rgba(50,50,50,0.9));
     width: 65%;
     padding: 4rem;
     margin: 3rem auto;
@@ -473,5 +510,5 @@ img.social-icon {
 
 .teal-backdrop {
     background-image: src("../images/tealRectangle.png");
-    background-repeat: repeat;
+    background-repeat: 
 }

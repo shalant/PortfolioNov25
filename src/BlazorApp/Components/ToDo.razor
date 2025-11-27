@@ -1,0 +1,29 @@
+<section class="light" id="todo" >
+    <h2>To Do</h2>
+
+ <ul>
+    <li>Reporting</li>
+    <li>Dashboards</li>
+    <li>Design</li>
+    <li>Leadership</li>
+    <li>Backend</li>
+</ul>
+
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public required HttpClient Http { get; set; }
+
+    [Parameter, EditorRequired]
+    public required HeroImageService HeroImageService { get; set; }
+
+    private List<Project>? projects;
+    private HeroImage? hero;
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = await Http.GetFromJsonAsync<List<Project>>("sample-data/projects.json");
+        // hero = await HeroImageService.GetHeroAsync(img => img.Name is "technical skills");
+    }
+}
