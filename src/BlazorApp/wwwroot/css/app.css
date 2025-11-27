@@ -293,6 +293,42 @@ img.social-icon {
     transition: background 0.4s ease-in-out;
 }
 
+.custom-card2 {
+    position: relative; /* Important for backdrop-filter to work correctly */
+    width: 70vw;
+    min-height: 250px;
+    height: 290px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 15px 45px;
+    margin: 10px 10px;
+
+    /* Glassmorphism properties */
+    background: rgba(250, 250, 250, 0.5); /* Semi-transparent white background */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+    border-radius: 5px; /* Rounded corners */
+    transition: background 0.4s ease-in-out;
+}
+
+.custom-card3 {
+    background-color: rgba(250,250,250,0.8);
+    width: 65%;
+    padding: 4rem;
+    margin: 3rem auto;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    transition: box-shadow 0.4s ease-in-out, background-color 0.4s ease-in-out;
+}
+
+    .custom-card3:hover {
+        box-shadow: rgba(0, 0, 0, 1,0.35) 0px 54px 55px, rgba(0, 0, 10, 0.22) 0px -12px 30px, rgba(0, 0, 50, 0.22) 0px 4px 6px, rgba(0, 0, 10, 0.27) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        background-color: rgba(250,250,255,0.85);
+    }
+
 .glassy-background {
 
 }
@@ -358,17 +394,18 @@ img.social-icon {
     margin: 10px;
     background-color: rgba(100,100,100,0.3);
     border-radius: 16px;
-    box-shadow: 3px 3px 3px 3px rgba(131, 138, 145, 0.1); /* Soft shadow */
+    box-shadow: 3px 3px 3px 3px rgba(231, 238, 245, 0.4); /* Soft shadow */
     transition: background-color 0.4s ease-in-out;
 }
 
     .custom-chip:hover {
         /*background-color: rgba(10,10,10,0.8);*/
         background-color: rgba(100,100,100,0.7);
+        box-shadow: 3px 3px 3px 3px rgba(231, 238, 215, 0.5); /* Soft shadow */
     }
 
 .custom-carousel {
-    height: 300px;
+    height: 350px;
     width: 800px;
     /*background-color: rgba(250,250,250,0.7);*/
     box-shadow: 4px 4px 10px rgba(31, 38, 65, 0.2); /* Soft shadow */
@@ -379,3 +416,13 @@ img.social-icon {
         /*background-color: rgba(240,240,240,0.7);*/
         box-shadow: 4px 8px 32px rgba(31, 38, 115, 0.4); /* Soft shadow */
     }
+
+.art-deco {
+    box-shadow: 4px 4px 10px rgba(31, 38, 65, 0.9); /* Soft shadow */
+    backdrop-filter: blur(100px);
+}
+
+.art-deco:hover {
+    backdrop-filter: contrast(10px);
+    background-blend-mode:color-burn;
+}
