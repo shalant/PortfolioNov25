@@ -1,52 +1,60 @@
-<section class="light" id="technicalskills">
-    <h2>Technical Skills</h2>
+@* <section class="light technical-skills__container" id="technicalskills"> *@
+<section class="light " id="technicalskills">
+    @if (hero is not null)
+    {
+        <img class="background" src="@(hero.Src)" alt="@(hero.Alt)" />
+    }
+    <div class="technical-skills__container">
+        <h2>Technical Skills</h2>
 
-    <div class="language-badges">
-        <h5>Languages</h5>
-        <img src="https://custom-icon-badges.demolab.com/badge/C%23-%23239120.svg?logo=cshrp&logoColor=white" />
-        <img src="https://img.shields.io/badge/-JavaScript-000?&logo=JavaScript" />
-        <img src="https://img.shields.io/badge/-TypeScript-000?&logo=TypeScript" />
-        <img src="https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=fff" />
-    </div>
+        <div class="language-badges my-3">
+            <h5>Languages</h5>
+            <img src="https://custom-icon-badges.demolab.com/badge/C%23-%23239120.svg?logo=cshrp&logoColor=white" />
+            <img src="https://img.shields.io/badge/-JavaScript-000?&logo=JavaScript" />
+            <img src="https://img.shields.io/badge/-TypeScript-000?&logo=TypeScript" />
+            <img src="https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=fff" />
+        </div>
 
-    <div class="tech-badges">
-        <h5>Technologies</h5>
-        <img src="https://img.shields.io/badge/-Dotnet-000?&logo=Dotnet&logoColor=F90" />
-        <img src="https://img.shields.io/badge/Blazor-512BD4?logo=blazor&logoColor=fff" />
-        <img src="https://img.shields.io/badge/-Angular-red?style=flat-square&logo=angular" />
-        <img src="https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=white" />
-        <img src="https://img.shields.io/badge/-React-black?style=flat-square&logo=react" />
-        <img src="https://img.shields.io/badge/-Nodejs-black?style=flat-square&logo=Node.js" />
-        <img src="https://img.shields.io/badge/-Docker-black?style=flat-square&logo=docker" />
-        <img src="https://img.shields.io/badge/-GitLab-FCA121?style=flat-square&logo=gitlab" />
-        <img src="https://custom-icon-badges.demolab.com/badge/Microsoft%20Azure-0089D6?logo=msazure&logoColor=white" />
-        <img src="https://img.shields.io/badge/AWS-%23FF9900.svg?logo=amazon-web-services&logoColor=white" />
-        <img src="https://img.shields.io/badge/-Digital%20Ocean-darkblue?style=flat-square&logo=digitalocean" />
-        <img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" />
-        <img src="https://img.shields.io/badge/Syncfusion-UI%20Components-blue?logo=syncfusion&logoColor=white" />
-        <img src="https://img.shields.io/badge/DevExpress-UI%20Toolkit-orange?logo=https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/DevExpress_logo.svg/512px-DevExpress_logo.svg.png&logoColor=white" />
-    </div>
+        <div class="tech-badges my-3">
+            <h5>Technologies</h5>
+            <img src="https://img.shields.io/badge/-Dotnet-000?&logo=Dotnet&logoColor=F90" />
+            <img src="https://img.shields.io/badge/Blazor-512BD4?logo=blazor&logoColor=fff" />
+            <img src="https://img.shields.io/badge/-Angular-red?style=flat-square&logo=angular" />
+            <img src="https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=white" />
+            <img src="https://img.shields.io/badge/-React-black?style=flat-square&logo=react" />
+            <img src="https://img.shields.io/badge/-Nodejs-black?style=flat-square&logo=Node.js" />
+            <img src="https://img.shields.io/badge/-Docker-black?style=flat-square&logo=docker" />
+            <br />
+            <img src="https://img.shields.io/badge/-GitLab-FCA121?style=flat-square&logo=gitlab" />
+            <img src="https://custom-icon-badges.demolab.com/badge/Microsoft%20Azure-0089D6?logo=msazure&logoColor=white" />
+            <img src="https://img.shields.io/badge/AWS-%23FF9900.svg?logo=amazon-web-services&logoColor=white" />
+            <img src="https://img.shields.io/badge/-Digital%20Ocean-darkblue?style=flat-square&logo=digitalocean" />
+            <img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" />
+            <img src="https://img.shields.io/badge/Syncfusion-UI%20Components-blue?logo=syncfusion&logoColor=white" />
+            <img src="https://img.shields.io/badge/DevExpress-UI%20Toolkit-orange?logo=https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/DevExpress_logo.svg/512px-DevExpress_logo.svg.png&logoColor=white" />
+        </div>
 
-    <div class="github-stats">
-        <iframe src="https://github-readme-stats.vercel.app/api?username=shalant&show_icons=true&theme=radical" 
-            frameborder="0" 
-            scrolling="0" 
-            width="400" 
-            height="200"
-                title="GitHub Stats" />
-        <iframe src="https://github-readme-stats.vercel.app/api/top-langs/?username=shalant"
-                frameborder="0" 
-            scrolling="0" 
-            width="400" 
-            height="200"
-                title="GitHub Stats" />
-        @* <iframe src="https://github.com/shalant/github-readme-stats"
+        <div class="github-stats my-3">
+            <iframe src="https://github-readme-stats.vercel.app/api?username=shalant&show_icons=true&theme=radical"
+                    frameborder="0"
+                    scrolling="0"
+                    width="400"
+                    height="200"
+                    title="GitHub Stats" />
+            <iframe src="https://github-readme-stats.vercel.app/api/top-langs/?username=shalant"
+                    frameborder="0"
+                    scrolling="0"
+                    width="400"
+                    height="200"
+                    title="GitHub Stats" />
+            @* <iframe src="https://github.com/shalant/github-readme-stats"
                 frameborder="0" 
             scrolling="0" 
             width="400" 
             height="200"
                 title="GitHub Stats" /> *@
 
+        </div>
     </div>
 
 </section>

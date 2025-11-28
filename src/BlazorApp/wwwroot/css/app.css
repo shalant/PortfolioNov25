@@ -299,14 +299,45 @@ img.social-icon {
     }
 }
 
+.home__container {
+    margin-top: 20px;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.technical-skills__container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
 .language-badges {
     text-align: center;
     align-content: center;
+    justify-content: center;
+    align-items: center;
+    /* Glassmorphism properties */
+    background: rgba(250, 250, 250, 0.3); /* Semi-transparent white background */
+    backdrop-filter: blur(5px); /* Frosted glass effect */
+    width: 65%;
+    padding: 20px;
 }
 
 .tech-badges {
     text-align: center;
     align-content: center;
+    justify-content: center;
+    align-items: center;
+    /* Glassmorphism properties */
+    background: rgba(250, 250, 250, 0.3); /* Semi-transparent white background */
+    backdrop-filter: blur(5px); /* Frosted glass effect */
+    width: 65%;
+    padding: 20px;
 }
 
 .custom-card {
