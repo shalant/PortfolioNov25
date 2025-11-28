@@ -1,0 +1,109 @@
+@* <div class="container custom-experience__container" id="experience"> *@
+<section class="" id="experience">
+    @if (hero is not null)
+    {
+        <img class="background" src="@(hero.Src)" alt="@(hero.Alt)" />
+    }
+    @* <div class="row"> *@
+        <h2>Experience</h2>
+    @* </div>
+    <div class="row"> *@
+        @* <div class="portfolio-container"> *@
+        <div class="custom-carousel__container">
+            @if (experiences is null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                @* <MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object"> *@
+                <MudCarousel Class="custom-carousel" Style="" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object">
+                    @foreach (var experience in experiences)
+                    {
+                        <MudCarouselItem Transition="transition">
+                            @* <MudCarouselItem Transition="Transition.Custom" CustomTransitionEnter="rotateIn" CustomTransitionExit="rotateOut"> *@
+                            @* <div class="custom-card" key="@experience.Title"> *@
+                            <div class="carousel-card" key="@experience.Title">
+                                <img src="@experience.Image" style="max-width: 200px; max-height:100px;" />
+                                @* <img src="/images/franciscan-frairs-logo-2023.jpg" style="width: 200px;"/> *@
+                                <a href="@experience.Url" target="_blank" rel="noopener noreferrer">
+                                    <h3 style="flex-basis: 40px;">@experience.Title</h3>
+                                </a>
+                                <p class="small">@experience.Description</p>
+                                <ul>
+                                    @foreach(var item in experience.Bulletpoints)
+                                    {
+                                        <li>@item.</li>
+                                    }
+                                </ul>
+                                @* <i class="@project.Icons"></i> *@
+                                <div class="d-flex">
+                                    @* @if (!string.IsNullOrEmpty(project.Icons))
+                                    { *@
+                                    @foreach (var chip in chips)
+                                    {
+                                        @* <MudChip T="string" >chip</MudChip> *@
+                                        <div class="custom-chip">@chip</div>
+                                    }
+                                    @* } *@
+                                </div>
+                            </div>
+                        </MudCarouselItem>
+                    }
+                </MudCarousel>
+            }
+        </div>
+    </section>
+@* </div> *@
+
+@code {
+    [Parameter, EditorRequired]
+    public required HttpClient Http { get; set; }
+
+    [Parameter, EditorRequired]
+    public required HeroImageService HeroImageService { get; set; }
+
+    private List<ExperienceModel>? experiences;
+    private HeroImage? hero;
+
+    private bool arrows = true;
+    private bool bullets = true;
+    private bool enableSwipeGesture = true;
+    private bool autocycle = true;
+    private Transition transition = Transition.Slide;
+    // private TimeSpan timeSpan = new TimeSpan(0,0,0.01);
+    private List<string> chips = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        experiences = await Http.GetFromJsonAsync<List<ExperienceModel>>("sample-data/experience.json");
+        hero = await HeroImageService.GetHeroAsync(img => img.Name is "experience");
+
+        if (experiences != null)
+        {
+            foreach (var item in experiences)
+            {
+                if (!string.IsNullOrEmpty(item.Icons))
+                {
+                    chips = item.Icons.Split(",").ToList();
+                }
+            }
+        }
+    }
+}
+
+<style>
+    .rotateIn {
+        opacity: 0;
+        animation-delay: 0.5s;
+        animation-duration: 0.5s;
+        animation-name: rotateIn;
+        animation-fill-mode: forwards;
+    }
+
+    .rotateOut {
+        animation-duration: 0.5s;
+        animation-name: rotateOut;
+        animation-fill-mode: forwards;
+    }
+</style>

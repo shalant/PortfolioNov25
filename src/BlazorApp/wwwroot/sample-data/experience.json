@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Friar One, a custom ERP for the Franciscan Friars",
+    "description": "Built several modules, composed entire service layer",
+    "url": "https://friars.us",
+    "icons": "C#, Blazor, ASP.NET, Syncfusion, SQL, Azure",
+    "image": "/images/franciscan-frairs-logo-2023.jpg",
+    "bulletpoints": [
+      "💡 Spearheaded development of 10 dynamic features—including a directory card layout with cascading filters and a dual-mode prayer wall interface—delivering intuitive user experiences and robust admin functionality. Composed with Blazor, C# .NET 9, MS SQL Server, and Syncfusion controls.",
+      "🔧 Elevated backend performance by implementing data adaptors for high-volume reads and architecting a scalable service layer, laying the foundation for a future API ecosystem.",
+      "📊 Designed and deployed 20 insightful reports using DevExpress Reporting, enabling data-driven decisions powered by a centralized SQL Server data store.",
+      "🧩 Reengineered a unified Data Grid solution to streamline data visualization across 50+ database tables, enhancing consistency and maintainability"
+    ]
+  },
+  {
+    "title": "Developed 4 applications, mainly front-end and design.",
+    "description": "Orchestrated end-to-end UI/UX design for four distinct applications, transforming initial requirements into sleek, user-friendly interfaces using Figma, .NET Blazor, Syncfusion controls, and custom CSS",
+    "url": "https://tackle.ai.png",
+    "icons": "Figma, Blazor, ASP.NET, Syncfusion, CSS",
+    "image": "/images/Tackle_Ai_SUA_logo.png",
+    "bulletpoints": [
+      "🎨 Orchestrated end-to-end UI/UX design for four distinct applications, transforming initial requirements into sleek, user-friendly interfaces using Figma, .NET Blazor, Syncfusion controls, and custom CSS",
+      "🤝 Secured high-impact project win with a Fortune 10 client by integrating proprietary LLMs for document processing—teamed up seamlessly with Python engineers and infrastructure leads to deliver a polished solution powered by .NET Blazor, SQL Server, KeyCloak, and Syncfusion",
+      "🚀 Reimagined the Customer Portal experience from the ground up—empowered users to upload and process hundreds of thousands of files through secure, proprietary LLMs in a visually compelling dashboard built with .NET Blazor and Syncfusion",
+      "🛠️ Built Admin Portal from scratch—partnered closely with PMs to uncover client onboarding flows and defined backend data requirements, crafting a scalable interface with .NET Blazor, SQL Server, KeyCloak, and Syncfusion"
+    ]
+  },
+  {
+    "title": "Shift Communications",
+    "description": "Contributed to the ongoing evolution of BridgestoneMarketing.com—a complex B2B platform—by enhancing features across Angular frontend, three ASP.NET servers, SQL database, and Kendo UI components",
+    "url": "https://bridgestonemarketing.com",
+    "icons": "Angular, ASP.NET, Kendo UI, SQL",
+    "image": "/images/cropped-SHIFTLogo_4-C.png",
+    "bulletpoints": [
+      "🌐 Contributed to the ongoing evolution of BridgestoneMarketing.com—a complex B2B platform—by enhancing features across Angular frontend, three ASP.NET servers, SQL database, and Kendo UI components",
+      "🌍 Engineered middleware to dynamically translate inventory content into French, adapting based on user profiles—boosting global accessibility and user relevance",
+      "⚡ Delivered high-volume feature enhancements and bug fixes with speed and precision—ensuring platform stability and continuous improvement",
+      "🔄 Managed seamless code deployments across local, staging, and production environments using TFS and Azure DevOps—upholding release integrity",
+      "🔐 Executed key security initiatives leveraging Microsoft 365, AlertLogic, and Xamin—fortifying system resilience and data protection"
+    ]
+  },
+  {
+    "title": "TC Industries",
+    "description": "Engineered a robust, enterprise-grade ERP system for a global manufacturing firm—leveraged .NET Blazor, MudBlazor, SQL Server, and Azure to modernize operations from end to end",
+    "url": "https://github.com/microsoft/workshop-library/tree/main/full/build-resume-website",
+    "icons": "Blazor, ASP.NET, MudBlazor, SQL, Azure",
+    "image": "/images/Tc-logo-small.png",
+
+    "bulletpoints": [
+      "🏭 Engineered a robust, enterprise-grade ERP system for a global manufacturing firm—leveraged .NET Blazor, MudBlazor, SQL Server, and Azure to modernize operations from end to end",
+      "🧠 Led critical architecture sessions and captured technical insights through thorough documentation with Subject Matter Experts—bridging business needs with scalable design",
+      "🧩 Built seven foundational layers—from Database to Web interface—ensuring seamless integration across DB, Repository, Domain, Domain Services, API, and UI",
+      "🛠️ Maintained and debugged four legacy systems while simultaneously developing a new platform to handle essential business processes—ensuring zero disruption during transformation"
+    ]
+  }
+
+]
