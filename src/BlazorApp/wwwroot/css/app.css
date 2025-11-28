@@ -510,5 +510,5 @@ img.social-icon {
 
 .teal-backdrop {
     background-image: src("../images/tealRectangle.png");
-    background-repeat: 
+    /*background-repeat:*/ 
 }

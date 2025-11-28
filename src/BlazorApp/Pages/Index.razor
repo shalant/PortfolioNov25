@@ -1,4 +1,5 @@
 @page "/"
+
 @inject HttpClient Http
 @inject HeroImageService HeroImageService
 
@@ -7,10 +8,11 @@
 <Header />
 <Home Http=@Http HeroImageService=@HeroImageService />
 <About Http=@Http HeroImageService=@HeroImageService />
-<Portfolio Http=@Http HeroImageService=@HeroImageService />
+@* <Experience Http=@Http HeroImageService=@HeroImageService /> *@
 <TechnicalSkills Http="@Http" HeroImageService="@HeroImageService" />
 <Casual Http="@Http" HeroImageService="@HeroImageService" />
-<Music Http="@Http" HeroImageService="@HeroImageService" />
+@* <Music Http="@Http" HeroImageService="@HeroImageService" /> *@
+@* < Http="@Http" HeroImageService="@HeroImageService" /> *@
 <ToDo Http="@Http" HeroImageService="@HeroImageService" />
 @* <Contact Http=@Http HeroImageService=@HeroImageService /> *@
 
