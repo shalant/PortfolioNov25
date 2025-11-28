@@ -1,0 +1,40 @@
+<section class="dark" id="home">
+    @if (hero is not null)
+    {
+        <img class="background" src="~/images/DrComputerConsultant2.png" alt="@(hero.Alt)" />
+    }
+    @* <div style="position: absolute; top: 30%; left: 2rem;"> *@
+    <div class="home__container">
+        @if (consulting is null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <h1 class="my-2">@consulting.Overview</h1>
+            <ul>
+                @foreach(var item in consulting.Topics.Split(","))
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public required HttpClient Http { get; set; }
+
+    [Parameter, EditorRequired]
+    public required HeroImageService HeroImageService { get; set; }
+
+    private ConsultingModel? consulting;
+    private HeroImage? hero;
+
+    protected override async Task OnInitializedAsync()
+    {
+        consulting = await Http.GetFromJsonAsync<ConsultingModel>("sample-data/consulting.json");
+        hero = await HeroImageService.GetHeroAsync(img => img.Name is "consulting");
+    }
+}

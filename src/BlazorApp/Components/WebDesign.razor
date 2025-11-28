@@ -1,0 +1,41 @@
+<section class="dark" id="home">
+    @if (hero is not null)
+    {
+        <img class="background2" style="animation: 1s ease-out 0s 1 slideOutRight " src="@(hero.Src)" alt="@(hero.Alt)" />
+        <img class="background" style="animation: 1s ease-out 0s 1 slideInLeft, 1.5s ease-in-out 0s 1 unBlur " src="@(hero.Src)" alt="@(hero.Alt)" />
+    }
+    @* <div style="position: absolute; top: 30%; left: 2rem;"> *@
+    <div class="home__container">
+        @if (webDesign is null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <h1 class="my-2">@webDesign</h1>
+            <h2 class="my-2">@webDesign</h2>
+        }
+    </div>
+    <div style="position: absolute; bottom: 8rem; left: 50%;">
+        <a href="#about" target="_top">
+            <img src="images/down-arrow.svg" style="height: 3rem; width: 3rem;" alt="scroll down" />
+        </a>
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public required HttpClient Http { get; set; }
+
+    [Parameter, EditorRequired]
+    public required HeroImageService HeroImageService { get; set; }
+
+    private WebDesignModel? webDesign;
+    private HeroImage? hero;
+
+    protected override async Task OnInitializedAsync()
+    {
+        webDesign = await Http.GetFromJsonAsync<WebDesignModel>("sample-data/webdesign.json");
+        hero = await HeroImageService.GetHeroAsync(img => img.Name is "webdesign");
+    }
+}
