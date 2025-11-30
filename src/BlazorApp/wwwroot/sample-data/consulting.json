@@ -1,4 +1,29 @@
 {
-  "overview": "test",
-  "topics": "test, rabbit, booze, ice, salmon"
+  "overview-header": "🖥️ Company Overview Technology Made Simple for Small Business",
+  "overview-body": "Running a small business means wearing many hats. At [Your Company Name], we make sure “IT troubleshooter” doesn’t have to be one of them. We provide clear, affordable technology solutions that help you save time, protect your data, and keep your business running smoothly. Our mission is simple: give small businesses the same quality of IT support that big companies enjoy—without the big-company price tag.",
+  "services-header": "🚀 Services for Small Busines",
+  "services-bullets": [
+    {
+      "Affordable IT Support",
+      "Reliable help when you need it, without costly overhead."
+    },
+    {
+      "Cloud Setup & Backup ",
+      "Protect your business from everyday threats with simple, effective safeguards."
+    },
+    {
+      "Website & App Development",
+      "Build a professional online presence that attracts customers."
+    },
+    {
+      "Ongoing Maintenance",
+      "We keep your systems updated so you can focus on growth."
+    }
+  ],
+  "topics": "test, rabbit, booze, ice, salmon",
+  "headline": "Technology Made Simple for Small Business",
+  "subheadline": "We take the stress out of IT so you can focus on running and growing your business. Affordable, reliable solutions—tailored to fit your needs",
+  "cta": "Get your free consultation",
+  "tagline": "Your neighborhood IT partner—big solutions, small business focus.",
+
 }
