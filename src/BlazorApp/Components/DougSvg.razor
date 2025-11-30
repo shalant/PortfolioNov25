@@ -1,0 +1,329 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1800" viewBox="0 0 800 900" role="img" aria-label="Realistic developer portrait with blurred code background">
+    <defs>
+        <!-- Palette -->
+        <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0b1a2b" />
+            <stop offset="100%" stop-color="#142b4a" />
+        </linearGradient>
+
+        <!-- Skin tones -->
+        <radialGradient id="skinBase" cx="50%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#f0c7a3" />
+            <stop offset="35%" stop-color="#e6b691" />
+            <stop offset="70%" stop-color="#d9a47f" />
+            <stop offset="100%" stop-color="#c7926c" />
+        </radialGradient>
+        <radialGradient id="cheekWarmth" cx="40%" cy="50%" r="35%">
+            <stop offset="0%" stop-color="#e79d81" stop-opacity="0.7" />
+            <stop offset="100%" stop-color="#e79d81" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="noseWarmth" cx="54%" cy="52%" r="20%">
+            <stop offset="0%" stop-color="#e48c73" stop-opacity="0.8" />
+            <stop offset="100%" stop-color="#e48c73" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="scalpShine" cx="50%" cy="20%" r="35%">
+            <stop offset="0%" stop-color="#f7d6b6" stop-opacity="0.85" />
+            <stop offset="100%" stop-color="#f7d6b6" stop-opacity="0" />
+        </radialGradient>
+
+        <!-- Sweater gradients -->
+        <linearGradient id="sweater" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#14365f" />
+            <stop offset="50%" stop-color="#0f2b55" />
+            <stop offset="100%" stop-color="#0b2346" />
+        </linearGradient>
+        <linearGradient id="ribShadow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#091c36" />
+            <stop offset="100%" stop-color="#0c2443" />
+        </linearGradient>
+
+        <!-- Shirt gradient -->
+        <linearGradient id="shirt" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#e9eef6" />
+            <stop offset="100%" stop-color="#d8e0ec" />
+        </linearGradient>
+
+        <!-- Glass reflection -->
+        <linearGradient id="glassRef" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7" />
+            <stop offset="100%" stop-color="#dfe7f3" stop-opacity="0.2" />
+        </linearGradient>
+
+        <!-- Background blur filter -->
+        <filter id="bgBlur" x="-10%" y="-10%" width="120%" height="120%">
+            <feGaussianBlur stdDeviation="3" />
+        </filter>
+
+        <!-- Soft face shading -->
+        <filter id="softShade" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.2" />
+        </filter>
+
+        <!-- Subtle inner shadow -->
+        <filter id="innerShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feOffset dx="0" dy="2" result="off" />
+            <feGaussianBlur in="off" stdDeviation="2" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+
+        <!-- Hair stubble pattern -->
+        <pattern id="stubble" patternUnits="userSpaceOnUse" width="6" height="6">
+            <circle cx="2" cy="3" r="0.5" fill="#9b7c65" opacity="0.7" />
+            <circle cx="5" cy="2" r="0.5" fill="#8f6f59" opacity="0.6" />
+            <circle cx="3" cy="5" r="0.5" fill="#8a6a55" opacity="0.55" />
+        </pattern>
+
+        <!-- Code line colors -->
+        <style>
+            .codeBlue {
+                fill: #8fb3ff;
+            }
+
+            .codeGreen {
+                fill: #6fd3a7;
+            }
+
+            .codeOrange {
+                fill: #f3a56b;
+            }
+
+            .codeTeal {
+                fill: #5fc7cf;
+            }
+
+            .codeYellow {
+                fill: #ffd970;
+            }
+        </style>
+    </defs>
+
+    <!-- Background -->
+    <rect x="0" y="0" width="800" height="900" fill="url(#bgGrad)" />
+
+    <!-- Blurred code background cluster -->
+    <g filter="url(#bgBlur)" opacity="0.35">
+        <text x="60" y="120" font-family="monospace" font-size="26" class="codeBlue">console.log()</text>
+        <text x="520" y="160" font-family="monospace" font-size="22" class="codeOrange">console.error()</text>
+        <text x="140" y="220" font-family="monospace" font-size="24" class="codeGreen">console.dir()</text>
+        <text x="600" y="260" font-family="monospace" font-size="18" class="codeTeal">new</text>
+        <text x="220" y="300" font-family="monospace" font-size="20" class="codeYellow">create</text>
+
+        <text x="100" y="420" font-family="monospace" font-size="26" class="codeOrange">console.log()</text>
+        <text x="550" y="470" font-family="monospace" font-size="22" class="codeBlue">console.error()</text>
+        <text x="180" y="530" font-family="monospace" font-size="24" class="codeGreen">console.dir()</text>
+        <text x="640" y="570" font-family="monospace" font-size="18" class="codeTeal">new</text>
+        <text x="250" y="610" font-family="monospace" font-size="20" class="codeYellow">create</text>
+    </g>
+
+    <!-- Composition frame -->
+    <g transform="translate(0,40)">
+        <!-- Bust silhouette -->
+        <path d="M160,760 C220,650 320,620 400,620 C480,620 580,650 640,760 L640,820 L160,820 Z" fill="url(#sweater)" />
+
+        <!-- Shirt collar -->
+        <g>
+            <path d="M320,600 C360,620 440,620 480,600 C500,620 480,640 440,648 C380,660 360,640 320,600 Z" fill="url(#shirt)" />
+            <path d="M340,600 L380,640 L320,654 C328,636 334,620 340,600 Z" fill="#eef2f8" stroke="#b9c3d3" stroke-width="1" />
+            <path d="M460,600 L420,640 L480,654 C472,636 466,620 460,600 Z" fill="#eef2f8" stroke="#b9c3d3" stroke-width="1" />
+        </g>
+
+        <!-- Sweater ribbing -->
+        <rect x="300" y="588" width="200" height="16" fill="url(#ribShadow)" opacity="0.7" />
+        <g opacity="0.35">
+            <rect x="300" y="588" width="4" height="16" fill="#071427" />
+            <rect x="308" y="588" width="4" height="16" fill="#071427" />
+            <rect x="316" y="588" width="4" height="16" fill="#071427" />
+            <rect x="324" y="588" width="4" height="16" fill="#071427" />
+            <rect x="332" y="588" width="4" height="16" fill="#071427" />
+            <rect x="340" y="588" width="4" height="16" fill="#071427" />
+            <rect x="348" y="588" width="4" height="16" fill="#071427" />
+            <rect x="356" y="588" width="4" height="16" fill="#071427" />
+            <rect x="364" y="588" width="4" height="16" fill="#071427" />
+            <rect x="372" y="588" width="4" height="16" fill="#071427" />
+            <rect x="380" y="588" width="4" height="16" fill="#071427" />
+            <rect x="388" y="588" width="4" height="16" fill="#071427" />
+            <rect x="396" y="588" width="4" height="16" fill="#071427" />
+            <rect x="404" y="588" width="4" height="16" fill="#071427" />
+            <rect x="412" y="588" width="4" height="16" fill="#071427" />
+            <rect x="420" y="588" width="4" height="16" fill="#071427" />
+            <rect x="428" y="588" width="4" height="16" fill="#071427" />
+            <rect x="436" y="588" width="4" height="16" fill="#071427" />
+            <rect x="444" y="588" width="4" height="16" fill="#071427" />
+            <rect x="452" y="588" width="4" height="16" fill="#071427" />
+            <rect x="460" y="588" width="4" height="16" fill="#071427" />
+            <rect x="468" y="588" width="4" height="16" fill="#071427" />
+            <rect x="476" y="588" width="4" height="16" fill="#071427" />
+            <rect x="484" y="588" width="4" height="16" fill="#071427" />
+            <rect x="492" y="588" width="4" height="16" fill="#071427" />
+        </g>
+
+        <!-- Head/face -->
+        <g transform="translate(0,-20)">
+            <!-- Head base -->
+            <path d="M260,280 C260,210 320,160 400,160 C480,160 540,210 540,280 C540,360 500,420 400,420 C300,420 260,360 260,280 Z" fill="url(#skinBase)" filter="url(#softShade)" />
+
+            <!-- Scalp highlight -->
+            <ellipse cx="400" cy="220" rx="110" ry="70" fill="url(#scalpShine)" opacity="0.6" />
+
+            <!-- Cheeks warmth -->
+            <ellipse cx="355" cy="310" rx="38" ry="28" fill="url(#cheekWarmth)" />
+            <ellipse cx="445" cy="308" rx="36" ry="26" fill="url(#cheekWarmth)" />
+
+            <!-- Nose warmth -->
+            <ellipse cx="408" cy="320" rx="18" ry="12" fill="url(#noseWarmth)" />
+
+            <!-- Ears -->
+            <ellipse cx="270" cy="300" rx="18" ry="24" fill="#e6b691" />
+            <ellipse cx="530" cy="300" rx="18" ry="24" fill="#e6b691" />
+
+            <!-- Brows -->
+            <path d="M340,265 Q360,255 380,265" stroke="#6a4f3d" stroke-width="3" stroke-linecap="round" />
+            <path d="M420,265 Q440,255 460,265" stroke="#6a4f3d" stroke-width="3" stroke-linecap="round" />
+
+            <!-- Eyes whites -->
+            <ellipse cx="360" cy="290" rx="22" ry="14" fill="#f7f8fb" />
+            <ellipse cx="440" cy="290" rx="22" ry="14" fill="#f7f8fb" />
+
+            <!-- Irises -->
+            <circle cx="360" cy="290" r="8" fill="#6a4b33" />
+            <circle cx="440" cy="290" r="8" fill="#6a4b33" />
+
+            <!-- Pupils -->
+            <circle cx="360" cy="290" r="4" fill="#1b1b1b" />
+            <circle cx="440" cy="290" r="4" fill="#1b1b1b" />
+
+            <!-- Eye highlights -->
+            <circle cx="363" cy="287" r="2" fill="#ffffff" opacity="0.9" />
+            <circle cx="443" cy="287" r="2" fill="#ffffff" opacity="0.9" />
+
+            <!-- Nose bridge and tip -->
+            <path d="M400,280 Q395,305 400,325" stroke="#875f47" stroke-width="2" opacity="0.5" />
+            <ellipse cx="402" cy="330" rx="9" ry="6" fill="#d49472" opacity="0.6" />
+
+            <!-- Smile -->
+            <path d="M350,355 Q400,380 450,355" stroke="#5f412f" stroke-width="4" fill="none" stroke-linecap="round" />
+
+            <!-- Upper lip shadow -->
+            <path d="M352,350 Q400,370 448,350" stroke="#8b6a55" stroke-width="2" opacity="0.35" />
+
+            <!-- Beard/stubble area -->
+            <path d="M320,370 C350,410 450,410 480,370 Q470,392 450,410 Q400,430 350,410 Q330,392 320,370 Z"
+                  fill="url(#skinBase)" />
+            <rect x="325" y="365" width="150" height="55" fill="url(#skinBase)" opacity="0.3" />
+            <rect x="325" y="365" width="150" height="55" fill="url(#skinBase)" opacity="0.1" />
+            <rect x="325" y="365" width="150" height="55" fill="url(#skinBase)" opacity="0.05" />
+            <rect x="330" y="368" width="140" height="52" fill="url(#stubble)" opacity="0.28" />
+
+            <!-- Chin highlight -->
+            <ellipse cx="400" cy="392" rx="32" ry="16" fill="#f5d2b2" opacity="0.45" />
+
+            <!-- Glasses: clear, thin -->
+            <g>
+                <!-- Frames -->
+                <rect x="320" y="270" width="70" height="38" rx="12" fill="none" stroke="#4b4b4b" stroke-width="2" opacity="0.4" />
+                <rect x="410" y="270" width="70" height="38" rx="12" fill="none" stroke="#4b4b4b" stroke-width="2" opacity="0.4" />
+                <!-- Bridge -->
+                <path d="M390,288 L410,288" stroke="#4b4b4b" stroke-width="2" opacity="0.4" />
+                <!-- Clear rim highlight -->
+                <rect x="318" y="268" width="74" height="42" rx="13" fill="none" stroke="url(#glassRef)" stroke-width="2" opacity="0.8" />
+                <rect x="408" y="268" width="74" height="42" rx="13" fill="none" stroke="url(#glassRef)" stroke-width="2" opacity="0.8" />
+                <path d="M392,282 L408,282" stroke="url(#glassRef)" stroke-width="2" opacity="0.7" />
+                <!-- Temples -->
+                <path d="M320,284 L300,286" stroke="#8f8f8f" stroke-width="2" opacity="0.7" />
+                <path d="M480,284 L500,286" stroke="#8f8f8f" stroke-width="2" opacity="0.7" />
+            </g>
+        </g>
+    </g>
+
+    <!-- Foreground accents -->
+    <g opacity="0.15">
+        <circle cx="720" cy="840" r="14" fill="#8fb3ff" />
+        <circle cx="90" cy="780" r="8" fill="#6fd3a7" />
+        <circle cx="160" cy="140" r="10" fill="#f3a56b" />
+    </g>
+</svg>
+
+
+
+
+@* 
+<svg width="320" height="360" viewBox="0 0 320 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stylized developer portrait">
+    <defs>
+        <!-- Theme -->
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0b1a2b" />
+            <stop offset="100%" stop-color="#152d50" />
+        </linearGradient>
+        <clipPath id="circleMask">
+            <circle cx="160" cy="160" r="140" />
+        </clipPath>
+        <!-- Colors -->
+        <style>
+            :root {
+                --skin: #f3c9a5;
+                --shadow: #e3b38e;
+                --line: #2a2a2a;
+                --glasses: #f7f7f7;
+                --sweater: #0f2b55;
+                --shirt: #e9edf3;
+                --collarLine: #b8c0cc;
+            }
+        </style>
+    </defs>
+
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="url(#bg)" />
+    <!-- Subtle code pattern -->
+    <g opacity="0.10">
+        <text x="20" y="40" font-family="monospace" font-size="16" fill="#8fb3ff">console.log()</text>
+        <text x="200" y="80" font-family="monospace" font-size="14" fill="#8fb3ff">console.error()</text>
+        <text x="60" y="120" font-family="monospace" font-size="12" fill="#8fb3ff">console.dir()</text>
+        <text x="180" y="160" font-family="monospace" font-size="13" fill="#8fb3ff">new</text>
+        <text x="90" y="200" font-family="monospace" font-size="12" fill="#8fb3ff">create</text>
+    </g>
+
+    <!-- Portrait -->
+    <g clip-path="url(#circleMask)" transform="translate(0,10)">
+        <!-- Head -->
+        <ellipse cx="160" cy="120" rx="70" ry="78" fill="var(--skin)" />
+        <path d="M90,125 q70,50 140,0" fill="none" stroke="var(--shadow)" stroke-width="6" opacity="0.25" />
+        <!-- Ears -->
+        <ellipse cx="95" cy="120" rx="11" ry="14" fill="var(--skin)" />
+        <ellipse cx="225" cy="120" rx="11" ry="14" fill="var(--skin)" />
+
+        <!-- Glasses -->
+        <g>
+            <rect x="110" y="105" width="40" height="28" rx="8" fill="none" stroke="var(--line)" stroke-width="2" opacity="0.35" />
+            <rect x="170" y="105" width="40" height="28" rx="8" fill="none" stroke="var(--line)" stroke-width="2" opacity="0.35" />
+            <path d="M150,115 L170,115" stroke="var(--line)" stroke-width="2" opacity="0.35" />
+            <!-- Clear rims highlight -->
+            <rect x="108" y="103" width="44" height="32" rx="9" fill="none" stroke="var(--glasses)" stroke-width="2" opacity="0.8" />
+            <rect x="168" y="103" width="44" height="32" rx="9" fill="none" stroke="var(--glasses)" stroke-width="2" opacity="0.8" />
+            <path d="M152,110 L168,110" stroke="var(--glasses)" stroke-width="2" opacity="0.7" />
+        </g>
+
+        <!-- Eyes -->
+        <circle cx="132" cy="118" r="3.2" fill="var(--line)" />
+        <circle cx="188" cy="118" r="3.2" fill="var(--line)" />
+
+        <!-- Brows -->
+        <path d="M120,110 q12,-8 24,0" stroke="var(--line)" stroke-width="2" fill="none" opacity="0.5" />
+        <path d="M176,110 q12,-8 24,0" stroke="var(--line)" stroke-width="2" fill="none" opacity="0.5" />
+
+        <!-- Nose -->
+        <path d="M158,118 q-4,12 0,14" stroke="var(--line)" stroke-width="2" fill="none" opacity="0.4" />
+
+        <!-- Smile -->
+        <path d="M135,144 q25,18 50,0" stroke="var(--line)" stroke-width="3" fill="none" stroke-linecap="round" />
+
+        <!-- Shirt + sweater -->
+        <path d="M60,210 q100,-30 200,0 L280,320 L40,320 Z" fill="var(--sweater)" />
+        <path d="M110,185 q50,20 100,0 q-10,20 -90,20 q-10,-8 -10,-20 Z" fill="var(--shirt)" />
+        <!-- Collar -->
+        <path d="M120,188 l20,14 l-32,6 q8,-10 12,-20 Z" fill="var(--shirt)" stroke="var(--collarLine)" stroke-width="1" />
+        <path d="M200,188 l-20,14 l32,6 q-8,-10 -12,-20 Z" fill="var(--shirt)" stroke="var(--collarLine)" stroke-width="1" />
+    </g>
+
+    <!-- Badge / accent -->
+    <circle cx="280" cy="300" r="10" fill="#8fb3ff" opacity="0.5" />
+</svg> *@
