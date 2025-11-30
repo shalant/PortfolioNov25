@@ -1,0 +1,123 @@
+@using MudBlazor
+
+<MudPaper Class="scene" Elevation="0">
+    <div class="ambient"></div>
+    <div class="stars"></div>
+    <div class="stars2"></div>
+
+    <div class="city">
+        <div class="windows"></div>
+    </div>
+
+    <div class="rig">
+        <div class="monitor">
+            <div class="code">
+                <span class="line">const neon = glow({ hue: 198, intensity: 0.6 });</span>
+                <span class="line">function boot() { return connect('city-grid'); }</span>
+                <span class="line">await grid.sync(); // stabilize skyline shimmer</span>
+                <span class="line">render(hud, { scanline: true, contrast: 'soft' });</span>
+                <span class="line">if (coffee) compile('feature/futuristic-tech-guru');</span>
+                <span class="line">shader.set({ bloom: 0.12, vignette: 0.08 });</span>
+                <span class="line">ui.animate('pulse', duration('--pulse'));</span>
+                <span class="line">deploy({ city: 'OPK', channel: 'night' });</span>
+            </div>
+        </div>
+        <div class="monitor">
+            <div class="code">
+                <span class="line">import { Spark } from './aurora.js';</span>
+                <span class="line">const skyline = new Spark('#city');</span>
+                <span class="line">skyline.windows.shimmer({ rate: 0.5 });</span>
+                <span class="line">HUD.enable('scan'); // subtle sweep</span>
+                <span class="line">steam.loop({ noise: 'gentle', amplitude: 0.4 });</span>
+                <span class="line">log('I TURN COFFEE INTO CODE');</span>
+                <span class="line">commit('glow', {accent:'#5bd4ff'});</span>
+                <span class="line">save('scene.html');</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="char">
+        <div class="head"></div>
+        <div class="glasses">
+            <div class="collar"></div>
+            <div class="torso"></div>
+            <div class="arms">
+                <div class="arm left"></div>
+                <div class="arm right"></div>
+            </div>
+            <div class="watch"></div>
+        </div>
+    </div>
+
+    <div class="mug">
+        <div class="label">I TURN COFFEE INTO CODE</div>
+    </div>
+
+    <div class="steam">
+        <span></span><span></span><span></span>
+    </div>
+
+    <div class="desk"></div>
+</MudPaper>
+
+@* 
+<div class="scene">
+    <div class="ambient"></div>
+    <div class="stars"></div>
+    <div class="stars2"></div>
+
+    <div class="city">
+        <div class="windows"></div>
+    </div>
+
+    <div class="rig">
+        <div class="monitor">
+            <div class="code" aria-label="Code lines">
+                <span class="line">const neon = glow({ hue: 198, intensity: 0.6 });</span>
+                <span class="line">function boot() { return connect('city-grid'); }</span>
+                <span class="line">await grid.sync(); // stabilize skyline shimmer</span>
+                <span class="line">render(hud, { scanline: true, contrast: 'soft' });</span>
+                <span class="line">if (coffee) compile('feature/futuristic-tech-guru');</span>
+                <span class="line">shader.set({ bloom: 0.12, vignette: 0.08 });</span>
+                <span class="line">ui.animate('pulse', duration('--pulse'));</span>
+                <span class="line">deploy({ city: 'OPK', channel: 'night' });</span>
+            </div>
+        </div>
+        <div class="monitor">
+            <div class="code" aria-label="Code lines">
+                <span class="line">import { Spark } from './aurora.js';</span>
+                <span class="line">const skyline = new Spark('#city');</span>
+                <span class="line">skyline.windows.shimmer({ rate: 0.5 });</span>
+                <span class="line">HUD.enable('scan'); // subtle sweep</span>
+                <span class="line">steam.loop({ noise: 'gentle', amplitude: 0.4 });</span>
+                <span class="line">log('I TURN COFFEE INTO CODE');</span>
+                <span class="line">commit('glow', {accent:'#5bd4ff'});</span>
+                <span class="line">save('scene.html');</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="char" aria-hidden="true">
+        <div class="head"></div>
+        <div class="glasses"></div>
+        <div class="collar"></div>
+        <div class="torso"></div>
+        <div class="arms">
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+        </div>
+        <div class="watch"></div>
+    </div>
+
+    <div class="mug" aria-label="Coffee mug">
+        <div class="label">I TURN COFFEE INTO CODE</div>
+    </div>
+
+    <div class="steam" aria-hidden="true">
+        <span></span><span></span><span></span>
+    </div>
+
+    <div class="desk"></div>
+</div> *@
+
+

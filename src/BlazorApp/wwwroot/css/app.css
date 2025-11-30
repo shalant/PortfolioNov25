@@ -547,7 +547,16 @@ img.social-icon {
 }
 
 
-.cartoon.desk {
+
+
+
+
+
+
+
+/*AI gibberish*/
+
+/*.cartoon.desk {
     width: 680px;
     height: 340px;
     border-radius: 18px;
@@ -779,9 +788,9 @@ img.social-icon {
 
 .hero-cartoon {
     background: linear-gradient(108deg, #0f2740, #133a66);
-    color: white;
+    color: white;*/
     /*min-height: 72vh;*/
-    min-height: 100vh;
+    /*min-height: 100vh;
 }
 
 .text-muted {
@@ -800,10 +809,10 @@ img.social-icon {
     backdrop-filter: blur(6px);
     overflow: hidden;
     padding: 18px;
-}
+}*/
 
 /* Monitors */
-.monitors {
+/*.monitors {
     position: absolute;
     bottom: 24px;
     left: 200px;
@@ -849,10 +858,10 @@ img.social-icon {
         opacity: 1;
         transform: translateX(8px);
     }
-}
+}*/
 
 /* Doug avatar */
-.doug-avatar {
+/*.doug-avatar {
     position: absolute;
     left: 20px;
     bottom: 28px;
@@ -920,10 +929,10 @@ img.social-icon {
     height: 22px;
     background: #1b2a41;
     border-radius: 50%;
-}
+}*/
 
 /* Mug with steam */
-.mug {
+/*.mug {
     position: absolute;
     left: 340px;
     bottom: 20px;
@@ -966,10 +975,10 @@ img.social-icon {
         transform: translateY(-22px) scale(1.2);
         opacity: 0;
     }
-}
+}*/
 
 /* Floating icons */
-.icon {
+/*.icon {
     position: absolute;
     width: 42px;
     height: 42px;
@@ -1005,7 +1014,464 @@ img.social-icon {
     50% {
         transform: translateY(-10px);
     }
+}*/
+
+
+
+/*DOUG CARTOON CSS*/
+
+/*:root {*/
+    /* Core palette */
+    /*--bg: #0a0f1f;
+    --fg: #eaf1ff;
+    --accent: #5bd4ff;
+    --accent2: #9b6dff;
+    --accent3: #46f7a8;
+    --monitor: #0e1835;
+    --monitor-glow: #4cc3ff55;
+    --desk: #1a2438;
+    --mug: #2b7bff;
+    --mug-text: #ffffff;*/
+    /* Character colors */
+    /*--skin: #f1d2b8;
+    --sweater: #0c2b5f;
+    --shirt: #a9b6cf;
+    --glasses: #bcd7ff;
+    --watch: #11161f;*/
+    /* Animation timing */
+    /*--pulse: 6s;
+    --steam: 3.5s;
+    --code: 8s;
+    --scan: 5s;
 }
+
+* {
+    box-sizing: border-box
+}
+
+html, body {
+    height: 100%
+}
+
+body {
+    margin: 0;
+    background: radial-gradient(1200px 700px at 50% 105%, #091126 0%, #060b18 30%, var(--bg) 100%);
+    color: var(--fg);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    overflow: hidden;
+}
+
+.scene {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}*/
+
+/* Ambient neon sweep */
+/*.ambient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px 300px at 20% 80%, #5bd4ff0f 0%, transparent 70%), radial-gradient(800px 500px at 80% 15%, #9b6dff10 0%, transparent 70%), radial-gradient(500px 400px at 50% 50%, #46f7a80b 0%, transparent 70%);
+    filter: saturate(110%);
+    animation: ambientPulse var(--pulse) ease-in-out infinite;
+}
+
+@keyframes ambientPulse {
+    0%,100% {
+        opacity: .55;
+        transform: translate3d(0,0,0)
+    }
+
+    50% {
+        opacity: .8;
+        transform: translate3d(0,-0.6vh,0)
+    }
+}*/
+
+/* Stars */
+/*.stars, .stars2 {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(1px 1px at 10% 20%, #bfe7ff 0 60%, transparent 61%), radial-gradient(1px 1px at 30% 15%, #c9c1ff 0 60%, transparent 61%), radial-gradient(1px 1px at 55% 10%, #d7fff5 0 60%, transparent 61%), radial-gradient(1px 1px at 80% 22%, #ffe9bf 0 60%, transparent 61%), radial-gradient(1px 1px at 20% 70%, #bfe7ff 0 60%, transparent 61%), radial-gradient(1px 1px at 65% 75%, #c9c1ff 0 60%, transparent 61%);
+    opacity: .35;
+    animation: driftA 42s linear infinite;
+}
+
+.stars2 {
+    opacity: .25;
+    filter: blur(0.5px);
+    animation: driftB 60s linear infinite;
+}
+
+@keyframes driftA {
+    from {
+        transform: translateX(0)
+    }
+
+    to {
+        transform: translateX(-2vw)
+    }
+}
+
+@keyframes driftB {
+    from {
+        transform: translateX(0)
+    }
+
+    to {
+        transform: translateX(2vw)
+    }
+}*/
+
+/* City skyline */
+/*.city {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 20vh;
+    height: 42vh;
+    background: linear-gradient(to top, #0c1529 0%, #0a1224 40%, transparent 41%), repeating-linear-gradient(90deg, transparent 0 20px, #0f1a33 21px 22px);
+    clip-path: polygon(0% 100%, 0% 68%, 5% 66%, 8% 62%, 12% 65%, 18% 60%, 24% 62%, 32% 58%, 38% 61%, 45% 55%, 52% 60%, 60% 56%, 67% 59%, 74% 53%, 80% 58%, 88% 55%, 94% 57%, 100% 54%, 100% 100%);
+    filter: drop-shadow(0 -6px 30px #5bd4ff1a);
+}*/
+/* City windows shimmer */
+/*.windows {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, transparent 0 26px, #1b2748 27px 28px), repeating-linear-gradient(180deg, transparent 0 10px, #162143 11px 11.7px);
+    mask: linear-gradient(#000 60%, transparent 100%);
+    opacity: .9;
+}
+
+    .windows::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(90deg, #ffd86b 0 2px, transparent 2px 20px), repeating-linear-gradient(180deg, #a3ffcf 0 2px, transparent 2px 14px);
+        mix-blend-mode: screen;
+        opacity: .12;
+        animation: cityGlow 7s ease-in-out infinite;
+    }
+
+@keyframes cityGlow {
+    0%,100% {
+        opacity: .10;
+        transform: translateY(0)
+    }
+
+    50% {
+        opacity: .18;
+        transform: translateY(-0.5vh)
+    }
+}*/
+
+/* Desk */
+/*.desk {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 20vh;
+    background: linear-gradient(to bottom, var(--desk), #121a2a);
+    box-shadow: 0 -10px 25px #0007 inset;
+}*/
+
+/* Monitors */
+/*.rig {
+    position: absolute;
+    left: 50%;
+    bottom: 20vh;
+    transform: translateX(-50%);
+    width: min(1100px, 88vw);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.2vw;
+    align-items: end;
+}
+
+.monitor {
+    height: min(40vh, 420px);
+    background: linear-gradient(180deg, #0a1330 0%, var(--monitor) 100%);
+    border-radius: 18px;
+    box-shadow: 0 0 40px var(--monitor-glow), 0 20px 60px #0008;
+    position: relative;
+    overflow: hidden;
+}*/
+    /* Scanline sweep */
+    /*.monitor::after {
+        content: "";
+        position: absolute;
+        left: -20%;
+        top: 0;
+        bottom: 0;
+        width: 40%;
+        background: linear-gradient(90deg, transparent, #7ed9ff08 40%, #7ed9ff12 50%, #7ed9ff08 60%, transparent);
+        animation: scan var(--scan) linear infinite;
+    }
+
+@keyframes scan {
+    0% {
+        transform: translateX(0)
+    }
+
+    100% {
+        transform: translateX(160%)
+    }
+}*/
+
+/* Code lines */
+/*.code {
+    position: absolute;
+    inset: 20px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: clamp(12px, 1.6vw, 15px);
+    line-height: 1.55;
+    color: #bfe7ff;
+}
+
+.line {
+    display: block;
+    margin: 2px 0;
+    opacity: .85;
+}
+
+    .line:nth-child(odd) {
+        color: #85ffc7
+    }
+
+    .line:nth-child(4n) {
+        color: #ffc6ff
+    }
+
+    .line:nth-child(5n) {
+        color: #ffd86b
+    }*/
+
+/* Subtle shimmer on code */
+/*.code {
+    background: linear-gradient(90deg, transparent 0%, #ffffff06 40%, transparent 60%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shimmer var(--code) ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%,100% {
+        background-position: 120% 0
+    }
+
+    50% {
+        background-position: -20% 0
+    }
+}*/
+
+/* Character silhouette (simple, geometric) */
+/*.char {
+    position: absolute;
+    left: 50%;
+    bottom: calc(20vh + 42vh - 12vh);
+    transform: translateX(-50%);
+    width: min(320px, 40vw);
+    height: min(340px, 42vw);
+}
+
+    .char .torso {
+        position: absolute;
+        left: 50%;
+        top: 38%;
+        transform: translateX(-50%);
+        width: 66%;
+        height: 40%;
+        background: radial-gradient(120px 80px at 50% 0%, #133566, var(--sweater));
+        border-radius: 28px 28px 22px 22px;
+        box-shadow: 0 -6px 20px #4cc3ff22 inset;
+    }
+
+    .char .collar {
+        position: absolute;
+        left: 50%;
+        top: 34%;
+        transform: translateX(-50%);
+        width: 40%;
+        height: 8%;
+        background: linear-gradient(#c8d3e8, var(--shirt));
+        border-radius: 12px;
+    }
+
+    .char .arms {
+        position: absolute;
+        left: 50%;
+        top: 48%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 20%;
+    }
+
+.arm {
+    position: absolute;
+    width: 46%;
+    height: 100%;
+    background: linear-gradient(180deg, #0f2e5e, #0a224a);
+    border-radius: 22px;
+    box-shadow: 0 6px 10px #0006;
+}
+
+    .arm.left {
+        left: 0;
+        transform: rotate(-4deg) translateY(1px)
+    }
+
+    .arm.right {
+        right: 0;
+        transform: rotate(4deg) translateY(0)
+    }
+
+.char .head {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, 0);
+    width: 44%;
+    aspect-ratio: 1 / 1.08;
+    background: radial-gradient(90px 60px at 50% 35%, #ffd9c2, var(--skin));
+    border-radius: 48% 48% 44% 44%;
+    box-shadow: 0 -8px 20px #ffefdb14 inset;
+}
+
+.char .glasses {
+    position: absolute;
+    left: 50%;
+    top: 22%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 10%;
+    border: 2px solid var(--glasses);
+    border-radius: 22px;
+    box-shadow: 0 0 18px #9bd0ff22;
+}
+
+.char .watch {
+    position: absolute;
+    left: 20%;
+    top: 58%;
+    width: 12%;
+    height: 6%;
+    background: linear-gradient(#0b1324, var(--watch));
+    border-radius: 9px;
+}*/
+
+/* Mug */
+/*.mug {
+    position: absolute;
+    left: calc(50% + 26vw);
+    bottom: 8.5vh;
+    width: min(160px, 18vw);
+    height: min(120px, 12vw);
+    background: linear-gradient(180deg, #3b89ff, var(--mug));
+    border-radius: 14px;
+    box-shadow: 0 12px 26px #0009, 0 0 26px #5bd4ff33;
+}
+
+    .mug::before {
+        content: "";
+        position: absolute;
+        right: -16%;
+        top: 26%;
+        width: 26%;
+        height: 44%;
+        border: 8px solid var(--mug);
+        border-left: 10px solid transparent;
+        border-radius: 50%;
+        box-shadow: 0 0 12px #5bd4ff44 inset;
+    }
+
+    .mug .label {
+        position: absolute;
+        inset: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 6px;
+        color: var(--mug-text);
+        font-weight: 700;
+        letter-spacing: .02em;
+        font-size: clamp(10px, 1.1vw, 14px);
+        line-height: 1.2;
+        text-shadow: 0 2px 10px #0007;
+    }*/
+
+/* Steam (gentle, subtle) */
+/*.steam {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(8.5vh + min(120px, 12vw) + 6px);
+    width: min(120px, 14vw);
+    height: 80px;
+    pointer-events: none;
+}
+
+    .steam span {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, #cfe9ff55, #cfe9ff00);
+        animation: rise var(--steam) ease-in-out infinite;
+        filter: blur(1px);
+    }
+
+        .steam span:nth-child(1) {
+            transform: translateX(-60%);
+            animation-delay: 0s
+        }
+
+        .steam span:nth-child(2) {
+            transform: translateX(-20%);
+            animation-delay: .8s
+        }
+
+        .steam span:nth-child(3) {
+            transform: translateX(25%);
+            animation-delay: 1.6s
+        }
+
+@keyframes rise {
+    0% {
+        opacity: 0;
+        transform: translateY(16px) scale(.8)
+    }
+
+    20% {
+        opacity: .45
+    }
+
+    60% {
+        opacity: .35
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-60px) scale(1.1)
+    }
+}*/
+
+/* Subtle overall parallax on hover */
+/*.scene:hover .rig {
+    transform: translateX(-50%) translateY(-0.6vh)
+}
+
+.scene:hover .city {
+    transform: translateY(-0.4vh)
+}
+
+.scene:hover .mug {
+    transform: translateY(-0.4vh)
+}*/
 
 
 

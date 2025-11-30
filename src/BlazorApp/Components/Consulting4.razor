@@ -10,23 +10,23 @@
         <MudLink Href="#contact" Class="mx-3">Contact</MudLink>
     </MudAppBar>
  *@
-    <MudMainContent Class="hero-cartoon">
-        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-            <MudGrid Class="pt-12 pb-8" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                <MudItem xs="12" md="6">
-                    <MudText Typo="Typo.h2" Class="mb-3 text-white fw-700">
-                        Technology Made Simple for Small Business
-                    </MudText>
-                    <MudText Typo="Typo.subtitle1" Class="mb-6 text-muted">
-                        We take the stress out of IT so you can focus on running and growing your business.
-                        Affordable, reliable solutions—tailored to fit your needs.
-                    </MudText>
-                    <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large">
-                        Get Your Free Consultation
-                    </MudButton>
-                </MudItem>
+<MudMainContent Class="hero-cartoon">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+        <MudGrid Class="pt-12 pb-8" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+            <MudItem xs="12" md="6">
+                <MudText Typo="Typo.h2" Class="mb-3 text-white fw-700">
+                    Technology Made Simple for Small Business
+                </MudText>
+                <MudText Typo="Typo.subtitle1" Class="mb-6 text-muted">
+                    We take the stress out of IT so you can focus on running and growing your business.
+                    Affordable, reliable solutions—tailored to fit your needs.
+                </MudText>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large">
+                    Get Your Free Consultation
+                </MudButton>
+            </MudItem>
 
-                <MudItem xs="12" md="6">
+            @* <MudItem xs="12" md="6">
                     <div class="cartoon-doug">
                         <div class="monitors">
                             <div class="monitor"><div class="line"></div><div class="line"></div><div class="line"></div></div>
@@ -45,8 +45,13 @@
                         <div class="icon gear"></div>
                         <div class="icon shield"></div>
                     </div>
-                </MudItem>
-            </MudGrid>
-        </MudContainer>
-    </MudMainContent>
+                </MudItem> *@
+            <MudItem xs="12" md="6">
+                @* <DougCartoon /> *@
+                @* <DougCartoon2 /> *@
+                <MudImage Src="images/DougCartoon4.png" Alt="Tech Guru Illustration" Width="200" />
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</MudMainContent>
 @* </MudLayout> *@

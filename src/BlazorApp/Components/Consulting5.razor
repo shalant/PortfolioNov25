@@ -1,0 +1,164 @@
+@page "/consulting5"
+
+<MudPaper Class="hero-container" Elevation="3">
+    <MudGrid>
+        <!-- Navigation -->
+        <MudItem xs="12" Class="hero-nav">
+            <span>Services</span>
+            <span>About</span>
+            <span>Contact</span>
+        </MudItem>
+
+        <!-- Headline -->
+        <MudItem xs="12" Class="hero-header">
+            <h1>Your Friendly Neighborhood Tech Team</h1>
+            <p>
+                We make technology easy, affordable, and stress-free for small businesses.<br />
+                Think of us as your IT sidekicks—always ready to help.
+            </p>
+        </MudItem>
+
+        <!-- Portrait + Laptop -->
+        <MudItem xs="12" Class="hero-body">
+            <div class="hero-portrait">
+                <div class="head"></div>
+                <div class="glasses"></div>
+                <div class="beard"></div>
+                <div class="sweater"></div>
+            </div>
+            <div class="hero-laptop">
+                <div class="screen">😊</div>
+                <div class="plant"></div>
+            </div>
+        </MudItem>
+
+        <!-- CTA Button -->
+        <MudItem xs="12" Class="hero-cta">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="cta-button">
+                Let's Fix Your Tech Together
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<style>
+    .hero-container {
+        background-color: #0f0f1f;
+        color: #f0e6d2;
+        padding: 2rem;
+        font-family: 'Futura', 'Segoe UI', sans-serif;
+        text-align: center;
+        border: 4px solid #c0a060;
+        border-radius: 12px;
+    }
+
+    .hero-nav {
+        display: flex;
+        justify-content: flex-end;
+        gap: 2rem;
+        font-weight: bold;
+        color: #c0a060;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-header h1 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        letter-spacing: 0.1em;
+        color: #c0a060;
+        margin-bottom: 0.5rem;
+    }
+
+    .hero-header p {
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 0 auto;
+        color: #eaeaea;
+    }
+
+    .hero-body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 3rem;
+        margin-top: 2rem;
+    }
+
+    .hero-portrait {
+        position: relative;
+        width: 120px;
+        height: 180px;
+    }
+
+    .head {
+        width: 80px;
+        height: 80px;
+        background: #d9c2a3;
+        border-radius: 50%;
+        margin: 0 auto;
+        border: 3px solid #c0a060;
+    }
+
+    .glasses {
+        width: 60px;
+        height: 20px;
+        border: 2px solid #c0a060;
+        border-radius: 10px;
+        margin: 0.5rem auto;
+    }
+
+    .beard {
+        width: 60px;
+        height: 20px;
+        background: #5a3e2b;
+        border-radius: 10px;
+        margin: 0 auto;
+    }
+
+    .sweater {
+        width: 100px;
+        height: 60px;
+        background: #0c2b5f;
+        border: 3px solid #c0a060;
+        margin: 1rem auto;
+    }
+
+    .hero-laptop {
+        width: 120px;
+        height: 80px;
+        background: #1a1a2f;
+        border: 3px solid #c0a060;
+        position: relative;
+        border-radius: 8px;
+    }
+
+    .screen {
+        font-size: 2rem;
+        color: #c0a060;
+        padding-top: 1rem;
+    }
+
+    .plant {
+        position: absolute;
+        bottom: -10px;
+        left: -20px;
+        width: 20px;
+        height: 30px;
+        background: #46f7a8;
+        border-radius: 50% 50% 0 0;
+    }
+
+    .hero-cta {
+        margin-top: 2rem;
+    }
+
+    .cta-button {
+        font-weight: bold;
+        letter-spacing: 0.05em;
+        background-color: #c0a060;
+        color: #0f0f1f;
+        border-radius: 6px;
+    }
+</style>
