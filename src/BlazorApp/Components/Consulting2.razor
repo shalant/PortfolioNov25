@@ -1,10 +1,11 @@
 @page "/consulting2"
 
+@inject IDialogService DialogService
 @using MudBlazor
 
 <MudLayout>
     <MudAppBar Elevation="0" Color="Color.Primary">
-        <MudText Typo="Typo.h6">Your Friendly Neighborhood Tech Team</MudText>
+        <MudText Typo="Typo.h6">Doug Rosenberg Dev: Your Friendly Neighborhood Tech Team</MudText>
         <MudSpacer />
         <MudLink Href="#services" Class="mx-3">Services</MudLink>
         <MudLink Href="#about" Class="mx-3">About</MudLink>
@@ -23,7 +24,7 @@
                         Affordable, reliable solutions—tailored to fit your needs.
                     </MudText>
                     <MudStack Direction="Row" Spacing="2">
-                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large">
+                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" OnClick="OpenDialog">
                             Get Your Free Consultation
                         </MudButton>
                         <MudButton Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Large">
@@ -34,14 +35,14 @@
 
                 <MudItem xs="12" md="6" Class="illustration-wrap">
                     <div class="desk-setup">
-                        <div class="doug-avatar">
+                        @* <div class="doug-avatar">
                             <div class="head"></div>
                             <div class="glasses"></div>
                             <div class="beard"></div>
                             <div class="torso"></div>
                             <div class="watch"></div>
-                        </div>
-
+                        </div> *@
+                        <img Src="/images/DougCartoon4.png" height="200"/>
                         <div class="monitor monitor-left">
                             <div class="code-line"></div>
                             <div class="code-line"></div>
@@ -62,15 +63,29 @@
                         <div class="floating-icon lock"></div>
                         <div class="floating-icon gear"></div>
 
-                        <div class="mug">
+                        @* <div class="mug">
                             <span>I TURN COFFEE INTO CODE</span>
-                        </div>
+                        </div> *@
                     </div>
                 </MudItem>
             </MudGrid>
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
+
+
+@code{
+    
+    private bool _openDialog { get; set; }
+
+    private Task OpenDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        return DialogService.ShowAsync<ContactDialog>("Simple Dialog", options);
+    }
+}
 
 <style>
     :root {
