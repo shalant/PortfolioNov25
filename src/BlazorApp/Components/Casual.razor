@@ -33,6 +33,9 @@
 </section>
 
 @code {
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
     [Parameter, EditorRequired]
     public required HttpClient Http { get; set; }
 
@@ -44,8 +47,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        casual = await Http.GetFromJsonAsync<CasualModel>("sample-data/casual.json");
-        hero = await HeroImageService.GetHeroAsync(img => img.Name is "casual");
+        try
+        {
+            casual = await Http.GetFromJsonAsync<CasualModel>("sample-data/casual.json");
+            hero = await HeroImageService.GetHeroAsync(img => img.Name is "casual");
 
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessageBox("Error", ex.Message);
+        }
+        
     }
 }

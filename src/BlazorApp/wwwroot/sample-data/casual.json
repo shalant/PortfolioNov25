@@ -1,11 +1,10 @@
 {
   "description": "In my free time, I'm a devoted father of two. My kids are very very awesome. I like to...",
+  "detailOrQuote": "",
   "hobbies": [
     "Cycling",
     "Cooking",
     "Park district badminton league",
-    "Legos",
-    
-  ],
-  "detailOrQuote": ""
+    "Legos"
+  ]
 }
