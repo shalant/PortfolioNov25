@@ -5,15 +5,15 @@
     }
     @* <div style="position: absolute; top: 30%; left: 2rem;"> *@
     <div class="home__container">
-        @if (consulting is null)
+        @if (ConsultingData is null)
         {
             <p><em>Loading...</em></p>
         }
         else
         {
-            <h1 class="my-2">@consulting.Overview</h1>
+            <h1 class="my-2">@ConsultingData.Overview</h1>
             <ul>
-                @foreach(var item in consulting.Topics.Split(","))
+                @foreach (var item in ConsultingData.Topics.Split(","))
                 {
                     <li>@item</li>
                 }
@@ -29,12 +29,12 @@
     [Parameter, EditorRequired]
     public required HeroImageService HeroImageService { get; set; }
 
-    private ConsultingModel? consulting;
+    public ConsultingModel? ConsultingData;
     private HeroImage? hero;
 
     protected override async Task OnInitializedAsync()
     {
-        consulting = await Http.GetFromJsonAsync<ConsultingModel>("sample-data/consulting.json");
+        ConsultingData = await Http.GetFromJsonAsync<ConsultingModel>("sample-data/consulting.json");
         hero = await HeroImageService.GetHeroAsync(img => img.Name is "consulting");
     }
 }
