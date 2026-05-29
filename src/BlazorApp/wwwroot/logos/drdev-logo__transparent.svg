@@ -1,0 +1,49 @@
+<svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">dr codeworks logo</title>
+  <desc id="desc">Hexagon with dr and codeworks wordmark</desc>
+
+  <!-- Transparent background (implicit, no rect fill) -->
+
+  <!-- Drop shadow -->
+  <defs>
+    <linearGradient id="hexGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2C3E50" />
+      <stop offset="100%" stop-color="#1ABC9C" />
+    </linearGradient>
+
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(0,0,0,0.25)" />
+    </filter>
+  </defs>
+
+  <!-- Hexagon -->
+  <g filter="url(#shadow)" transform="translate(20,20)">
+    <polygon
+      points="40,0 80,23 80,69 40,92 0,69 0,23"
+      fill="url(#hexGradient)"
+    />
+    <!-- dr -->
+    <text
+      x="40"
+      y="50"
+      text-anchor="middle"
+      dominant-baseline="middle"
+      fill="#FFFFFF"
+      font-family="Montserrat, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      font-size="30"
+      font-weight="600">
+      dr
+    </text>
+  </g>
+
+  <!-- codeworks wordmark -->
+  <text
+    x="115"
+    y="76"
+    fill="#2C3E50"
+    font-family="Montserrat, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    font-size="32"
+    font-weight="500">
+    codeworks
+  </text>
+</svg>

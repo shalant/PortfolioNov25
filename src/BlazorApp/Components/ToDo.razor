@@ -60,20 +60,3 @@
         public bool Completed { get; set; }
     }
 }
-
-<style>
-    :global(.todo-container) {
-        animation: slideIn 0.5s ease-out;
-    }
-
-    @@keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>
