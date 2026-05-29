@@ -21,6 +21,7 @@
   --charcoal: #0f1620;
 }
 
+
 /* ============================================================================
    2. GLOBAL STYLES
    ============================================================================ */
@@ -259,7 +260,7 @@ a:hover {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: linear-gradient(135deg, rgba(44, 62, 80, 0.92) 0%, rgba(26, 176, 156, 0.15) 100%);
+  background: linear-gradient(235deg, rgba(44, 62, 80, 0.92) 0%, rgba(26, 176, 156, 0.15) 100%);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(26, 176, 156, 0.15);
