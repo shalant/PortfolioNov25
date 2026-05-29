@@ -1,17 +1,23 @@
-<section class="light" id="todo" >
-    <h2>To Do</h2>
+<section class="light" id="todo">
+    <h2 class="mt-5">To Do</h2>
 
- <ul>
-    <li>Reporting</li>
-    <li>Dashboards</li>
-    <li>Design</li>
-    <li>Leadership</li>
-    <li>Backend</li>
-    <li>Consulting</li>
-    <li>Website Design</li>
-    <li>Portfolio</li>
-</ul>
-
+    <div class="todo-container">
+        <ul class="todo-list">
+            @foreach (var item in todoItems)
+            {
+                <li class="todo-item" @key="item.Id">
+                    <input type="checkbox"
+                           id="todo-@item.Id"
+                           class="todo-checkbox"
+                           @onchange="@((ChangeEventArgs e) => ToggleTodo(item.Id, (bool)e.Value!))"
+                           checked="@item.Completed" />
+                    <label for="todo-@item.Id" class="todo-label @(item.Completed ? "completed" : "")">
+                        @item.Title
+                    </label>
+                </li>
+            }
+        </ul>
+    </div>
 </section>
 
 @code {
@@ -21,12 +27,53 @@
     [Parameter, EditorRequired]
     public required HeroImageService HeroImageService { get; set; }
 
-    private List<Project>? projects;
-    private HeroImage? hero;
+    private List<TodoItem> todoItems = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        projects = await Http.GetFromJsonAsync<List<Project>>("sample-data/projects.json");
-        // hero = await HeroImageService.GetHeroAsync(img => img.Name is "technical skills");
+        todoItems = new List<TodoItem>
+        {
+            new TodoItem { Id = 1, Title = "Reporting", Completed = false },
+            new TodoItem { Id = 2, Title = "Dashboards", Completed = false },
+            new TodoItem { Id = 3, Title = "Design", Completed = false },
+            new TodoItem { Id = 4, Title = "Leadership", Completed = false },
+            new TodoItem { Id = 5, Title = "Backend", Completed = false },
+            new TodoItem { Id = 6, Title = "Consulting", Completed = false },
+            new TodoItem { Id = 7, Title = "Website Design", Completed = false },
+            new TodoItem { Id = 8, Title = "Portfolio", Completed = false }
+        };
+    }
+
+    private void ToggleTodo(int id, bool completed)
+    {
+        var item = todoItems.FirstOrDefault(x => x.Id == id);
+        if (item != null)
+        {
+            item.Completed = completed;
+        }
+    }
+
+    private class TodoItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public bool Completed { get; set; }
     }
 }
+
+<style>
+    :global(.todo-container) {
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
