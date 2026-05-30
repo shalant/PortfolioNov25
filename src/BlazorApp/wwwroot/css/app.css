@@ -1078,3 +1078,82 @@ img.social-icon {
   animation-name: rotateOut;
   animation-fill-mode: forwards;
 }
+
+/* ============================================================================
+   12. ARCHIVE PAGE (PREVIOUS PORTFOLIO)
+   ============================================================================ */
+
+.archive-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #2c3e50 0%, #1a2635 100%);
+  padding: 40px 20px;
+}
+
+.archive-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 40px;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.archive-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.archive-subtitle {
+  font-size: 1.1rem;
+  color: #b0c4de;
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  display: inline-block;
+  padding: 10px 20px;
+  background: rgba(26, 188, 156, 0.1);
+  border: 1px solid #1abc9c;
+  color: #1abc9c;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+  background: rgba(26, 188, 156, 0.2);
+  transform: translateX(-5px);
+}
+
+.archive-frame {
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.archive-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  min-height: 600px;
+}
+
+@media (max-width: 768px) {
+  .archive-container {
+    padding: 20px 10px;
+  }
+
+  .archive-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .archive-frame iframe {
+    min-height: 400px;
+  }
+}
