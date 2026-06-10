@@ -1,107 +1,73 @@
 <header class="navbar-wrapper" id="navbar">
     <div class="navbar-content">
-        <!-- Logo Section (Left) -->
         <div class="logo-section">
-            <a href="#home">
+            <a href="/">
                 <img src="logos/drdev-logo__transparent.svg" alt="DR Codeworks" title="DR Codeworks" />
             </a>
         </div>
 
-        <!-- Navigation Items (Right) -->
         <nav>
             <ul class="nav-items" id="navItems">
-                <li>
-                    <a class="nav-link active" href="#home">Home</a>
-                </li>
-                <li>
-                    <a class="nav-link" href="#about">About</a>
-                </li>
-                <li>
-                    <a class="nav-link" href="#experience">Experience</a>
-                </li>
-                <li class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        More
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#technicalskills">Technical Skills</a></li>
-                        <li><a class="dropdown-item" href="#casual">Casual</a></li>
-                        <li><a class="dropdown-item" href="#consulting">Consulting</a></li>
-                        <li><a class="dropdown-item" href="#webdesign">Web Design</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/archive">Previous Portfolio</a></li>
-                    </ul>
-                </li>
+                <li><a class="nav-link" href="/#about">about</a></li>
+                <li><a class="nav-link" href="/#experience">experience</a></li>
+                <li><a class="nav-link" href="/#arborkin">arborkin</a></li>
+                <li><a class="nav-link" href="/#technicalskills">skills</a></li>
+                <li><a class="nav-link nav-link--page" href="/consulting">consulting</a></li>
+                <li><a class="nav-link nav-link--page" href="/webdesign">web design</a></li>
+                <li><a class="nav-link nav-link--archive" href="/archive">archive ↗</a></li>
             </ul>
         </nav>
 
-        <!-- Mobile Toggle -->
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+        </button>
     </div>
 </header>
 
 @code {
     protected override void OnAfterRender(bool firstRender)
     {
-        if (firstRender)
-        {
-            InitializeNavbar();
-        }
+        if (firstRender) InitializeNavbar();
     }
 
-    private void InitializeNavbar()
-    {
-        // This will be called after render
-    }
+    private void InitializeNavbar() { }
 }
 
 <script suppress-error="BL9992">
-    document.addEventListener('DOMContentLoaded', function() {
-        const navbar = document.getElementById('navbar');
+    (function () {
+        const navbar  = document.getElementById('navbar');
         const navItems = document.getElementById('navItems');
         const navToggle = document.getElementById('navToggle');
 
-        // Scroll listener
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar?.classList.add('scrolled');
-            } else {
-                navbar?.classList.remove('scrolled');
-            }
+            navbar?.classList.toggle('scrolled', window.scrollY > 50);
         }, { passive: true });
 
-        // Mobile menu toggle
         if (navToggle) {
             navToggle.addEventListener('click', () => {
-                navItems?.classList.toggle('active');
+                const open = navItems?.classList.toggle('active');
+                navToggle.classList.toggle('open', open);
             });
         }
 
-        // Close mobile menu when link is clicked
-        const navLinks = document.querySelectorAll('.nav-link, .dropdown-item');
-        navLinks.forEach(link => {
+        document.querySelectorAll('.nav-link, .nav-link--page, .nav-link--archive').forEach(link => {
             link.addEventListener('click', () => {
                 navItems?.classList.remove('active');
+                navToggle?.classList.remove('open');
             });
         });
 
-        // Update active nav link on scroll
         const sections = document.querySelectorAll('section[id]');
         window.addEventListener('scroll', () => {
             let current = '';
             sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (window.scrollY >= sectionTop - 200) {
-                    current = section.getAttribute('id');
-                }
+                if (window.scrollY >= section.offsetTop - 200) current = section.id;
             });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const href = link.getAttribute('href') ?? '';
+                const match = href === '#' + current || href === '/#' + current;
+                link.classList.toggle('active', match);
             });
         }, { passive: true });
-    });
+    })();
 </script>

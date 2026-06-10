@@ -1,4 +1,5 @@
 {
-  "overview": "test",
-  "topics": "test"
+  "headline": "UI/UX Design & Web Development",
+  "subheadline": "Design-led development from wireframe to production. Specializing in Blazor, Angular, and modern frontend systems backed by real UX thinking.",
+  "tools": [ "Figma", "Blazor", "Angular", "Bootstrap", "CSS / Animations", "MudBlazor", "Syncfusion", "DevExpress" ]
 }

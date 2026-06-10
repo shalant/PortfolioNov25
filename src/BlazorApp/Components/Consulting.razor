@@ -11,11 +11,12 @@
         }
         else
         {
-            <h1 class="my-2">@ConsultingData.Overview</h1>
+            <h1 class="my-2">@ConsultingData.Headline</h1>
+            <p>@ConsultingData.Subheadline</p>
             <ul>
-                @foreach (var item in ConsultingData.Topics.Split(","))
+                @foreach (var svc in ConsultingData.Services)
                 {
-                    <li>@item</li>
+                    <li>@svc.Title</li>
                 }
             </ul>
         }

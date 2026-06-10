@@ -1,26 +1,39 @@
-<section class="dark" id="home">
-    @if (hero is not null)
-    {
-        <img class="background2" style="animation: 1s ease-out 0s 1 slideOutRight " src="@(hero.Src)" alt="@(hero.Alt)" />
-        <img class="background" style="animation: 1s ease-out 0s 1 slideInLeft, 1.5s ease-in-out 0s 1 unBlur " src="@(hero.Src)" alt="@(hero.Alt)" />
-    }
-    @* <div style="position: absolute; top: 30%; left: 2rem;"> *@
-    <div class="home__container">
-    @if (property is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <h1 class="my-2">@property.Name</h1>
-        <h2 class="my-2">@property.Title</h2>
-    }
+<section class="hero-section" id="home">
+    <div class="hero-grid-bg"></div>
+
+    <div class="hero-content">
+        <div class="hero-text">
+            <span class="hero-eyebrow">// software engineer</span>
+            @if (property is null)
+            {
+                <h1 class="hero-name">&nbsp;</h1>
+            }
+            else
+            {
+                <h1 class="hero-name">@property.Name</h1>
+            }
+            <div class="hero-divider"></div>
+            @if (property is not null)
+            {
+                <p class="hero-subtitle">@property.Title</p>
+            }
+            <div class="hero-cta">
+                <a href="#experience" class="hero-btn hero-btn--primary" target="_top">View Work</a>
+                <a href="#about" class="hero-btn hero-btn--ghost" target="_top">About Me</a>
+            </div>
+        </div>
+
+        <div class="hero-portrait">
+            @if (hero is not null)
+            {
+                <img src="@hero.Src" alt="@hero.Alt" class="hero-portrait__img" />
+            }
+        </div>
     </div>
-    <div style="position: absolute; bottom: 8rem; left: 50%;">
-        <a href="#about" target="_top">
-            <img src="images/down-arrow.svg" style="height: 3rem; width: 3rem;" alt="scroll down" />
-        </a>
-    </div>
+
+    <a href="#about" class="hero-scroll" target="_top" aria-label="Scroll down">
+        <img src="images/down-arrow.svg" alt="scroll down" />
+    </a>
 </section>
 
 @code {

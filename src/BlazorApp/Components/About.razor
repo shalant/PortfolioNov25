@@ -1,27 +1,33 @@
-<section class="light" id="about">
-    @if (hero is not null)
-    {
-        <img class="background" src="@(hero.Src)" alt="@(hero.Alt)" />
-    }
-    <h2>About Myself</h2>
-    <div style="background-color: rgba(250,250,250,0.7); width: 65%; padding: 4rem; margin: 3rem auto; text-align: center;box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
-    @if (aboutMe is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <p class="large">@aboutMe.Description</p>
-        <hr />
-        <ul style="text-align: left; columns: 2; font-size: 1.25rem; margin: 2rem 3rem; gap: 3rem;">
-        @foreach (var skill in aboutMe.Skills)
+<section class="about-section" id="about">
+    <div class="about-container">
+        <div class="about-header">
+            <span class="section-eyebrow">// about me</span>
+            <h2 class="about-heading">Who I Am</h2>
+        </div>
+
+        @if (aboutMe is null)
         {
-            <li key="@skill">@skill</li>
+            <p><em>Loading...</em></p>
         }
-        </ul>
-        <hr />
-        <p style="padding: 1rem 3rem 0;">@aboutMe.DetailOrQuote</p>
-    }
+        else
+        {
+            <div class="about-body">
+                <div class="about-bio">
+                    <p class="about-description">@aboutMe.Description</p>
+                </div>
+                <div class="about-skills">
+                    <p class="about-skills__label">Core Stack</p>
+                    <ul class="about-skills__list">
+                        @foreach (var skill in aboutMe.Skills)
+                        {
+                            <li class="about-skill-chip">@skill</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <blockquote class="about-quote">@aboutMe.DetailOrQuote</blockquote>
+        }
     </div>
 </section>
 
@@ -39,6 +45,5 @@
     {
         aboutMe = await Http.GetFromJsonAsync<AboutMe>("sample-data/aboutme.json");
         hero = await HeroImageService.GetHeroAsync(img => img.Name is "about");
-
     }
 }

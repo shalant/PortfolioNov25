@@ -1,11 +1,69 @@
 @page "/consulting"
-
 @inject HttpClient Http
-@inject HeroImageService HeroImageService
 
-@* <Consulting2 Http=@Http HeroImageService=@HeroImageService /> *@
-<Consulting2 />
+<PageTitle>Consulting — Doug Rosenberg Dev</PageTitle>
+
+<Header />
+
+<section class="subpage-hero" id="consulting-hero">
+    <div class="subpage-hero__grid-bg"></div>
+    <div class="subpage-hero__content">
+        <div class="subpage-hero__text">
+            <span class="section-eyebrow">// consulting</span>
+            @if (consulting is null)
+            {
+                <h1 class="subpage-hero__title">Technology Made Simple</h1>
+                <p class="subpage-hero__sub">Loading...</p>
+            }
+            else
+            {
+                <h1 class="subpage-hero__title">@consulting.Headline</h1>
+                <p class="subpage-hero__sub">@consulting.Subheadline</p>
+                <a href="mailto:doug.rosenberg@gmail.com" class="hero-btn hero-btn--primary">
+                    @consulting.Cta
+                </a>
+            }
+        </div>
+        <div class="subpage-hero__img">
+            <img src="images/DrComputerConsultant2.png" alt="Doug Rosenberg — IT Consultant" />
+        </div>
+    </div>
+</section>
+
+@if (consulting is not null)
+{
+    <section class="consulting-services">
+        <div class="consulting-services__container">
+            <span class="section-eyebrow">// services</span>
+            <h2 class="consulting-services__heading">What I Can Do For You</h2>
+            <div class="consulting-services__grid">
+                @foreach (var svc in consulting.Services)
+                {
+                    <div class="consulting-service-card">
+                        <span class="consulting-service-card__icon">@svc.Icon</span>
+                        <h3>@svc.Title</h3>
+                        <p>@svc.Description</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="consulting-cta">
+        <div class="consulting-cta__container">
+            <p class="consulting-cta__tagline">@consulting.Tagline</p>
+            <a href="mailto:doug.rosenberg@gmail.com" class="hero-btn hero-btn--primary">
+                @consulting.Cta
+            </a>
+        </div>
+    </section>
+}
 
 @code {
+    private ConsultingModel? consulting;
 
+    protected override async Task OnInitializedAsync()
+    {
+        consulting = await Http.GetFromJsonAsync<ConsultingModel>("sample-data/consulting.json");
+    }
 }

@@ -1,10 +1,59 @@
 @page "/webdesign"
-
 @inject HttpClient Http
-@inject HeroImageService HeroImageService
 
-<WebDesign Http=@Http HeroImageService=@HeroImageService />
+<PageTitle>Web Design — Doug Rosenberg Dev</PageTitle>
+
+<Header />
+
+<section class="subpage-hero" id="webdesign-hero">
+    <div class="subpage-hero__grid-bg"></div>
+    <div class="subpage-hero__content subpage-hero__content--centered">
+        <span class="section-eyebrow">// web design</span>
+        @if (webDesign is null)
+        {
+            <h1 class="subpage-hero__title subpage-hero__title--centered">UI/UX Design</h1>
+        }
+        else
+        {
+            <h1 class="subpage-hero__title subpage-hero__title--centered">@webDesign.Headline</h1>
+            <p class="subpage-hero__sub subpage-hero__sub--centered">@webDesign.Subheadline</p>
+        }
+    </div>
+</section>
+
+@if (webDesign is not null)
+{
+    <section class="webdesign-tools">
+        <div class="webdesign-tools__container">
+            <span class="section-eyebrow">// toolkit</span>
+            <h2 class="webdesign-tools__heading">Tools &amp; Frameworks</h2>
+            <div class="webdesign-tools__chips">
+                @foreach (var tool in webDesign.Tools)
+                {
+                    <span class="about-skill-chip">@tool</span>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="webdesign-projects">
+        <div class="webdesign-projects__container">
+            <span class="section-eyebrow">// portfolio</span>
+            <h2 class="webdesign-projects__heading">Selected Work</h2>
+            <p class="webdesign-projects__note">
+                Case studies and screenshots coming soon. In the meantime,
+                <a href="/#arborkin" class="webdesign-link">see the ArborKin project</a> for a
+                detailed breakdown of a recent full-stack build — including UI decisions.
+            </p>
+        </div>
+    </section>
+}
 
 @code {
+    private WebDesignModel? webDesign;
 
+    protected override async Task OnInitializedAsync()
+    {
+        webDesign = await Http.GetFromJsonAsync<WebDesignModel>("sample-data/webdesign.json");
+    }
 }
