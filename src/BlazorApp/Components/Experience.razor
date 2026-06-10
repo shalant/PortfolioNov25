@@ -1,70 +1,82 @@
-@* <div class="container custom-experience__container" id="experience"> *@
-<section class="" id="experience">
-    @if (hero is not null)
-    {
-        <img class="background" src="@(hero.Src)" alt="@(hero.Alt)" />
-    }
-    @* <div class="row"> *@
-    <h2 class="mt-5 text-info">Experience</h2>
-    @* </div>
-    <div class="row"> *@
-    @* <div class="portfolio-container"> *@
-    <div class="custom-carousel__container">
+<section class="experience-section" id="experience">
+    <div class="experience-container">
+
+        <div class="experience-header">
+            <span class="section-eyebrow">// experience</span>
+            <h2 class="experience-heading">Where I've Worked</h2>
+        </div>
+
         @if (experiences is null)
         {
-            <p><em>Loading...</em></p>
+            <p style="color: rgba(238,242,247,0.4); font-family: 'Courier New', monospace; font-size: 0.85rem;">
+                loading...
+            </p>
         }
         else
         {
-            @* <MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object"> *@
-            <MudCarousel Class="custom-carousel" Style="" ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" AutoCycle="@autocycle" TData="object">
-                @foreach (var experience in experiences)
-                {
-                    <MudCarouselItem Transition="transition">
-                        @* <MudCarouselItem Transition="Transition.Custom" CustomTransitionEnter="rotateIn" CustomTransitionExit="rotateOut"> *@
-                        @* <div class="custom-card" key="@experience.Title"> *@
-                        <div class="carousel-card" key="@experience.Title">
-                            <img src="@experience.Image" />
-                            @* <img src="/images/franciscan-frairs-logo-2023.jpg" style="width: 200px;"/> *@
-                            <a href="@experience.Url" target="_blank" rel="noopener noreferrer">
-                                <h3 style="flex-basis: 40px;">@experience.Title</h3>
-                            </a>
-                            @* <p class="small">@experience.Description</p> *@
-                            <ul>
-                                @foreach (var item in experience.Bulletpoints)
-                                {
-                                    <li class="carousel-card__li">@item</li>
-                                }
-                            </ul>
-                            @* <i class="@project.Icons"></i> *@
-                            <div class="d-flex">
-                                @* @if (!string.IsNullOrEmpty(project.Icons))
-                                    { *@
-                                @* @foreach (var chip in chips)
-                                    {
-                                        @* <MudChip T="string" >chip</MudChip>
-                                        <div class="custom-chip">@chip</div>
-                                    } *@
-                                @* @foreach (var icon in experience.Icons)
-                                {
-                                    <div class="custom-chip">@icon</div>
+            <div class="experience-layout">
 
-                                }
-                                } *@
-                                @foreach(var item in experience.Icons.Split(","))
-                                {
-                                    <div class="custom-chip">@item</div>
+                <div class="experience-list" role="tablist">
+                    @for (int i = 0; i < experiences.Count; i++)
+                    {
+                        var idx = i;
+                        var exp = experiences[i];
+                        <button class="experience-list__item @(idx == _activeIndex ? "active" : "")"
+                                role="tab"
+                                aria-selected="@(idx == _activeIndex)"
+                                @onclick="() => SetActive(idx)">
+                            <span class="experience-list__num">@((idx + 1).ToString("D2"))</span>
+                            <span class="experience-list__logo-wrap">
+                                <img src="@exp.Image" alt="" class="experience-list__logo" />
+                            </span>
+                            <span class="experience-list__title">@exp.Title</span>
+                        </button>
+                    }
+                </div>
 
-                                }
-                            </div>
+                <div class="experience-detail" role="tabpanel" @key="_activeIndex">
+                    @{
+                        var active = experiences[_activeIndex];
+                        var numStr = (_activeIndex + 1).ToString("D2");
+                    }
+                    <div class="experience-detail__num-bg" aria-hidden="true">@numStr</div>
+
+                    <div class="experience-detail__logo-wrap">
+                        <img src="@active.Image" alt="@active.Title" class="experience-detail__logo" />
+                    </div>
+
+                    <h3 class="experience-detail__title">@active.Title</h3>
+                    <div class="experience-detail__divider"></div>
+
+                    <ul class="experience-detail__bullets">
+                        @foreach (var bullet in active.Bulletpoints)
+                        {
+                            <li>@bullet</li>
+                        }
+                    </ul>
+
+                    <div class="experience-detail__footer">
+                        <div class="experience-detail__chips">
+                            @foreach (var chip in active.Icons.Split(","))
+                            {
+                                <span class="about-skill-chip">@chip.Trim()</span>
+                            }
                         </div>
-                    </MudCarouselItem>
-                }
-            </MudCarousel>
+                        @if (!string.IsNullOrEmpty(active.Url) && active.Url.StartsWith("http"))
+                        {
+                            <a href="@active.Url"
+                               target="_blank" rel="noopener noreferrer"
+                               class="experience-detail__link">
+                                visit site ↗
+                            </a>
+                        }
+                    </div>
+                </div>
+
+            </div>
         }
     </div>
 </section>
-@* </div> *@
 
 @code {
     [Parameter, EditorRequired]
@@ -74,34 +86,12 @@
     public required HeroImageService HeroImageService { get; set; }
 
     private List<ExperienceModel>? experiences;
-    private HeroImage? hero;
-
-    private bool arrows = true;
-    private bool bullets = true;
-    private bool enableSwipeGesture = true;
-    private bool autocycle = true;
-    private Transition transition = Transition.Slide;
-    // private TimeSpan timeSpan = new TimeSpan(0,0,0.01);
-    private List<string> chips = new List<string>();
+    private int _activeIndex = 0;
 
     protected override async Task OnInitializedAsync()
     {
         experiences = await Http.GetFromJsonAsync<List<ExperienceModel>>("sample-data/experience.json");
-        hero = await HeroImageService.GetHeroAsync(img => img.Name is "experience");
-
-        if (experiences != null)
-        {
-            foreach (var item in experiences)
-            {
-                if (!string.IsNullOrEmpty(item.Icons))
-                {
-                    var commaSeparatedIcons = item.Icons.Split(",");
-
-
-                    chips = item.Icons.Split(",").ToList();
-                    // chips.Add(item.Icons);
-                }
-            }
-        }
     }
+
+    private void SetActive(int index) => _activeIndex = index;
 }

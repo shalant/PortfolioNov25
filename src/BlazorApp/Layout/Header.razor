@@ -1,5 +1,6 @@
 <header class="navbar-wrapper" id="navbar">
     <div class="navbar-content">
+
         <div class="logo-section">
             <a href="/">
                 <img src="logos/drdev-logo__transparent.svg" alt="DR Codeworks" title="DR Codeworks" />
@@ -18,9 +19,15 @@
             </ul>
         </nav>
 
+        <a href="mailto:doug.rosenberg@gmail.com" class="nav-cta" aria-label="Contact Doug Rosenberg">
+            <span class="nav-cta__text">get in touch</span>
+            <span class="nav-cta__arrow">↗</span>
+        </a>
+
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
             <span></span><span></span><span></span>
         </button>
+
     </div>
 </header>
 
@@ -35,7 +42,7 @@
 
 <script suppress-error="BL9992">
     (function () {
-        const navbar  = document.getElementById('navbar');
+        const navbar   = document.getElementById('navbar');
         const navItems = document.getElementById('navItems');
         const navToggle = document.getElementById('navToggle');
 
@@ -50,13 +57,15 @@
             });
         }
 
-        document.querySelectorAll('.nav-link, .nav-link--page, .nav-link--archive').forEach(link => {
+        // Close menu on any nav link or CTA click
+        document.querySelectorAll('.nav-link, .nav-link--page, .nav-link--archive, .nav-cta').forEach(link => {
             link.addEventListener('click', () => {
                 navItems?.classList.remove('active');
                 navToggle?.classList.remove('open');
             });
         });
 
+        // Active section tracking
         const sections = document.querySelectorAll('section[id]');
         window.addEventListener('scroll', () => {
             let current = '';
