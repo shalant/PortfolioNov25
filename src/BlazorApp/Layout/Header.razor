@@ -9,13 +9,95 @@
 
         <nav>
             <ul class="nav-items" id="navItems">
-                <li><a class="nav-link" href="/#about">about</a></li>
-                <li><a class="nav-link" href="/#experience">experience</a></li>
-                <li><a class="nav-link" href="/#arborkin">arborkin</a></li>
-                <li><a class="nav-link" href="/#technicalskills">skills</a></li>
-                <li><a class="nav-link nav-link--page" href="/consulting">consulting</a></li>
-                <li><a class="nav-link nav-link--page" href="/webdesign">web design</a></li>
-                <li><a class="nav-link nav-link--archive" href="/archive">archive ↗</a></li>
+
+                <li>
+                    <a class="nav-link" href="/#about">
+                        <!-- arch — mirrors the arch shapes in the art deco backgrounds -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                            <path d="M2 13 L2 7.5 A5 5 0 0 0 12 7.5 L12 13"/>
+                        </svg>
+                        about
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link" href="/#experience">
+                        <!-- timeline: dots + lines -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+                            <circle cx="3" cy="4"  r="1.3" stroke="none"/>
+                            <line x1="6.5" y1="4"  x2="12" y2="4"/>
+                            <circle cx="3" cy="8"  r="1.3" stroke="none"/>
+                            <line x1="6.5" y1="8"  x2="10" y2="8"/>
+                            <circle cx="3" cy="12" r="1.3" stroke="none"/>
+                            <line x1="6.5" y1="12" x2="11" y2="12"/>
+                        </svg>
+                        experience
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link" href="/#arborkin">
+                        <!-- Y-branch: family tree / branching structure -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                            <line x1="7"   y1="13"  x2="7"   y2="7"/>
+                            <line x1="7"   y1="7"   x2="2.5" y2="2.5"/>
+                            <line x1="7"   y1="7"   x2="11.5" y2="2.5"/>
+                            <line x1="2.5" y1="2.5" x2="1"   y2="1"/>
+                            <line x1="2.5" y1="2.5" x2="4"   y2="1"/>
+                            <line x1="11.5" y1="2.5" x2="10" y2="1"/>
+                            <line x1="11.5" y1="2.5" x2="13" y2="1"/>
+                        </svg>
+                        arborkin
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link" href="/#technicalskills">
+                        <!-- 2×2 grid of squares -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+                            <rect x="1.5" y="1.5" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="8"   y="1.5" width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="1.5" y="8"   width="4.5" height="4.5" rx="0.5"/>
+                            <rect x="8"   y="8"   width="4.5" height="4.5" rx="0.5"/>
+                        </svg>
+                        skills
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link nav-link--page" href="/consulting">
+                        <!-- northeast arrow: forward motion, direction -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="3" y1="11" x2="11" y2="3"/>
+                            <polyline points="6,3 11,3 11,8"/>
+                        </svg>
+                        consulting
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link nav-link--page" href="/webdesign">
+                        <!-- bezier curve with endpoints: design / drawing tool -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                            <path d="M2 12 C4 12 10 2 12 2"/>
+                            <circle cx="2"  cy="12" r="1.5" fill="currentColor" stroke="none"/>
+                            <circle cx="12" cy="2"  r="1.5" fill="currentColor" stroke="none"/>
+                        </svg>
+                        web design
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link nav-link--archive" href="/archive">
+                        <!-- clock face: time / past work -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                            <circle cx="7" cy="7" r="5"/>
+                            <polyline points="7,4 7,7 9.5,7"/>
+                        </svg>
+                        archive ↗
+                    </a>
+                </li>
+
             </ul>
         </nav>
 
@@ -42,8 +124,8 @@
 
 <script suppress-error="BL9992">
     (function () {
-        const navbar   = document.getElementById('navbar');
-        const navItems = document.getElementById('navItems');
+        const navbar    = document.getElementById('navbar');
+        const navItems  = document.getElementById('navItems');
         const navToggle = document.getElementById('navToggle');
 
         window.addEventListener('scroll', () => {
@@ -57,7 +139,6 @@
             });
         }
 
-        // Close menu on any nav link or CTA click
         document.querySelectorAll('.nav-link, .nav-link--page, .nav-link--archive, .nav-cta').forEach(link => {
             link.addEventListener('click', () => {
                 navItems?.classList.remove('active');
@@ -65,18 +146,23 @@
             });
         });
 
-        // Active section tracking
-        const sections = document.querySelectorAll('section[id]');
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                if (window.scrollY >= section.offsetTop - 200) current = section.id;
-            });
+        const trackActive = () => {
+            // query lazily — Blazor renders sections after this script fires
+            const sections = Array.from(document.querySelectorAll('section[id]'));
+            if (!sections.length) return;
+            const threshold = (navbar ? navbar.offsetHeight : 80) + 40;
+            let current = sections[0].id;
+            for (const s of sections) {
+                if (s.getBoundingClientRect().top <= threshold) current = s.id;
+            }
             document.querySelectorAll('.nav-link').forEach(link => {
                 const href = link.getAttribute('href') ?? '';
-                const match = href === '#' + current || href === '/#' + current;
-                link.classList.toggle('active', match);
+                link.classList.toggle('active', href === '#' + current || href === '/#' + current);
             });
-        }, { passive: true });
+        };
+
+        window.addEventListener('scroll', trackActive, { passive: true });
+        // fire after Blazor finishes rendering its async components
+        setTimeout(trackActive, 300);
     })();
 </script>
