@@ -1,243 +1,167 @@
-# DR Codeworks Portfolio
+# dr codeworks
+[![CI/CD](https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/YOUR_REPO/YOUR_WORKFLOW.yml?label=Build%20%26%20Deploy&logo=github&color=1abc9c&labelColor=060e1a)](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/YOUR_WORKFLOW.yml)
+[![Live Site](https://img.shields.io/badge/Live-dougrosenbergdev.com-1abc9c?style=flat&labelColor=060e1a)](https://dougrosenbergdev.com)
 
-A modern, interactive portfolio website built with Blazor WebAssembly showcasing professional work, skills, experience, and upcoming projects.
+A developer portfolio built as a Blazor WebAssembly SPA. Single-scroll, data-driven, no server required. Dark art deco aesthetic — navy + teal, Cormorant Garamond headings, Courier monospace accents, `mix-blend-mode: screen` art deco overlays composited per section.
 
-![Status](https://img.shields.io/badge/status-active-brightgreen) ![Built with Blazor](https://img.shields.io/badge/built%20with-Blazor-512bd4) ![License](https://img.shields.io/badge/license-MIT-blue)
-
-## 🌟 Features
-
-- **3D Hexagon Logo Branding** — Custom DR Codeworks logo with navy + teal gradient
-- **Interactive Navigation** — Sticky navbar with smooth scrolling navigation
-- **Experience Carousel** — MudBlazor carousel displaying professional experience
-- **Skills Section** — Organized technical skills with custom chip styling
-- **Interactive Todo List** — Checkable tasks for upcoming projects:
-  - Reporting
-  - Dashboards
-  - Design
-  - Leadership
-  - Backend
-  - Consulting
-  - Website Design
-  - Portfolio
-- **Responsive Design** — Mobile-first approach with glassmorphism effects
-- **Smooth Animations** — CSS transitions and Blazor component lifecycle animations
-- **Bootstrap 5 Integration** — CDN with local fallback support
-
-## 📁 Project Structure
-
-```
-portfolioNov25/
-├── src/BlazorApp/
-│   ├── Components/           # Reusable Razor components
-│   │   ├── Experience.razor   # Experience carousel
-│   │   ├── ToDo.razor        # Interactive todo list
-│   │   └── ...
-│   ├── Layout/
-│   │   ├── Header.razor      # Navigation bar with logo
-│   │   └── MainLayout.razor
-│   ├── Pages/
-│   │   └── Index.razor       # Home page (main entry)
-│   ├── wwwroot/
-│   │   ├── css/
-│   │   │   └── app.css       # Global styling + component styles
-│   │   ├── logos/
-│   │   │   └── drdev-logo.png # Favicon + navbar branding
-│   │   └── sample-data/      # JSON data files
-│   └── BlazorApp.csproj
-├── MyPortfolio.sln           # Solution file
-├── README.md                 # This file
-├── CLAUDE.md                 # Claude Code development guidelines
-└── COMPONENTS.md             # Component documentation
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-- .NET 8.0 or higher
-- Node.js 18+ (optional, for npm packages)
-- Visual Studio Code or Visual Studio
-
-### Local Development
-
-1. **Clone the repository**
-   ```bash
-   git clone <repo-url>
-   cd portfolioNov25
-   ```
-
-2. **Restore dependencies**
-   ```bash
-   dotnet restore
-   ```
-
-3. **Run the development server**
-   ```bash
-   dotnet run --project src/BlazorApp/BlazorApp.csproj
-   ```
-
-4. **Open in browser**
-   - Navigate to `http://localhost:5000`
-   - The app will automatically reload on file changes
-
-### Using Claude Code
-
-For AI-assisted development with Claude Code:
-
-```bash
-claude-code .
-```
-
-See [CLAUDE.md](./CLAUDE.md) for detailed Claude Code guidelines.
-
-## 🎨 Customization
-
-### Update Personal Information
-
-Edit `src/BlazorApp/wwwroot/sample-data/siteproperties.json`:
-```json
-{
-  "name": "Your Name",
-  "title": "Your Title",
-  "email": "your.email@example.com",
-  "socialLinks": {
-    "linkedin": "https://linkedin.com/in/...",
-    "github": "https://github.com/...",
-    "twitter": "https://twitter.com/..."
-  }
-}
-```
-
-### Modify Experience Items
-
-Edit `src/BlazorApp/wwwroot/sample-data/experience.json` to add/remove experience entries.
-
-### Update Todo Items
-
-Edit the `todoItems` list in `src/BlazorApp/Components/ToDo.razor`:
-```csharp
-todoItems = new List<TodoItem>
-{
-    new TodoItem { Id = 1, Title = "Your Item", Completed = false },
-    // ...
-};
-```
-
-### Styling
-
-- Global styles: `src/BlazorApp/wwwroot/css/app.css`
-- Component styles: Embedded `<style>` blocks in `.razor` files
-- Theme colors:
-  - Primary Navy: `#2c3e50`
-  - Accent Teal: `#1abc9c`
-  - Background: Light semi-transparent with glassmorphism effects
-
-## 🏗️ Architecture
-
-### Components
-
-- **Header.razor** — Navigation with DR Codeworks logo
-- **Experience.razor** — Carousel of professional experience
-- **ToDo.razor** — Interactive checklist of upcoming projects
-- **Layout components** — Main layout structure
-
-### Data Flow
-
-1. Components receive data via parameters (HttpClient, services)
-2. Data loaded from JSON files in `wwwroot/sample-data/`
-3. State managed at component level
-4. Styling applied via CSS classes
-
-### Key Technologies
-
-- **Blazor WebAssembly** — SPA framework
-- **MudBlazor** — UI component library (carousel, grids, etc.)
-- **Bootstrap 5** — Layout and utilities (CDN + local fallback)
-- **Custom CSS** — Glassmorphism effects, animations
-
-## 📱 Responsive Design
-
-The site is mobile-first with breakpoints:
-- Mobile: < 420px
-- Tablet: 420px - 1024px
-- Desktop: > 1024px
-
-Media queries ensure proper display across all devices.
-
-## 🔒 Browser Support
-
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-- Requires JavaScript enabled
-
-## 📦 Build & Deploy
-
-### Build for Production
-
-```bash
-dotnet publish -c Release -o publish/
-```
-
-### Deploy to Azure
-
-Using Azure Static Web Apps:
-
-```bash
-swa start
-```
-
-For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
-
-## 📝 Todo List Features
-
-- ✅ Click checkboxes to mark items complete
-- ✅ State persists during session
-- ✅ Visual feedback (strikethrough, opacity fade)
-- ✅ Glassmorphic styling matching site design
-- ✅ Teal accent color for checkboxes
-
-Current items:
-1. Reporting
-2. Dashboards
-3. Design
-4. Leadership
-5. Backend
-6. Consulting
-7. Website Design
-8. Portfolio
-
-## 🎯 Recent Updates (May 2026)
-
-- ✅ Integrated DR Codeworks 3D hexagon logo
-- ✅ Fixed CSS compatibility (webkit prefixes)
-- ✅ Implemented interactive todo list
-- ✅ Added Bootstrap CDN with local fallback
-- ✅ Cleaned up navigation code
-- ✅ Standardized navigation IDs across components
-
-## 🐛 Known Issues
-
-None currently. Report issues via GitHub Issues.
-
-## 📞 Support
-
-For questions or issues:
-- Check [COMPONENTS.md](./COMPONENTS.md) for component details
-- Review [CLAUDE.md](./CLAUDE.md) for development practices
-- Check existing GitHub Issues
-
-## 📄 License
-
-MIT License - feel free to use this template for your own portfolio.
-
-## 🙏 Acknowledgments
-
-- Built with [Blazor WebAssembly](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)
-- UI components from [MudBlazor](https://mudblazor.com/)
-- Layout framework [Bootstrap 5](https://getbootstrap.com/)
-- Icons and assets from [Bootstrap Icons](https://icons.getbootstrap.com/)
+**Stack:** Blazor WASM · .NET 10 · C# / Razor · CSS3 · Bootstrap 5 · MudBlazor 8
 
 ---
 
-**Last Updated:** May 29, 2026  
-**Maintainer:** Douglas Rosenberg
+## Getting Started
+
+**Prerequisite:** [.NET 10 SDK](https://dotnet.microsoft.com/download)
+
+```bash
+git clone <repo>
+dotnet run --project src/BlazorApp/BlazorApp.csproj
+# → http://localhost:5001
+```
+
+After changing `.csproj` or adding files to `wwwroot/`, do a clean build to regenerate the static asset manifest:
+
+```bash
+dotnet clean src/BlazorApp/BlazorApp.csproj
+dotnet run --project src/BlazorApp/BlazorApp.csproj
+```
+
+---
+
+## Project Structure
+
+```
+src/BlazorApp/
+├── Components/
+│   ├── Home.razor                  # Hero — animated title, portrait, CTA
+│   ├── About.razor                 # Bio, skill chips, pull quote
+│   ├── Experience.razor            # Split-panel interactive timeline
+│   ├── ArborKin.razor              # Featured project — deep-dive case study
+│   ├── TechnicalSkills.razor       # Skill chip grid + GitHub activity
+│   ├── Casual.razor                # Interests + hobby tiles
+│   └── Music.razor                 # Composer section, sticky photo
+├── Layout/
+│   ├── Header.razor                # Sticky nav, scroll-spy, hamburger
+│   └── Footer.razor
+├── Pages/
+│   ├── Index.razor                 # Composes all sections in order
+│   ├── ConsultingPage.razor        # /consulting — client-facing services
+│   ├── WebDesignPage.razor         # /webdesign — Squarespace + Blazor work
+│   └── PreviousPortfolio.razor     # /archive — previous Angular portfolio
+├── Services/
+│   └── HeroImageService.cs         # Hero image rotation
+└── wwwroot/
+    ├── css/app.css                  # All styles — 22 sections, ~3,500 lines
+    ├── images/                      # Art deco overlays, portraits, hero assets
+    ├── logos/                       # SVG + PNG logo variants
+    ├── sample-data/                 # JSON content (edit here, not in components)
+    └── archive/dist/portfolio/      # Compiled Angular app (previous portfolio)
+```
+
+---
+
+## Pages & Routing
+
+| Route | Purpose | Audience |
+|-------|---------|----------|
+| `/` | Full single-scroll — hero → about → experience → arborkin → skills → casual → music | Corporate / technical hiring |
+| `/consulting` | IT consulting services, client CTA | Non-technical small business clients |
+| `/webdesign` | Web design portfolio — Squarespace sites + Blazor builds | Design-forward clients |
+| `/archive` | Previous Angular portfolio embedded in iframe | Anyone curious about the progression |
+
+Consulting and web design live on separate pages by design — they speak to different audiences and would dilute the main page's corporate dev narrative if inlined.
+
+---
+
+## Content
+
+All copy lives in JSON files in `wwwroot/sample-data/`. Edit content here without touching component code.
+
+| File | Controls |
+|------|---------|
+| `siteproperties.json` | Name, email, social links |
+| `aboutme.json` | Bio text, skill chip list |
+| `experience.json` | Timeline entries — logo, role, bullet points, tech chips, link |
+| `consulting.json` | Consulting page — headline, subheadline, services array, CTA text, tagline |
+| `webdesign.json` | Web design page — headline, subheadline, tools array |
+| `skills.json` | Technical skill categories and chip lists |
+| `casual.json` | Description, closing quote, hobbies array — each hobby has `name` + `detail` tagline |
+| `music.json` | Three paragraphs, press quote + attribution, albums array (`title`, `artist`, `role`, `url`), collaborators array |
+| `heroimages.json` | Hero background image rotation list |
+
+---
+
+## Design System
+
+### Colors
+
+```
+#060e1a   page background — near-black deep navy
+#2c3e50   navy — section backgrounds, structural elements
+#1abc9c   teal — accents, active nav, CTAs, chips, code
+#eef2f7   light — primary text on dark backgrounds
+```
+
+### Typography
+
+| Role | Font | Weight |
+|------|------|--------|
+| Display headings | Cormorant Garamond | 300 — editorial, high contrast |
+| Body / UI text | Montserrat | 200–600 — clean, contemporary |
+| Code / nav labels / chips | Courier New | monospace — technical precision |
+
+### Art Deco Overlays
+
+Two source images are composited over dark section backgrounds using `mix-blend-mode: screen`. Because `screen` renders black as fully transparent, the lighter geometric shapes in the images become additive light on dark surfaces — no hard edges, no boxes.
+
+- `artDecoBackground1.png` — Mondrian-style grid circles (used full-bleed)
+- `artDecoBackground2.png` — arch columns (used edge-anchored, right or left)
+
+Opacity ranges: `0.08` (subtle background depth) → `0.22` (navbar). Placement and sizing vary per section — see CSS section 20 for the full map.
+
+---
+
+## CSS Architecture
+
+`wwwroot/css/app.css` is the single stylesheet. 22 named sections:
+
+```
+ 1   Imports & Design System      @import, :root variables
+ 2   Global Styles                html/body, section variants, background images
+ 3   Typography                   h1–h3, p, responsive scale breakpoints
+ 4   Layout (Legacy)              older container and card classes
+ 5   Navigation & Header          sticky nav, scroll-spy active state, hamburger menu
+ 6   Cards & Glassmorphism        reusable card variants (custom-card, glassmorphism)
+ 7   Experience                   split-panel timeline — selector list + detail panel
+ 8   Todo List                    checkbox list component
+ 9   Decorative & Utility         scroll-reveal, glow effects, overlay helpers
+10   Error UI & Loading           Blazor boot screen and error banner
+11   Animations & Keyframes       @keyframes library + animation utility classes
+12   Hero Section                 homepage hero layout
+13   About Section                bio two-column grid
+14   ArborKin                     case study — screenshot, problem cards, stats row
+15   Subpages                     shared hero + /consulting + /webdesign specific
+16   Archive Page                 iframe wrapper layout
+17   Technical Skills             chip grid + GitHub activity embeds
+18   Casual                       hobby tile layout
+19   Music                        two-column layout, sticky photo sidebar
+20   Art Deco Overlays            ::before/::after per section, blend modes, opacity map
+21   Web Design Page Identity     additional art deco overlays for /webdesign
+22   Footer                       glassmorphism page-end footer, social icons, back-to-top
+```
+
+---
+
+## Commit Convention
+
+```
+[UI]       Visual — layout, styles, animation
+[Feature]  New functionality
+[Fix]      Bug fix
+[Data]     JSON content update
+[Docs]     Documentation
+[Refactor] Code cleanup, no behavior change
+```
+
+---
+
+Built by Douglas Rosenberg · [doug.rosenberg@gmail.com](mailto:doug.rosenberg@gmail.com)

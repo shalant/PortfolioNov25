@@ -200,7 +200,9 @@ a:hover {
 }
 
 /* ============================================================================
-   4. LAYOUT & STRUCTURE
+   4. LAYOUT (LEGACY)
+   These classes predate the current section-based architecture. Kept for any
+   older components that may still reference them.
    ============================================================================ */
 
 .portfolio-container {
@@ -445,6 +447,25 @@ a:hover {
 .nav-link--page:hover .nav-icon {
   color: #1abc9c;
   transform: scale(1.15);
+}
+
+.nav-link--page.active {
+  color: #1abc9c !important;
+  text-shadow: 0 0 12px rgba(26, 188, 156, 0.5), 0 1px 6px rgba(0, 0, 0, 0.8);
+  background: rgba(26, 188, 156, 0.1);
+  border-radius: 4px;
+  outline: 1px solid rgba(26, 188, 156, 0.25);
+  outline-offset: -1px;
+}
+
+.nav-link--page.active .nav-icon {
+  color: #1abc9c;
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 4px rgba(26, 188, 156, 0.7));
+}
+
+.nav-items li:has(.nav-link--page.active)::after {
+  width: calc(100% - 0.5rem);
 }
 
 .nav-link--archive {
@@ -1098,32 +1119,11 @@ a:hover {
    9. DECORATIVE & UTILITY
    ============================================================================ */
 
-.glassy-background {
-  /* Utility class for glassmorphism */
-}
-
-.art-deco {
-  box-shadow: 4px 4px 10px rgba(31, 38, 65, 0.9);
-}
-
-.art-deco:hover {
-  backdrop-filter: contrast(10px);
-}
-
-.better-than-tv {
-  background-image: src("../images/dougRosenbergBetterThanTv.jpg");
-  background-repeat: repeat;
-}
-
 .background-overlay {
   background: linear-gradient(135deg, rgba(50, 0, 80, 0.3), rgba(0, 0, 50, 0.3));
   animation: moveGradient 30s ease-in-out infinite;
   mix-blend-mode: overlay;
   backdrop-filter: blur(2px);
-}
-
-.teal-backdrop {
-  background-image: src("../images/tealRectangle.png");
 }
 
 img.social-icon {
@@ -2348,6 +2348,8 @@ img.social-icon {
   background: #07111f;
   padding: 5rem 0;
   border-top: 1px solid rgba(26, 188, 156, 0.08);
+  position: relative;
+  overflow: hidden;
 }
 
 .webdesign-tools__container {
@@ -2761,25 +2763,47 @@ img.social-icon {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(26, 188, 156, 0.08);
 }
 
 .skills-github__frames {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.25rem;
   align-items: flex-start;
 }
 
-.skills-github__frames iframe {
-  border-radius: 8px;
+.skills-github__card {
+  background: rgba(6, 14, 26, 0.55);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(26, 188, 156, 0.12);
+  border-radius: 4px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.skills-github__card:hover {
+  border-color: rgba(26, 188, 156, 0.32);
+  box-shadow: 0 0 20px rgba(26, 188, 156, 0.06);
+}
+
+.skills-github__card iframe {
+  display: block;
+  border-radius: 2px;
   max-width: 100%;
 }
 
 @media (max-width: 768px) {
   .skills-container { padding: 0 2rem; }
   .skills-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  .skills-github__frames { flex-direction: column; }
-  .skills-github__frames iframe { width: 100% !important; height: auto !important; min-height: 150px; }
+  .skills-github__frames { flex-direction: column; align-items: stretch; }
+  .skills-github__card { padding: 0.75rem; }
+  .skills-github__card iframe { width: 100% !important; height: auto !important; min-height: 150px; }
 }
 
 /* ============================================================================
@@ -2842,26 +2866,45 @@ img.social-icon {
 
 .casual-hobby {
   position: relative;
-}
-
-.casual-hobby__text {
-  display: block;
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-  font-weight: 200;
-  color: rgba(238, 242, 247, 0.7);
-  padding: 0.6rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1.4rem 0.65rem;
   border: 1px solid rgba(26, 188, 156, 0.15);
   border-radius: 2px;
-  letter-spacing: 0.04em;
-  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
   cursor: default;
+  min-width: 11rem;
 }
 
-.casual-hobby:hover .casual-hobby__text {
-  color: #eef2f7;
+.casual-hobby:hover {
   border-color: rgba(26, 188, 156, 0.5);
   background: rgba(26, 188, 156, 0.05);
+}
+
+.casual-hobby__name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 300;
+  color: rgba(238, 242, 247, 0.8);
+  letter-spacing: 0.04em;
+  transition: color 0.2s ease;
+}
+
+.casual-hobby:hover .casual-hobby__name {
+  color: #eef2f7;
+}
+
+.casual-hobby__detail {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.68rem;
+  color: rgba(26, 188, 156, 0.55);
+  letter-spacing: 0.04em;
+  margin-top: 0.2rem;
+  transition: color 0.2s ease;
+}
+
+.casual-hobby:hover .casual-hobby__detail {
+  color: rgba(26, 188, 156, 0.85);
 }
 
 .casual-quote {
@@ -2983,6 +3026,131 @@ img.social-icon {
   text-transform: uppercase;
 }
 
+.music-section-label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.68rem;
+  color: rgba(26, 188, 156, 0.5);
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  display: block;
+  margin-bottom: 0.85rem;
+}
+
+/* Press quote */
+.music-press {
+  margin: 0;
+  border-left: 2px solid rgba(26, 188, 156, 0.35);
+  padding-left: 1.5rem;
+}
+
+.music-press__quote {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(238, 242, 247, 0.75);
+  line-height: 1.5;
+  margin: 0 0 0.4rem;
+}
+
+.music-press__attribution {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.68rem;
+  color: rgba(26, 188, 156, 0.5);
+  letter-spacing: 0.1em;
+}
+
+/* Discography */
+.music-discography {
+  display: flex;
+  flex-direction: column;
+}
+
+.music-albums {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.music-album {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0.5rem 1.5rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(238, 242, 247, 0.05);
+  transition: background 0.15s ease;
+}
+
+.music-album:last-child {
+  border-bottom: none;
+}
+
+.music-album__title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: rgba(238, 242, 247, 0.8);
+  text-decoration: none;
+}
+
+a.music-album__title--link {
+  transition: color 0.2s ease;
+}
+
+a.music-album__title--link:hover {
+  color: #1abc9c;
+}
+
+.music-album__artist {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: rgba(238, 242, 247, 0.38);
+}
+
+.music-album__role {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.65rem;
+  color: rgba(26, 188, 156, 0.5);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* Collaborators */
+.music-collaborators {
+  display: flex;
+  flex-direction: column;
+}
+
+.music-collab-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.music-collab-chip {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.68rem;
+  color: rgba(238, 242, 247, 0.5);
+  border: 1px solid rgba(238, 242, 247, 0.1);
+  border-radius: 2px;
+  padding: 0.25rem 0.65rem;
+  letter-spacing: 0.03em;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.music-collab-chip:hover {
+  color: rgba(238, 242, 247, 0.8);
+  border-color: rgba(26, 188, 156, 0.3);
+}
+
 @media (max-width: 860px) {
   .music-container { padding: 0 2rem; }
   .music-body {
@@ -2994,6 +3162,19 @@ img.social-icon {
     align-items: center;
   }
   .music-photo__img { max-width: 340px; }
+  .music-album {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+  }
+  .music-album__artist {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .music-album__role {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: center;
+  }
 }
 
 /* ============================================================================
@@ -3163,12 +3344,6 @@ img.social-icon {
    21. WEB DESIGN PAGE — VISUAL IDENTITY
    ============================================================================ */
 
-.webdesign-tools {
-  position: relative;
-  overflow: hidden;
-  background: #07111f;
-}
-
 /* Arch columns on the right side of the tools strip */
 .webdesign-tools::before {
   content: '';
@@ -3277,4 +3452,211 @@ img.social-icon {
     radial-gradient(ellipse at 75% 35%, rgba(26, 188, 156, 0.1) 0%, transparent 55%),
     radial-gradient(circle, rgba(26, 188, 156, 0.07) 1px, transparent 1px);
   background-size: 100% 100%, 36px 36px;
+}
+
+/* ==========================================================================
+   22. FOOTER
+   ========================================================================== */
+
+.site-footer {
+  position: relative;
+  overflow: hidden;
+  background: rgba(6, 14, 26, 0.78);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border-top: 1px solid rgba(26, 188, 156, 0.2);
+  box-shadow: 0 -4px 32px rgba(26, 188, 156, 0.06), 0 -1px 0 rgba(26, 188, 156, 0.08);
+}
+
+/* Art deco arch overlay — same treatment as navbar */
+.site-footer__deco {
+  position: absolute;
+  inset: 0;
+  background-image: url('/images/artDecoBackground2.png');
+  background-size: auto 260%;
+  background-position: right bottom;
+  background-repeat: no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0.09;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.site-footer__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.75rem 2rem 2.25rem;
+}
+
+/* Left column */
+.site-footer__left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.site-footer__name {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1abc9c;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 10px rgba(26, 188, 156, 0.4);
+}
+
+.site-footer__title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: rgba(238, 242, 247, 0.55);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  max-width: 32ch;
+  line-height: 1.5;
+}
+
+.site-footer__copy {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.65rem;
+  color: rgba(238, 242, 247, 0.3);
+  margin-top: 0.5rem;
+  letter-spacing: 0.04em;
+}
+
+/* Right column */
+.site-footer__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+/* Social icons */
+.site-footer__socials {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.site-footer__social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.site-footer__social img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: filter 0.2s ease;
+}
+
+.site-footer__social:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.site-footer__social:hover img {
+  filter: sepia(1) saturate(4) hue-rotate(132deg) brightness(1.1)
+          drop-shadow(0 0 5px rgba(26, 188, 156, 0.8));
+}
+
+/* Actions row — CTA + back-to-top */
+.site-footer__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* "get in touch ↗" — mirrors navbar CTA */
+.site-footer__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #1abc9c;
+  border: 1px solid rgba(26, 188, 156, 0.45);
+  border-radius: 3px;
+  padding: 0.38rem 0.85rem;
+  background: rgba(26, 188, 156, 0.06);
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.site-footer__cta:hover {
+  background: rgba(26, 188, 156, 0.14);
+  border-color: rgba(26, 188, 156, 0.7);
+  box-shadow: 0 0 12px rgba(26, 188, 156, 0.2);
+  color: #2fffda;
+}
+
+.site-footer__cta-arrow {
+  font-size: 0.85em;
+  transition: transform 0.2s ease;
+}
+
+.site-footer__cta:hover .site-footer__cta-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* Back-to-top button */
+.site-footer__top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(26, 188, 156, 0.3);
+  border-radius: 3px;
+  background: rgba(26, 188, 156, 0.05);
+  color: rgba(238, 242, 247, 0.5);
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.site-footer__top svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.site-footer__top:hover {
+  background: rgba(26, 188, 156, 0.12);
+  border-color: rgba(26, 188, 156, 0.6);
+  color: #1abc9c;
+  transform: translateY(-2px);
+}
+
+/* Responsive — stack to single column on mobile */
+@media (max-width: 600px) {
+  .site-footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 2rem 1.25rem 1.75rem;
+  }
+
+  .site-footer__right {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .site-footer__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }

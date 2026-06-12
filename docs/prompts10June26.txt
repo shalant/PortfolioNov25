@@ -1,0 +1,14 @@
+i still can't get my old angular portfolio to load in the iframe. i understand this is a wacky idea. should i keep trying or is this a dead end?
+
+
+dougrosenbergdev.com is hosted at hostinger.com. i would like to use GH, GH actions CI/CD to host my new portfolio.
+
+ I would like a fantastic readme. I would like some nice documentation. please organize the massive CSS file.
+
+the footer is not great, please upgrade it...would a very transparent glassy sticky footer make sense?
+
+help me extend the content of the casual section
+
+help me extend the content of the music area
+
+i think the GitHub activitiy section could be layed out better

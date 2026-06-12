@@ -19,7 +19,11 @@
                     @foreach (var hobby in casual.Hobbies)
                     {
                         <li class="casual-hobby">
-                            <span class="casual-hobby__text">@hobby</span>
+                            <span class="casual-hobby__name">@hobby.Name</span>
+                            @if (!string.IsNullOrWhiteSpace(hobby.Detail))
+                            {
+                                <span class="casual-hobby__detail">@hobby.Detail</span>
+                            }
                         </li>
                     }
                 </ul>

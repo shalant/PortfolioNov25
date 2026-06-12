@@ -13,11 +13,61 @@
         else
         {
             <div class="music-body">
+
                 <div class="music-text">
                     <p class="music-paragraph music-paragraph--lead">@music.Paragraph1</p>
                     <p class="music-paragraph">@music.Paragraph2</p>
                     <p class="music-paragraph">@music.Paragraph3</p>
+
+                    @if (!string.IsNullOrWhiteSpace(music.PressQuote))
+                    {
+                        <figure class="music-press">
+                            <blockquote class="music-press__quote">"@music.PressQuote"</blockquote>
+                            @if (!string.IsNullOrWhiteSpace(music.PressAttribution))
+                            {
+                                <figcaption class="music-press__attribution">— @music.PressAttribution</figcaption>
+                            }
+                        </figure>
+                    }
+
+                    @if (music.Albums.Count > 0)
+                    {
+                        <div class="music-discography">
+                            <span class="music-section-label">// discography</span>
+                            <ul class="music-albums">
+                                @foreach (var album in music.Albums)
+                                {
+                                    <li class="music-album">
+                                        @if (!string.IsNullOrWhiteSpace(album.Url))
+                                        {
+                                            <a href="@album.Url" target="_blank" rel="noopener noreferrer" class="music-album__title music-album__title--link">@album.Title</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="music-album__title">@album.Title</span>
+                                        }
+                                        <span class="music-album__artist">@album.Artist</span>
+                                        <span class="music-album__role">@album.Role</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    @if (music.Collaborators.Count > 0)
+                    {
+                        <div class="music-collaborators">
+                            <span class="music-section-label">// performed with</span>
+                            <ul class="music-collab-list">
+                                @foreach (var name in music.Collaborators)
+                                {
+                                    <li class="music-collab-chip">@name</li>
+                                }
+                            </ul>
+                        </div>
+                    }
                 </div>
+
                 <div class="music-photo">
                     <img src="/images/dougRosenbergBetterThanTv.jpg"
                          alt="Doug Rosenberg performing"
@@ -25,6 +75,7 @@
                          loading="lazy" />
                     <span class="music-photo__caption">Better Than TV — live</span>
                 </div>
+
             </div>
         }
 

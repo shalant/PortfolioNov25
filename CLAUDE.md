@@ -79,7 +79,7 @@ protected override async Task OnInitializedAsync()
 - **Colors:** Use variables consistently
   - Navy: `#2c3e50`
   - Teal: `#1abc9c`
-  - Light text: `#1A1A1A`
+  - Light text: `#eef2f7`
 - **Mobile-first:** Use `@media (min-width: ...)` for larger screens
 - **Transitions:** Use `transition: property 0.3s ease` for smooth effects
 

@@ -161,8 +161,31 @@
             });
         };
 
+        // highlight consulting / web design links when on their pages
+        const highlightPageLink = () => {
+            const path = window.location.pathname.replace(/\/$/, '');
+            document.querySelectorAll('.nav-link--page').forEach(link => {
+                const href = (link.getAttribute('href') ?? '').replace(/\/$/, '');
+                link.classList.toggle('active', href === path);
+            });
+        };
+        highlightPageLink();
+
+        // re-scroll to hash after async sections (e.g. ArborKin) finish rendering
+        const scrollToHash = () => {
+            const hash = window.location.hash;
+            if (!hash) return;
+            const el = document.querySelector(hash);
+            if (!el) return;
+            const offset = (navbar ? navbar.offsetHeight : 80) + 20;
+            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+        };
+
         window.addEventListener('scroll', trackActive, { passive: true });
         // fire after Blazor finishes rendering its async components
         setTimeout(trackActive, 300);
+        // two-pass scroll: first pass for fast sections, second for slow async ones (ArborKin)
+        setTimeout(scrollToHash, 400);
+        setTimeout(scrollToHash, 1200);
     })();
 </script>

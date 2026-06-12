@@ -12,4 +12,12 @@
     <PackageReference Include="MudBlazor" Version="8.15.0" />
   </ItemGroup>
 
+  <!-- Serve the Angular archive as plain static files; exclude from fingerprinting/compression -->
+  <ItemGroup>
+    <Content Update="wwwroot/archive/**/*">
+      <Fingerprint>false</Fingerprint>
+      <Compress>false</Compress>
+    </Content>
+  </ItemGroup>
+
 </Project>
