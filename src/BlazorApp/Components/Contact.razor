@@ -1,19 +1,58 @@
-<h3>Contact</h3>
-<p>Put a form on it</p>
+@inject HttpClient Http
+
+<section class="contact-section" id="contact">
+    <div class="contact-container">
+        <span class="section-eyebrow">// let's build something</span>
+        <h2 class="contact-heading">Get In Touch</h2>
+        <div class="contact-glass">
+            <p class="contact-sub">
+                Whether you have a project in mind, need a consultation,
+                or just want to connect — I'd love to hear from you.
+            </p>
+            @if (props is not null)
+            {
+                <div class="contact-actions">
+                    <a href="mailto:@props.Email" class="hero-btn hero-btn--primary">
+                        Send a Message ↗
+                    </a>
+                    @if (!string.IsNullOrEmpty(props.LinkedIn))
+                    {
+                        <a href="https://www.linkedin.com/in/@props.LinkedIn"
+                           class="hero-btn hero-btn--ghost"
+                           target="_blank" rel="noopener">
+                            LinkedIn ↗
+                        </a>
+                    }
+                </div>
+                <div class="contact-socials">
+                    <a href="mailto:@props.Email" class="contact-social" title="Email" aria-label="Email">
+                        <img src="images/socials/envelope.svg" alt="Email" />
+                    </a>
+                    @if (!string.IsNullOrEmpty(props.GitHub))
+                    {
+                        <a href="https://github.com/@props.GitHub"
+                           class="contact-social" target="_blank" rel="noopener" aria-label="GitHub">
+                            <img src="images/socials/github.svg" alt="GitHub" />
+                        </a>
+                    }
+                    @if (!string.IsNullOrEmpty(props.LinkedIn))
+                    {
+                        <a href="https://www.linkedin.com/in/@props.LinkedIn"
+                           class="contact-social" target="_blank" rel="noopener" aria-label="LinkedIn">
+                            <img src="images/socials/linkedin.svg" alt="LinkedIn" />
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>
 
 @code {
-    [Parameter, EditorRequired]
-    public required HttpClient Http { get; set; }
-
-    [Parameter, EditorRequired]
-    public required HeroImageService HeroImageService { get; set; }
-
-    private List<Project>? projects;
-    private HeroImage? hero;
+    private SiteProperties? props;
 
     protected override async Task OnInitializedAsync()
     {
-        projects = await Http.GetFromJsonAsync<List<Project>>("sample-data/projects.json");
-        hero = await HeroImageService.GetHeroAsync(img => img.Name is "contact");
+        props = await Http.GetFromJsonAsync<SiteProperties>("sample-data/siteproperties.json");
     }
 }

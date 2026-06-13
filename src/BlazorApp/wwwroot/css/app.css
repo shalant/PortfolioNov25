@@ -268,7 +268,6 @@ a:hover {
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   border-bottom: 1px solid rgba(26, 188, 156, 0.2);
   transition: background 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
-  overflow: hidden;
 }
 
 /* Bauhaus bg1 — tiled strip, small enough to read as pattern not blob */
@@ -487,6 +486,93 @@ a:hover {
   transform: scale(1.15);
 }
 
+/* Services dropdown */
+.nav-has-dropdown {
+  position: relative;
+}
+
+.nav-caret {
+  font-size: 0.6em;
+  margin-left: 0.15em;
+  display: inline-block;
+  transition: transform 0.2s ease;
+  line-height: 1;
+}
+
+.nav-has-dropdown:hover .nav-caret {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  min-width: 160px;
+  flex-direction: column;
+  background: rgba(6, 14, 26, 0.97);
+  backdrop-filter: blur(32px) saturate(160%);
+  border: 1px solid rgba(26, 188, 156, 0.18);
+  border-radius: 4px;
+  padding: 0.4rem 0;
+  z-index: 1001;
+}
+
+.nav-has-dropdown:hover .nav-dropdown {
+  display: flex;
+}
+
+.nav-dropdown-item {
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
+  color: rgba(238, 242, 247, 0.7) !important;
+  text-decoration: none;
+  padding: 0.55rem 1.25rem;
+  transition: color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-dropdown-item:hover {
+  color: #1abc9c !important;
+  background: rgba(26, 188, 156, 0.07);
+}
+
+@media (max-width: 820px) {
+  .nav-dropdown {
+    display: flex;
+    position: static;
+    background: none;
+    backdrop-filter: none;
+    border: none;
+    padding: 0;
+    min-width: 0;
+    border-radius: 0;
+    z-index: auto;
+  }
+
+  .nav-has-dropdown:hover .nav-caret {
+    transform: none;
+  }
+
+  .nav-caret {
+    display: none;
+  }
+
+  .nav-dropdown-item {
+    padding: 0.35rem 1.5rem 0.35rem 3rem;
+    font-size: 0.82rem;
+    color: rgba(238, 242, 247, 0.45) !important;
+    border-left: 1px solid rgba(26, 188, 156, 0.15);
+    margin-left: 2.5rem;
+  }
+
+  .nav-dropdown-item:hover {
+    color: #1abc9c !important;
+    background: none;
+  }
+}
+
 /* Contact CTA */
 .nav-cta {
   display: flex;
@@ -559,8 +645,9 @@ a:hover {
 
 .nav-toggle span {
   display: block;
-  height: 1.5px;
-  background: rgba(238, 242, 247, 0.7);
+  width: 100%;
+  height: 2px;
+  background: rgba(238, 242, 247, 0.85);
   border-radius: 2px;
   transition: all 0.3s ease;
   transform-origin: center;
@@ -606,10 +693,11 @@ a:hover {
     top: 100%;
     left: 0;
     right: 0;
-    background: rgba(6, 14, 26, 0.72);
+    background: rgba(6, 14, 26, 0.97);
     backdrop-filter: blur(32px) saturate(160%);
-    padding: 0.75rem 0 1rem;
-    border-bottom: 1px solid rgba(26, 188, 156, 0.15);
+    padding: 0.4rem 0 0.6rem;
+    border-bottom: 1px solid rgba(26, 188, 156, 0.2);
+    z-index: 999;
   }
 
   .nav-items.active {
@@ -623,7 +711,7 @@ a:hover {
   .nav-link,
   .nav-link--page,
   .nav-link--archive {
-    padding: 0.75rem 1.5rem;
+    padding: 0.45rem 1.5rem;
     font-size: 0.94rem;
     border-left: none;
     margin-left: 0;
@@ -3455,7 +3543,122 @@ a.music-album__title--link:hover {
 }
 
 /* ==========================================================================
-   22. FOOTER
+   22. CONTACT CTA
+   ========================================================================== */
+
+.contact-section {
+  background: linear-gradient(160deg, #07111f 0%, #0a1a2e 50%, #060e1a 100%);
+  padding: 7rem 0;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(26, 188, 156, 0.08);
+}
+
+.contact-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/images/artDecoBackground2.png');
+  background-size: auto 120%;
+  background-position: center;
+  background-repeat: no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.contact-container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 4rem;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.contact-heading {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: clamp(3rem, 7vw, 6rem) !important;
+  font-weight: 300 !important;
+  color: #eef2f7 !important;
+  letter-spacing: -2px !important;
+  margin: 0.5rem 0 0 0 !important;
+  padding-bottom: 0 !important;
+  text-align: center !important;
+  line-height: 1 !important;
+}
+
+.contact-heading::after {
+  display: none !important;
+}
+
+.contact-glass {
+  margin-top: 3rem;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid rgba(26, 188, 156, 0.18);
+  border-radius: 8px;
+  padding: 3rem;
+}
+
+.contact-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem !important;
+  font-weight: 300;
+  color: rgba(238, 242, 247, 0.55);
+  line-height: 1.85;
+  max-width: 440px;
+  margin: 0 auto 2.5rem !important;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contact-socials {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(26, 188, 156, 0.12);
+}
+
+.contact-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  opacity: 0.5;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.contact-social img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: invert(1) brightness(0.85);
+}
+
+.contact-social:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .contact-container { padding: 0 1.5rem; }
+  .contact-glass { padding: 2rem 1.5rem; }
+  .contact-heading { letter-spacing: -1px !important; }
+}
+
+/* ==========================================================================
+   23. FOOTER
    ========================================================================== */
 
 .site-footer {

@@ -64,38 +64,21 @@
                     </a>
                 </li>
 
-                <li>
-                    <a class="nav-link nav-link--page" href="/consulting">
-                        <!-- northeast arrow: forward motion, direction -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <line x1="3" y1="11" x2="11" y2="3"/>
-                            <polyline points="6,3 11,3 11,8"/>
-                        </svg>
-                        consulting
-                    </a>
-                </li>
-
-                <li>
-                    <a class="nav-link nav-link--page" href="/webdesign">
-                        <!-- bezier curve with endpoints: design / drawing tool -->
+                <li class="nav-has-dropdown">
+                    <span class="nav-link nav-link--page">
+                        <!-- split branch: multiple services -->
                         <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                            <path d="M2 12 C4 12 10 2 12 2"/>
-                            <circle cx="2"  cy="12" r="1.5" fill="currentColor" stroke="none"/>
-                            <circle cx="12" cy="2"  r="1.5" fill="currentColor" stroke="none"/>
+                            <line x1="7" y1="13" x2="7" y2="7"/>
+                            <line x1="7" y1="7" x2="3" y2="3"/>
+                            <line x1="7" y1="7" x2="11" y2="3"/>
                         </svg>
-                        web design
-                    </a>
-                </li>
-
-                <li>
-                    <a class="nav-link nav-link--archive" href="/archive">
-                        <!-- clock face: time / past work -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                            <circle cx="7" cy="7" r="5"/>
-                            <polyline points="7,4 7,7 9.5,7"/>
-                        </svg>
-                        archive ↗
-                    </a>
+                        services
+                        <span class="nav-caret">▾</span>
+                    </span>
+                    <div class="nav-dropdown">
+                        <a href="/consulting" class="nav-dropdown-item">↗ consulting</a>
+                        <a href="/webdesign" class="nav-dropdown-item">╱ web design</a>
+                    </div>
                 </li>
 
             </ul>
