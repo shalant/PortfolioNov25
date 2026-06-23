@@ -10,5 +10,19 @@
     "Syncfusion",
     "Dev Express reporting"
   ],
+  "highlights": [
+    {
+      "metric": "500+",
+      "text": "staff served by a custom Blazor ERP I'm building for a global nonprofit—spanning 50 reports, a Salesforce integration, and a scalable service layer."
+    },
+    {
+      "metric": "5 stacks",
+      "text": "shipped to production across Blazor, Angular, React, ASP.NET, and the MERN stack."
+    },
+    {
+      "metric": "340+",
+      "text": "GitHub repositories, backed by hands-on DevOps with Docker, Kubernetes, Terraform, Ansible, and Jenkins."
+    }
+  ],
   "detailOrQuote": "🛠️ Recently led the full-stack buildout of an ERP system for a global nonprofit—streamlining employee management and delivering 20 custom reports utilized by 500+ staff. 🎨 In a prior role, championed UI-UX design with Figma and led development across four major applications using Blazor, MVC, Syncfusion, SQL Server, and Docker."
 }

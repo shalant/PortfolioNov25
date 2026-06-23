@@ -1,0 +1,63 @@
+<span class="tech-chip">
+    @if (_iconFile is not null)
+    {
+        <img src="icons/tech/@_iconFile" alt="" class="tech-chip__icon" loading="lazy" aria-hidden="true" />
+    }
+    <span class="tech-chip__label">@Name</span>
+</span>
+
+@code {
+    [Parameter, EditorRequired]
+    public required string Name { get; set; }
+
+    private string? _iconFile;
+
+    // Aliases map to a local Devicon SVG in wwwroot/icons/tech/.
+    // Names with no official icon (Syncfusion, DevExpress, MudBlazor,
+    // Entity Framework, Kendo UI) fall through to a text-only chip.
+    private static readonly Dictionary<string, string> IconMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["c#"] = "csharp.svg",
+        ["csharp"] = "csharp.svg",
+        ["javascript"] = "javascript.svg",
+        ["js"] = "javascript.svg",
+        ["typescript"] = "typescript.svg",
+        ["ts"] = "typescript.svg",
+        ["sql"] = "sqlserver.svg",
+        ["ms sql server"] = "sqlserver.svg",
+        ["sql server"] = "sqlserver.svg",
+        ["mssql"] = "sqlserver.svg",
+        ["html"] = "html5.svg",
+        ["html5"] = "html5.svg",
+        ["html / css"] = "html5.svg",
+        ["css"] = "css3.svg",
+        ["css3"] = "css3.svg",
+        [".net"] = "dotnet.svg",
+        [".net 10"] = "dotnet.svg",
+        ["dotnet"] = "dotnet.svg",
+        ["microsoft dotnet"] = "dotnet.svg",
+        ["asp.net"] = "aspnet.svg",
+        ["aspnet"] = "aspnet.svg",
+        ["blazor"] = "blazor.svg",
+        ["angular"] = "angular.svg",
+        ["react"] = "react.svg",
+        ["node.js"] = "nodejs.svg",
+        ["node"] = "nodejs.svg",
+        ["nodejs"] = "nodejs.svg",
+        ["bootstrap"] = "bootstrap.svg",
+        ["azure"] = "azure.svg",
+        ["aws"] = "aws.svg",
+        ["amazon web services"] = "aws.svg",
+        ["docker"] = "docker.svg",
+        ["linux"] = "linux.svg",
+        ["digital ocean"] = "digitalocean.svg",
+        ["digitalocean"] = "digitalocean.svg",
+        ["figma"] = "figma.svg",
+        ["gitlab"] = "gitlab.svg",
+    };
+
+    protected override void OnParametersSet()
+    {
+        IconMap.TryGetValue(Name.Trim(), out _iconFile);
+    }
+}
