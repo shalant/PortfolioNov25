@@ -40,6 +40,30 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Keyboard focus ring — teal accent, only shown for keyboard users (not on
+   mouse click) so it never interferes with the pointer experience. */
+:focus-visible {
+  outline: 2px solid #1abc9c;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Respect users who ask for less motion: neutralize transitions, animations,
+   and smooth scrolling site-wide. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 div#main {
   display: flex;
   flex-direction: column;
@@ -931,17 +955,17 @@ a:hover {
   justify-content: center;
   width: 44px;
   height: 44px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(238, 242, 247, 0.88);
   border-radius: 6px;
   overflow: hidden;
   flex-shrink: 0;
 }
 
 .experience-list__logo {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   object-fit: contain;
-  filter: grayscale(70%) brightness(0.8);
+  filter: grayscale(70%) brightness(0.9);
   transition: filter 0.3s ease;
 }
 
@@ -997,18 +1021,26 @@ a:hover {
 }
 
 .experience-detail__logo-wrap {
-  margin-bottom: 1.75rem;
-  height: 56px;
+  width: fit-content;
+  margin: 0 auto 2rem;
+  height: 108px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 18px;
+  padding: 1rem 2.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .experience-detail__logo {
-  max-height: 56px;
+  max-height: 62px;
   width: auto;
-  max-width: 220px;
+  max-width: 260px;
   object-fit: contain;
-  filter: drop-shadow(0 4px 16px rgba(26, 188, 156, 0.12));
 }
 
 .experience-detail__title {
@@ -1827,14 +1859,11 @@ img.social-icon {
 }
 
 .about-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5rem;
-  align-items: start;
   margin-bottom: 3.5rem;
 }
 
 .about-bio {
+  max-width: 720px;
   border-left: 2px solid #1abc9c;
   padding-left: 2.5rem;
 }
@@ -1890,6 +1919,63 @@ img.social-icon {
   border-color: #1abc9c;
   background: rgba(26, 188, 156, 0.14);
   color: #1abc9c;
+}
+
+/* Shared technology chip with official brand icon (TechChip.razor) */
+.tech-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(238, 242, 247, 0.85);
+  border: 1px solid rgba(26, 188, 156, 0.3);
+  padding: 0.4rem 0.9rem;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+  transition: all 0.25s ease;
+  background: rgba(26, 188, 156, 0.06);
+  cursor: default;
+}
+
+.tech-chip__icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.tech-chip:hover {
+  border-color: #1abc9c;
+  background: rgba(26, 188, 156, 0.14);
+  color: #1abc9c;
+}
+
+/* Wordmark vendor logos (Syncfusion, DevExpress) render as the logo alone,
+   no separate text label since the name is already baked into the mark. */
+.tech-chip--wordmark {
+  padding: 0.35rem 0.8rem;
+}
+
+.tech-chip__logo-wrap {
+  display: flex;
+  align-items: center;
+  height: 0.95rem;
+}
+
+.tech-chip__logo-wrap--light {
+  background: rgba(238, 242, 247, 0.92);
+  border-radius: 3px;
+  padding: 0.2rem 0.5rem;
+}
+
+.tech-chip__logo {
+  height: 100%;
+  width: auto;
+  max-width: 4.5rem;
+  object-fit: contain;
+  display: block;
 }
 
 .about-quote {
@@ -2955,18 +3041,48 @@ img.social-icon {
 .casual-hobby {
   position: relative;
   display: flex;
-  flex-direction: column;
-  padding: 0.75rem 1.4rem 0.65rem;
+  align-items: center;
+  gap: 0.95rem;
+  padding: 0.85rem 1.4rem;
   border: 1px solid rgba(26, 188, 156, 0.15);
-  border-radius: 2px;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  border-radius: 4px;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
   cursor: default;
-  min-width: 11rem;
+  min-width: 12.5rem;
 }
 
 .casual-hobby:hover {
   border-color: rgba(26, 188, 156, 0.5);
   background: rgba(26, 188, 156, 0.05);
+  transform: translateY(-2px);
+}
+
+.casual-hobby__icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgba(26, 188, 156, 0.08);
+  color: rgba(26, 188, 156, 0.65);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.casual-hobby__icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.casual-hobby:hover .casual-hobby__icon {
+  color: #1abc9c;
+  background: rgba(26, 188, 156, 0.16);
+}
+
+.casual-hobby__text {
+  display: flex;
+  flex-direction: column;
 }
 
 .casual-hobby__name {
@@ -3633,22 +3749,31 @@ a.music-album__title--link:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  opacity: 0.5;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgba(26, 188, 156, 0.07);
+  border: 1px solid rgba(26, 188, 156, 0.12);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .contact-social img {
-  width: 100%;
-  height: 100%;
+  width: 1.05rem;
+  height: 1.05rem;
   object-fit: contain;
-  filter: invert(1) brightness(0.85);
+  filter: invert(1) brightness(0.9);
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
 }
 
 .contact-social:hover {
-  opacity: 1;
+  background: rgba(26, 188, 156, 0.16);
+  border-color: rgba(26, 188, 156, 0.4);
   transform: translateY(-2px);
+}
+
+.contact-social:hover img {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {

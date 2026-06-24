@@ -7,17 +7,20 @@
     "icons": "C#, Blazor, ASP.NET, Syncfusion, SQL, Azure",
     "image": "/images/franciscan-frairs-logo-2023.jpg",
     "bulletpoints": [
-      "💡 Spearheaded development of 10 dynamic features—including a directory card layout with cascading filters and a dual-mode prayer wall interface—delivering intuitive user experiences and robust admin functionality. Composed with Blazor, C# .NET 9, MS SQL Server, and Syncfusion controls.",
-      "🔧 Elevated backend performance by implementing data adaptors for high-volume reads and architecting a scalable service layer, laying the foundation for a future API ecosystem.",
-      "📊 Designed and deployed 20 insightful reports using DevExpress Reporting, enabling data-driven decisions powered by a centralized SQL Server data store.",
-      "🧩 Reengineered a unified Data Grid solution to streamline data visualization across 50+ database tables, enhancing consistency and maintainability"
+      "🛠️ Developed a custom SQL data-masking tool to generate sanitized development databases, establishing a standardized, secure pipeline for internal and external contributors to interface with complex ERP data without risk.",
+      "🔄 Orchestrated a seamless Salesforce integration to synchronize and reconcile disparate ERP and CRM records, ensuring data integrity and cross-platform consistency across the enterprise ecosystem.",
+      "💡 Spearheaded development of 10 dynamic features—including a directory card layout with cascading filters and a dual-mode prayer wall interface—delivering intuitive user experiences and robust admin functionality. Composed with Blazor, C# .NET 10, MS SQL Server, and Syncfusion controls.",
+      "⚙️ Engineered 2 CI/CD pipelines using GitHub Enterprise Actions and YAML (IaC) to automate the deployment of 10 production Blazor applications and a custom SharePoint site.",
+      "🔧 Elevated backend performance by architecting a scalable service layer, laying the foundation for a future API ecosystem.",
+      "📊 Designed and deployed 50 insightful reports using DevExpress Reporting, enabling data-driven decisions powered by a centralized SQL Server data store.",
+      "🧩 Reengineered a unified Data Grid solution to streamline data visualization across 50+ database tables, enhancing consistency and maintainability."
     ]
   },
   {
     "title": "Front-end software engineer",
     "titleOLD": "Developed 4 applications, mainly front-end and design.",
     "description": "Orchestrated end-to-end UI/UX design for four distinct applications, transforming initial requirements into sleek, user-friendly interfaces using Figma, .NET Blazor, Syncfusion controls, and custom CSS",
-    "url": "https://tackle.ai.png",
+    "url": "https://tackle.ai",
     "icons": "Figma, Blazor, ASP.NET, Syncfusion, CSS",
     "image": "/images/Tackle_Ai_SUA_logo.png",
     "bulletpoints": [
@@ -44,7 +47,7 @@
   {
     "title": "Full-stack .NET software engineer",
     "description": "Engineered a robust, enterprise-grade ERP system for a global manufacturing firm—leveraged .NET Blazor, MudBlazor, SQL Server, and Azure to modernize operations from end to end",
-    "url": "https://github.com/microsoft/workshop-library/tree/main/full/build-resume-website",
+    "url": "https://tcindustries.com/",
     "icons": "Blazor, ASP.NET, MudBlazor, SQL, Azure",
     "image": "/images/Tc-logo-small.png",
 

@@ -59,7 +59,7 @@
                         <div class="experience-detail__chips">
                             @foreach (var chip in active.Icons.Split(","))
                             {
-                                <span class="about-skill-chip">@chip.Trim()</span>
+                                <TechChip Name="@chip.Trim()" />
                             }
                         </div>
                         @if (!string.IsNullOrEmpty(active.Url) && active.Url.StartsWith("http"))
