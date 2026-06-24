@@ -1,9 +1,18 @@
-<span class="tech-chip">
-    @if (_iconFile is not null)
+<span class="tech-chip @(_isWordmark ? "tech-chip--wordmark" : "")">
+    @if (_iconFile is not null && _isWordmark)
     {
-        <img src="icons/tech/@_iconFile" alt="" class="tech-chip__icon" loading="lazy" aria-hidden="true" />
+        <span class="tech-chip__logo-wrap @(_needsLightBacking ? "tech-chip__logo-wrap--light" : "")">
+            <img src="icons/tech/@_iconFile" alt="@Name" class="tech-chip__logo" loading="lazy" />
+        </span>
     }
-    <span class="tech-chip__label">@Name</span>
+    else
+    {
+        @if (_iconFile is not null)
+        {
+            <img src="icons/tech/@_iconFile" alt="" class="tech-chip__icon" loading="lazy" aria-hidden="true" />
+        }
+        <span class="tech-chip__label">@Name</span>
+    }
 </span>
 
 @code {
@@ -11,10 +20,12 @@
     public required string Name { get; set; }
 
     private string? _iconFile;
+    private bool _isWordmark;
+    private bool _needsLightBacking;
 
-    // Aliases map to a local Devicon SVG in wwwroot/icons/tech/.
-    // Names with no official icon (Syncfusion, DevExpress, MudBlazor,
-    // Entity Framework, Kendo UI) fall through to a text-only chip.
+    // Aliases map to a local brand icon in wwwroot/icons/tech/ (mostly Devicon SVGs).
+    // Names with no official mark (MudBlazor's glyph aside, Entity Framework, Kendo UI)
+    // fall through to a text-only chip.
     private static readonly Dictionary<string, string> IconMap = new(StringComparer.OrdinalIgnoreCase)
     {
         ["c#"] = "csharp.svg",
@@ -54,10 +65,35 @@
         ["digitalocean"] = "digitalocean.svg",
         ["figma"] = "figma.svg",
         ["gitlab"] = "gitlab.svg",
+        ["mudblazor"] = "mudblazor.svg",
+        ["syncfusion"] = "syncfusion.svg",
+        ["devexpress"] = "devexpress.png",
+        ["dev express reporting"] = "devexpress.png",
+        ["entity framework"] = "entityframework.svg",
+        ["entity framework core"] = "entityframework.svg",
+        ["ef core"] = "entityframework.svg",
+    };
+
+    // These vendor marks are full wordmarks (logo + name baked together), so the
+    // chip renders just the logo image instead of icon + duplicate text label.
+    private static readonly HashSet<string> WordmarkIcons = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "syncfusion.svg",
+        "devexpress.png",
+    };
+
+    // DevExpress's mark has near-black ink that disappears on this site's dark
+    // background, so it gets a small light backing plate; Syncfusion's white
+    // variant was already chosen to read on dark UI and needs no backing.
+    private static readonly HashSet<string> NeedsLightBacking = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "devexpress.png",
     };
 
     protected override void OnParametersSet()
     {
         IconMap.TryGetValue(Name.Trim(), out _iconFile);
+        _isWordmark = _iconFile is not null && WordmarkIcons.Contains(_iconFile);
+        _needsLightBacking = _iconFile is not null && NeedsLightBacking.Contains(_iconFile);
     }
 }

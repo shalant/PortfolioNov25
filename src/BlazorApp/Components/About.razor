@@ -15,18 +15,6 @@
                 <div class="about-bio">
                     <p class="about-description">@aboutMe.Description</p>
                 </div>
-                @if (aboutMe.Highlights.Count > 0)
-                {
-                    <ul class="about-highlights">
-                        @foreach (var highlight in aboutMe.Highlights)
-                        {
-                            <li class="about-highlight">
-                                <span class="about-highlight__metric">@highlight.Metric</span>
-                                <span class="about-highlight__text">@highlight.Text</span>
-                            </li>
-                        }
-                    </ul>
-                }
             </div>
 
             <blockquote class="about-quote">@aboutMe.DetailOrQuote</blockquote>

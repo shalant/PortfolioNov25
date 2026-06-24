@@ -1,5 +1,5 @@
 {
-  "description": "Dynamic full-stack .NET developer with three years of experience with a focus on Blazor ERP development",
+  "description": "Full-stack .NET developer who turns sprawling enterprise systems into software people actually enjoy using—Blazor by trade, detail-obsessed by nature.",
   "skills": [
     "Microsoft Dotnet, C#, Blazor",
     "Figma",
@@ -10,19 +10,5 @@
     "Syncfusion",
     "Dev Express reporting"
   ],
-  "highlights": [
-    {
-      "metric": "500+",
-      "text": "staff served by a custom Blazor ERP I'm building for a global nonprofit—spanning 50 reports, a Salesforce integration, and a scalable service layer."
-    },
-    {
-      "metric": "5 stacks",
-      "text": "shipped to production across Blazor, Angular, React, ASP.NET, and the MERN stack."
-    },
-    {
-      "metric": "340+",
-      "text": "GitHub repositories, backed by hands-on DevOps with Docker, Kubernetes, Terraform, Ansible, and Jenkins."
-    }
-  ],
-  "detailOrQuote": "🛠️ Recently led the full-stack buildout of an ERP system for a global nonprofit—streamlining employee management and delivering 20 custom reports utilized by 500+ staff. 🎨 In a prior role, championed UI-UX design with Figma and led development across four major applications using Blazor, MVC, Syncfusion, SQL Server, and Docker."
+  "detailOrQuote": "🛠️ Currently leading the full-stack build of an ERP system for a global nonprofit—built a secure data-masking pipeline for safe dev access, synced Salesforce and ERP records, and shipped 50 custom reports relied on by 500+ staff. 🎨 Before that, led UI/UX design and development across four applications with Figma, Blazor, Syncfusion, and SQL Server."
 }
