@@ -147,7 +147,16 @@
         // highlight consulting / web design links when on their pages
         const highlightPageLink = () => {
             const path = window.location.pathname.replace(/\/$/, '');
-            document.querySelectorAll('.nav-link--page').forEach(link => {
+            const servicePages = ['/consulting', '/webdesign'];
+            const isServicePage = servicePages.includes(path);
+
+            // highlight parent services link when on a service subpage
+            document.querySelectorAll('.nav-link--page:not([href])').forEach(link => {
+                link.classList.toggle('active', isServicePage);
+            });
+
+            // highlight dropdown items when on their pages
+            document.querySelectorAll('.nav-dropdown-item').forEach(link => {
                 const href = (link.getAttribute('href') ?? '').replace(/\/$/, '');
                 link.classList.toggle('active', href === path);
             });
@@ -167,6 +176,9 @@
         window.addEventListener('scroll', trackActive, { passive: true });
         // fire after Blazor finishes rendering its async components
         setTimeout(trackActive, 300);
+        // highlight page links (consulting/web design) after Blazor renders
+        setTimeout(highlightPageLink, 300);
+        setTimeout(highlightPageLink, 800);
         // two-pass scroll: first pass for fast sections, second for slow async ones (ArborKin)
         setTimeout(scrollToHash, 400);
         setTimeout(scrollToHash, 1200);
