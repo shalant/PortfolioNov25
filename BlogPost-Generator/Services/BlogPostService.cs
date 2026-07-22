@@ -205,6 +205,9 @@ Format your response EXACTLY as:
 
         [JsonPropertyName("readingTimeMinutes")]
         public int ReadingTimeMinutes { get; set; }
+
+        [JsonPropertyName("tags")]
+        public List<string> Tags { get; set; } = new();
     }
 
     private class ApiResponse

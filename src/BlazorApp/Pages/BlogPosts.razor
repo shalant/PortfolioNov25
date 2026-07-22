@@ -24,6 +24,31 @@
             <h2>Latest Posts</h2>
             <a href="/blog/archive" class="blog-archive-link">View Archive →</a>
         </div>
+
+        <div class="blog-search-section">
+            <input type="text"
+                   placeholder="Search posts..."
+                   @bind="SearchQuery"
+                   class="blog-search-input" />
+
+            @if (GetAllTags().Any())
+            {
+                <div class="blog-tags-filter">
+                    <button class="blog-tag @(SelectedTag == null ? "active" : "")"
+                            @onclick="() => SelectedTag = null">
+                        All
+                    </button>
+                    @foreach (var tag in GetAllTags())
+                    {
+                        <button class="blog-tag @(SelectedTag == tag ? "active" : "")"
+                                @onclick="() => SelectedTag = tag">
+                            @tag
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+
         @if (Posts == null)
         {
             <div class="text-center py-5">
@@ -38,8 +63,15 @@
         }
         else
         {
-            <div class="blog-grid">
-                @foreach (var post in Posts.OrderByDescending(p => p.Date))
+            var filtered = GetFilteredPosts();
+            @if (!filtered.Any())
+            {
+                <div class="alert alert-info">No posts match your search.</div>
+            }
+            else
+            {
+                <div class="blog-grid">
+                    @foreach (var post in filtered.OrderByDescending(p => p.Date))
                 {
                     <article class="blog-post-card" @onclick="() => SelectPost(post)">
                         <div class="blog-post-card__content">
@@ -49,11 +81,21 @@
                                 <span class="blog-post-card__reading-time">@post.ReadingTimeMinutes min read</span>
                             </div>
                             <p class="blog-post-card__excerpt">@post.Excerpt</p>
+                            @if (post.Tags.Any())
+                            {
+                                <div class="blog-post-card__tags">
+                                    @foreach (var tag in post.Tags)
+                                    {
+                                        <span class="blog-post-card__tag">@tag</span>
+                                    }
+                                </div>
+                            }
                         </div>
                         <div class="blog-post-card__arrow">→</div>
                     </article>
-                }
-            </div>
+                    }
+                </div>
+            }
         }
 
         @if (SelectedPost != null)
@@ -69,6 +111,16 @@
                                 <span class="blog-post-detail__reading-time">@SelectedPost.ReadingTimeMinutes min read</span>
                             </div>
                         </header>
+                        @if (SelectedPost.Tags?.Count > 0)
+                        {
+                            <div class="blog-post-detail__tags">
+                                @foreach (var tag in SelectedPost.Tags)
+                                {
+                                    <span class="blog-post-detail__tag" @onclick="() => { SelectedTag = tag; DeselectPost(); }">@tag</span>
+                                }
+                            </div>
+                        }
+
                         @if (SelectedPost.Images?.Count > 0)
                         {
                             <div class="blog-post-detail__images">
@@ -81,6 +133,27 @@
                         <div class="blog-post-detail__content">
                             @((MarkupString)SelectedPost.Content)
                         </div>
+
+                        @{
+                            var relatedPosts = GetRelatedPosts(SelectedPost).Take(3).ToList();
+                            if (relatedPosts.Any())
+                            {
+                                <div class="blog-post-detail__related">
+                                    <h3>Related Posts</h3>
+                                    <ul class="related-posts-list">
+                                        @foreach (var related in relatedPosts)
+                                        {
+                                            <li class="related-post-item">
+                                                <a href="javascript:void(0)" @onclick="() => SelectPost(related)" class="related-post-link">
+                                                    @related.Title
+                                                </a>
+                                                <span class="related-post-meta">@DateTime.Parse(related.Date).ToString("MMM d, yyyy")</span>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        }
                     </article>
                 </div>
             </div>
@@ -93,6 +166,8 @@
 @code {
     private List<BlogPost>? Posts;
     private BlogPost? SelectedPost;
+    private string SearchQuery = string.Empty;
+    private string? SelectedTag = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -117,6 +192,53 @@
         SelectedPost = null;
     }
 
+    private List<BlogPost> GetFilteredPosts()
+    {
+        var filtered = Posts ?? new List<BlogPost>();
+
+        if (!string.IsNullOrWhiteSpace(SearchQuery))
+        {
+            var query = SearchQuery.ToLower();
+            filtered = filtered.Where(p =>
+                p.Title.ToLower().Contains(query) ||
+                p.Excerpt.ToLower().Contains(query)
+            ).ToList();
+        }
+
+        if (!string.IsNullOrWhiteSpace(SelectedTag))
+        {
+            filtered = filtered.Where(p => p.Tags.Contains(SelectedTag)).ToList();
+        }
+
+        return filtered;
+    }
+
+    private List<string> GetAllTags()
+    {
+        return Posts?
+            .SelectMany(p => p.Tags)
+            .Distinct()
+            .OrderBy(t => t)
+            .ToList() ?? new List<string>();
+    }
+
+    private List<BlogPost> GetRelatedPosts(BlogPost currentPost)
+    {
+        return (Posts ?? new List<BlogPost>())
+            .Where(p => p.Id != currentPost.Id)
+            .OrderByDescending(p =>
+            {
+                var score = 0;
+                score += p.Tags.Count(t => currentPost.Tags.Contains(t)) * 3;
+                var titleWords = currentPost.Title.Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
+                score += titleWords.Count(w => p.Title.Contains(w, System.StringComparison.OrdinalIgnoreCase));
+                return score;
+            })
+            .Where(p => p.Tags.Any(t => currentPost.Tags.Contains(t)) ||
+                       currentPost.Title.Split(' ').Any(w => p.Title.Contains(w, System.StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+    }
+
     private class BlogPost
     {
         [JsonPropertyName("id")]
@@ -139,6 +261,9 @@
 
         [JsonPropertyName("readingTimeMinutes")]
         public int ReadingTimeMinutes { get; set; }
+
+        [JsonPropertyName("tags")]
+        public List<string> Tags { get; set; } = new();
     }
 }
 
@@ -193,6 +318,107 @@
     .blog-archive-link:hover {
         color: #eef2f7;
         transform: translateX(4px);
+    }
+
+    .blog-search-section {
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .blog-search-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: rgba(238, 242, 247, 0.05);
+        border: 1px solid rgba(26, 188, 156, 0.2);
+        border-radius: 8px;
+        color: #eef2f7;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .blog-search-input:focus {
+        outline: none;
+        background: rgba(238, 242, 247, 0.08);
+        border-color: rgba(26, 188, 156, 0.5);
+        box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.1);
+    }
+
+    .blog-search-input::placeholder {
+        color: rgba(238, 242, 247, 0.4);
+    }
+
+    .blog-tags-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .blog-tag {
+        padding: 0.5rem 1rem;
+        background: rgba(26, 188, 156, 0.1);
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 20px;
+        color: #1abc9c;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+
+    .blog-tag:hover {
+        background: rgba(26, 188, 156, 0.2);
+        border-color: rgba(26, 188, 156, 0.5);
+    }
+
+    .blog-tag.active {
+        background: #1abc9c;
+        color: #060e1a;
+        border-color: #1abc9c;
+    }
+
+    .blog-post-card__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .blog-post-card__tag {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .blog-post-detail__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .blog-post-detail__tag {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: rgba(26, 188, 156, 0.1);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .blog-post-detail__tag:hover {
+        background: rgba(26, 188, 156, 0.2);
+        border-color: rgba(26, 188, 156, 0.5);
     }
 
     .blog-grid {
@@ -445,6 +671,55 @@
 
     .blog-post-detail__content em {
         font-style: italic;
+    }
+
+    .blog-post-detail__related {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid #f0f0f0;
+    }
+
+    .blog-post-detail__related h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0 0 1.5rem 0;
+    }
+
+    .related-posts-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .related-post-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+    }
+
+    .related-post-link {
+        color: #1abc9c;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        flex: 1;
+    }
+
+    .related-post-link:hover {
+        color: #2c3e50;
+        text-decoration: underline;
+    }
+
+    .related-post-meta {
+        color: #999;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        margin-left: 1rem;
     }
 
     @@media (max-width: 768px) {
