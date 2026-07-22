@@ -135,7 +135,8 @@ Format your response EXACTLY as:
             Date = DateTime.Now.ToString("yyyy-MM-dd"),
             Excerpt = excerpt ?? TruncateText(content, 200),
             Content = content,
-            Images = images ?? new List<string>()
+            Images = images ?? new List<string>(),
+            ReadingTimeMinutes = CalculateReadingTime(content)
         };
 
         posts.Add(post);
@@ -174,6 +175,14 @@ Format your response EXACTLY as:
         return stripped.Length > maxLength ? stripped.Substring(0, maxLength) + "..." : stripped;
     }
 
+    private int CalculateReadingTime(string htmlContent)
+    {
+        var stripped = System.Text.RegularExpressions.Regex.Replace(htmlContent, "<[^>]*>", "");
+        var words = stripped.Split(new[] { ' ', '\n', '\r', '\t' }, System.StringSplitOptions.RemoveEmptyEntries).Length;
+        var minutes = Math.Max(1, Math.Ceiling(words / 200.0));
+        return (int)minutes;
+    }
+
     public class BlogPost
     {
         [JsonPropertyName("id")]
@@ -193,6 +202,15 @@ Format your response EXACTLY as:
 
         [JsonPropertyName("images")]
         public List<string> Images { get; set; } = new();
+
+        [JsonPropertyName("readingTimeMinutes")]
+        public int ReadingTimeMinutes { get; set; }
+
+        [JsonPropertyName("tags")]
+        public List<string> Tags { get; set; } = new();
+
+        [JsonPropertyName("featured")]
+        public bool Featured { get; set; }
     }
 
     private class ApiResponse
