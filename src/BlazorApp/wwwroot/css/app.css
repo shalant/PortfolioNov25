@@ -4049,3 +4049,34 @@ a.music-album__title--link:hover {
     font-size: 0.9rem;
   }
 }
+
+/* Blog Archive Responsive */
+@media (max-width: 768px) {
+  .archive-year__title {
+    font-size: 1.5rem;
+  }
+
+  .archive-months {
+    grid-template-columns: 1fr;
+  }
+
+  .archive-post {
+    flex-wrap: wrap;
+  }
+
+  .archive-post__date {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0.25rem;
+  }
+
+  .blog-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .blog-header h2 {
+    font-size: 1.25rem;
+  }
+}

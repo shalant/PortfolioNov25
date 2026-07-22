@@ -1,0 +1,315 @@
+@page "/blog/archive"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>Blog Archive — Doug Rosenberg Dev</PageTitle>
+
+<Header />
+
+<section class="subpage-hero" id="archive-hero">
+    <div class="subpage-hero__grid-bg"></div>
+    <div class="subpage-hero__content">
+        <div class="subpage-hero__text">
+            <span class="section-eyebrow">// archive</span>
+            <h1 class="subpage-hero__title">Blog Archive</h1>
+            <p class="subpage-hero__sub">Browse posts by date</p>
+        </div>
+    </div>
+</section>
+
+<section class="archive-section">
+    <div class="archive-container">
+        @if (GroupedPosts == null)
+        {
+            <div class="text-center py-5">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else if (!GroupedPosts.Any())
+        {
+            <div class="alert alert-info">No blog posts yet. Check back soon!</div>
+        }
+        else
+        {
+            <div class="archive-timeline">
+                @foreach (var yearGroup in GroupedPosts.OrderByDescending(y => y.Year))
+                {
+                    <div class="archive-year">
+                        <h2 class="archive-year__title">@yearGroup.Year</h2>
+                        <div class="archive-months">
+                            @foreach (var monthGroup in yearGroup.Months.OrderByDescending(m => m.Month))
+                            {
+                                <div class="archive-month">
+                                    <h3 class="archive-month__title">
+                                        @GetMonthName(monthGroup.Month)
+                                        <span class="archive-month__count">(@monthGroup.Posts.Count)</span>
+                                    </h3>
+                                    <ul class="archive-posts">
+                                        @foreach (var post in monthGroup.Posts.OrderByDescending(p => p.Date))
+                                        {
+                                            <li class="archive-post">
+                                                <div class="archive-post__date">@DateTime.Parse(post.Date).ToString("d")</div>
+                                                <a href="javascript:void(0)" @onclick="() => NavigateToBlog(post.Id)" class="archive-post__link">
+                                                    @post.Title
+                                                </a>
+                                                <span class="archive-post__reading-time">@post.ReadingTimeMinutes min</span>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="archive-footer">
+            <a href="/blog" class="archive-back-link">← Back to Blog</a>
+        </div>
+    </div>
+</section>
+
+<Footer Http="Http" />
+
+@code {
+    private List<YearGroup>? GroupedPosts;
+    private List<BlogPost>? AllPosts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            AllPosts = await Http.GetFromJsonAsync<List<BlogPost>>("sample-data/blog-posts.json") ?? new List<BlogPost>();
+            GroupPosts();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading blog posts: {ex.Message}");
+            AllPosts = new List<BlogPost>();
+            GroupedPosts = new List<YearGroup>();
+        }
+    }
+
+    private void GroupPosts()
+    {
+        GroupedPosts = AllPosts?
+            .GroupBy(p => DateTime.Parse(p.Date).Year)
+            .OrderByDescending(y => y.Key)
+            .Select(yearGroup => new YearGroup
+            {
+                Year = yearGroup.Key,
+                Months = yearGroup
+                    .GroupBy(p => DateTime.Parse(p.Date).Month)
+                    .OrderByDescending(m => m.Key)
+                    .Select(monthGroup => new MonthGroup
+                    {
+                        Month = monthGroup.Key,
+                        Posts = monthGroup.ToList()
+                    })
+                    .ToList()
+            })
+            .ToList();
+    }
+
+    private string GetMonthName(int month)
+    {
+        return new DateTime(2000, month, 1).ToString("MMMM");
+    }
+
+    private void NavigateToBlog(string postId)
+    {
+        var post = AllPosts?.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            Navigation.NavigateTo($"/blog?post={postId}");
+        }
+    }
+
+    private class YearGroup
+    {
+        public int Year { get; set; }
+        public List<MonthGroup> Months { get; set; } = new();
+    }
+
+    private class MonthGroup
+    {
+        public int Month { get; set; }
+        public List<BlogPost> Posts { get; set; } = new();
+    }
+
+    private class BlogPost
+    {
+        [JsonPropertyName("id")]
+        public string Id { get; set; } = string.Empty;
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; } = string.Empty;
+
+        [JsonPropertyName("date")]
+        public string Date { get; set; } = string.Empty;
+
+        [JsonPropertyName("readingTimeMinutes")]
+        public int ReadingTimeMinutes { get; set; }
+    }
+}
+
+<style>
+    .archive-section {
+        padding: 4rem 0;
+        background: #060e1a;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .archive-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle, rgba(26, 188, 156, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .archive-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .archive-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .archive-year {
+        border-left: 3px solid #1abc9c;
+        padding-left: 2rem;
+        position: relative;
+    }
+
+    .archive-year::before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 0;
+        width: 12px;
+        height: 12px;
+        background: #1abc9c;
+        border-radius: 50%;
+        border: 3px solid #060e1a;
+    }
+
+    .archive-year__title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1abc9c;
+        margin: 0 0 2rem 0;
+    }
+
+    .archive-months {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .archive-month {
+        background: rgba(238, 242, 247, 0.03);
+        border: 1px solid rgba(26, 188, 156, 0.1);
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .archive-month:hover {
+        background: rgba(238, 242, 247, 0.06);
+        border-color: rgba(26, 188, 156, 0.2);
+    }
+
+    .archive-month__title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #eef2f7;
+        margin: 0 0 1rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .archive-month__count {
+        font-size: 0.85rem;
+        color: rgba(238, 242, 247, 0.5);
+        font-weight: 400;
+    }
+
+    .archive-posts {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .archive-post {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.95rem;
+    }
+
+    .archive-post__date {
+        color: rgba(238, 242, 247, 0.5);
+        font-size: 0.8rem;
+        min-width: 60px;
+        text-align: right;
+    }
+
+    .archive-post__link {
+        color: #1abc9c;
+        text-decoration: none;
+        flex: 1;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .archive-post__link:hover {
+        color: #eef2f7;
+        text-decoration: underline;
+    }
+
+    .archive-post__reading-time {
+        color: rgba(238, 242, 247, 0.4);
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .archive-footer {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(26, 188, 156, 0.1);
+    }
+
+    .archive-back-link {
+        color: #1abc9c;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .archive-back-link:hover {
+        color: #eef2f7;
+        transform: translateX(-4px);
+    }
+</style>
