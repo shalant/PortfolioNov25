@@ -2,6 +2,7 @@ using BlogPost_Generator;
 using BlogPost_Generator.Components;
 using BlogPost_Generator.Services;
 using Microsoft.AspNetCore.Components;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(sp.GetRequiredService<NavigationManager>().BaseUri) });
 builder.Services.AddScoped<BlogPostService>();
+builder.Services.AddMudServices();
 
 var webApp = builder.Build();
 
