@@ -1,0 +1,446 @@
+@page "/"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using Microsoft.Extensions.Configuration
+@using BlogPost_Generator.Services
+@using Microsoft.AspNetCore.Components.Web
+@rendermode RenderMode.InteractiveServer
+@inject IConfiguration Configuration
+@inject BlogPostService BlogService
+
+<div class="generator-container">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
+        @if (SelectedVersion == null)
+        {
+            <div class="mb-8">
+                <MudText Typo="Typo.h3" GutterBottom="true" Align="Align.Center">
+                    📝 Create Your Blog Post
+                </MudText>
+                <MudText Typo="Typo.subtitle1" Align="Align.Center" Color="Color.Default">
+                    Write raw thoughts, let Claude polish them into publication-ready posts
+                </MudText>
+            </div>
+
+            <MudPaper Elevation="2" Class="pa-8 mb-6">
+                <MudForm @ref="form" @bind-IsValid="@isFormValid" @bind-Errors="@errors">
+                    <MudTextField @bind-Value="Title" Label="Post Title"
+                                  Placeholder="e.g., Building Better APIs"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Class="mb-6" />
+
+                    <MudTextField @bind-Value="Content" Label="Raw Content"
+                                  Placeholder="Paste your raw thoughts here..."
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Lines="12"
+                                  Class="mb-6" />
+
+                    <div class="mb-6">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2">Upload Photos (Optional)</MudText>
+                        <InputFile id="image-upload" OnChange="OnFilesSelected" accept=".jpg,.jpeg,.png,.gif,.webp" multiple style="display:none;" />
+                        <label for="image-upload" style="cursor: pointer; display: inline-block;">
+                            <MudButton HtmlTag="span"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                                Choose Images
+                            </MudButton>
+                        </label>
+
+                        @if (UploadedImages.Any())
+                        {
+                            <div class="mt-4">
+                                <MudText Typo="Typo.subtitle2" Class="mb-3">Uploaded Images (@UploadedImages.Count)</MudText>
+                                <div class="image-preview-grid">
+                                    @foreach (var (image, idx) in UploadedImages.Select((x, i) => (x, i)))
+                                    {
+                                        <div class="image-preview-item">
+                                            <img src="@image.DataUrl" alt="Preview" />
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                           Size="Size.Small"
+                                                           OnClick="() => RemoveImage(idx)"
+                                                           Class="delete-btn" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Large"
+                               FullWidth="true"
+                               OnClick="GenerateVersions"
+                               Disabled="@IsLoading"
+                               Class="mb-4">
+                        @if (IsLoading)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Generating 3 versions...</MudText>
+                        }
+                        else
+                        {
+                            <MudText>✨ Send to Claude for Polish</MudText>
+                        }
+                    </MudButton>
+                </MudForm>
+
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <MudAlert Severity="Severity.Error" Class="mt-4">@ErrorMessage</MudAlert>
+                }
+            </MudPaper>
+        }
+
+        @if (Versions.Any())
+        {
+            <div class="mb-8">
+                <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-2">
+                    Choose Your Best Version
+                </MudText>
+                <MudText Typo="Typo.body2" Color="Color.Default">
+                    Click one to preview and publish
+                </MudText>
+            </div>
+
+            <MudGrid Class="mb-6">
+                @for (int i = 0; i < Versions.Count; i++)
+                {
+                    var version = Versions[i];
+                    var versionNum = i + 1;
+                    var index = i;
+
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudCard Class="mud-height-full">
+                            <MudCardHeader>
+                                <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                                    Version @versionNum
+                                </MudText>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <MudText Typo="Typo.body2">
+                                    @((MarkupString)TruncateHtml(version, 200))
+                                </MudText>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => SelectVersion(index)">
+                                    View & Select →
+                                </MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Default"
+                       StartIcon="@Icons.Material.Filled.ArrowBack"
+                       OnClick="ResetForm">
+                Back to Editor
+            </MudButton>
+        }
+
+        @if (SelectedVersion != null)
+        {
+            <div class="modal-overlay" @onclick="DeselectVersion">
+                <MudPaper Elevation="3" Class="modal-content pa-8" @onclick:stopPropagation="true">
+                    <div class="d-flex justify-content-between align-items-center mb-6">
+                        <div>
+                            <MudText Typo="Typo.h4" GutterBottom="true">@Title</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Default">
+                                @DateTime.Now.ToString("MMMM d, yyyy")
+                            </MudText>
+                        </div>
+                        <MudIconButton Icon="@Icons.Material.Filled.Close" OnClick="DeselectVersion" />
+                    </div>
+
+                    <MudDivider Class="mb-6" />
+
+                    <div class="content-preview mb-8">
+                        @((MarkupString)SelectedVersion)
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(PublishMessage))
+                    {
+                        <MudAlert Severity="Severity.Success" Class="mb-4">@PublishMessage</MudAlert>
+                    }
+
+                    <div class="d-flex gap-2 justify-content-end">
+                        <MudButton OnClick="DeselectVersion" Disabled="@IsPublishing">Cancel</MudButton>
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Success"
+                                   OnClick="PublishPost"
+                                   Disabled="@IsPublishing">
+                            @if (IsPublishing)
+                            {
+                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                <MudText Class="ms-2">Publishing...</MudText>
+                            }
+                            else
+                            {
+                                <MudText>✓ Publish to Blog</MudText>
+                            }
+                        </MudButton>
+                    </div>
+                </MudPaper>
+            </div>
+        }
+    </MudContainer>
+</div>
+
+@code {
+    private MudForm? form;
+    private bool isFormValid = false;
+    private string[] errors = { };
+
+    private string Title = string.Empty;
+    private string Content = string.Empty;
+    private List<string> Versions = new();
+    private string? SelectedVersion = null;
+    private bool IsLoading = false;
+    private bool IsPublishing = false;
+    private string? ErrorMessage = null;
+    private string? PublishMessage = null;
+
+    private List<UploadedImage> UploadedImages = new();
+
+    private class UploadedImage
+    {
+        public string DataUrl { get; set; } = string.Empty;
+        public string FileName { get; set; } = string.Empty;
+    }
+
+    private async Task GenerateVersions()
+    {
+        Console.WriteLine($"GenerateVersions called - Title: {Title}, Content length: {Content?.Length ?? 0}");
+
+        if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Content))
+        {
+            ErrorMessage = "Please enter both title and content.";
+            Console.WriteLine($"Validation failed: Title empty={string.IsNullOrWhiteSpace(Title)}, Content empty={string.IsNullOrWhiteSpace(Content)}");
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = null;
+        Versions.Clear();
+
+        try
+        {
+            Console.WriteLine("Calling BlogService.GenerateVersionsAsync...");
+            Versions = await BlogService.GenerateVersionsAsync(Title, Content);
+            Console.WriteLine($"Got {Versions.Count} versions back");
+
+            if (!Versions.Any())
+            {
+                ErrorMessage = "Failed to generate versions. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error: {ex.Message}";
+            Console.WriteLine($"Exception: {ex}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void SelectVersion(int index)
+    {
+        if (index >= 0 && index < Versions.Count)
+        {
+            SelectedVersion = Versions[index];
+            PublishMessage = null;
+        }
+    }
+
+    private void DeselectVersion()
+    {
+        SelectedVersion = null;
+    }
+
+    private async Task PublishPost()
+    {
+        if (string.IsNullOrEmpty(SelectedVersion))
+            return;
+
+        IsPublishing = true;
+
+        try
+        {
+            var imageUrls = UploadedImages.Select(img => img.DataUrl).ToList();
+            await BlogService.SaveBlogPostAsync(Title, SelectedVersion, null, imageUrls);
+            PublishMessage = "✅ Published! Your post is now live on your blog.";
+
+            await Task.Delay(2000);
+            ResetForm();
+        }
+        catch (Exception ex)
+        {
+            PublishMessage = $"Error publishing: {ex.Message}";
+        }
+        finally
+        {
+            IsPublishing = false;
+        }
+    }
+
+    private void ResetForm()
+    {
+        Title = string.Empty;
+        Content = string.Empty;
+        Versions.Clear();
+        SelectedVersion = null;
+        ErrorMessage = null;
+        PublishMessage = null;
+        UploadedImages.Clear();
+    }
+
+    private async Task OnFilesSelected(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles(10))
+        {
+            try
+            {
+                using var stream = file.OpenReadStream(maxAllowedSize: 5_242_880);
+                var buffer = new byte[stream.Length];
+                await stream.ReadAsync(buffer, 0, (int)stream.Length);
+
+                var base64 = Convert.ToBase64String(buffer);
+                var mimeType = file.ContentType;
+                var dataUrl = $"data:{mimeType};base64,{base64}";
+
+                UploadedImages.Add(new UploadedImage
+                {
+                    DataUrl = dataUrl,
+                    FileName = file.Name
+                });
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error uploading {file.Name}: {ex.Message}";
+            }
+        }
+    }
+
+    private void RemoveImage(int index)
+    {
+        if (index >= 0 && index < UploadedImages.Count)
+        {
+            UploadedImages.RemoveAt(index);
+        }
+    }
+
+    private string TruncateHtml(string html, int maxLength)
+    {
+        var text = System.Net.WebUtility.HtmlDecode(
+            System.Text.RegularExpressions.Regex.Replace(html, "<[^>]*>", "")
+        );
+        return text.Length > maxLength ? text.Substring(0, maxLength) + "..." : text;
+    }
+}
+
+<style>
+    .generator-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .cursor-pointer:hover {
+        transform: translateY(-4px);
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 1rem;
+    }
+
+    .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+        max-width: 750px;
+        width: 100%;
+    }
+
+    .content-preview {
+        line-height: 1.8;
+        color: #333;
+    }
+
+    .content-preview p {
+        margin-bottom: 1rem;
+    }
+
+    .content-preview h2 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .content-preview ul,
+    .content-preview ol {
+        margin-bottom: 1rem;
+        padding-left: 2rem;
+    }
+
+    .content-preview li {
+        margin-bottom: 0.5rem;
+    }
+
+    .content-preview code {
+        background: #f4f4f4;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+    }
+
+    .image-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+
+    .image-preview-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+        aspect-ratio: 1;
+    }
+
+    .image-preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-preview-item .delete-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(255, 255, 255, 0.9);
+        display: none;
+    }
+
+    .image-preview-item:hover .delete-btn {
+        display: flex;
+    }
+</style>

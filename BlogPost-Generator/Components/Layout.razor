@@ -1,0 +1,26 @@
+@using MudBlazor
+@inherits LayoutComponentBase
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudText Typo="Typo.h6" Class="ml-3">📝 Blog Post Generator</MudText>
+        <MudSpacer />
+    </MudAppBar>
+    <MudMainContent>
+        <div class="generator-layout">
+            @Body
+        </div>
+    </MudMainContent>
+</MudLayout>
+
+<style>
+    .generator-layout {
+        padding: 2rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 64px);
+    }
+</style>

@@ -1,0 +1,19 @@
+# Build results
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# User uploads and exports
+wwwroot/uploads/
+wwwroot/exports/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Dependencies
+node_modules/

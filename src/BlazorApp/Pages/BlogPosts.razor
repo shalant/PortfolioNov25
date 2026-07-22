@@ -1,0 +1,403 @@
+@page "/blog"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject HttpClient Http
+
+<PageTitle>Blog — Doug Rosenberg Dev</PageTitle>
+
+<Header />
+
+<section class="subpage-hero" id="blog-hero">
+    <div class="subpage-hero__grid-bg"></div>
+    <div class="subpage-hero__content">
+        <div class="subpage-hero__text">
+            <span class="section-eyebrow">// blog</span>
+            <h1 class="subpage-hero__title">Thoughts & Insights</h1>
+            <p class="subpage-hero__sub">On development, design, and building things</p>
+        </div>
+    </div>
+</section>
+
+<section class="blog-posts-section">
+    <div class="blog-container">
+        @if (Posts == null)
+        {
+            <div class="text-center py-5">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else if (!Posts.Any())
+        {
+            <div class="alert alert-info">No blog posts yet. Check back soon!</div>
+        }
+        else
+        {
+            <div class="blog-grid">
+                @foreach (var post in Posts.OrderByDescending(p => p.Date))
+                {
+                    <article class="blog-post-card" @onclick="() => SelectPost(post)">
+                        <div class="blog-post-card__content">
+                            <h3 class="blog-post-card__title">@post.Title</h3>
+                            <time class="blog-post-card__date">@DateTime.Parse(post.Date).ToString("MMMM d, yyyy")</time>
+                            <p class="blog-post-card__excerpt">@post.Excerpt</p>
+                        </div>
+                        <div class="blog-post-card__arrow">→</div>
+                    </article>
+                }
+            </div>
+        }
+
+        @if (SelectedPost != null)
+        {
+            <div class="modal-overlay" @onclick="DeselectPost">
+                <div class="modal-dialog" @onclick:stopPropagation="true">
+                    <button class="modal-close" @onclick="DeselectPost">✕</button>
+                    <article class="blog-post-detail">
+                        <header class="blog-post-detail__header">
+                            <h1>@SelectedPost.Title</h1>
+                            <time>@DateTime.Parse(SelectedPost.Date).ToString("MMMM d, yyyy")</time>
+                        </header>
+                        @if (SelectedPost.Images?.Count > 0)
+                        {
+                            <div class="blog-post-detail__images">
+                                @foreach (var image in SelectedPost.Images)
+                                {
+                                    <img src="@image" alt="@SelectedPost.Title" class="blog-post-detail__image" />
+                                }
+                            </div>
+                        }
+                        <div class="blog-post-detail__content">
+                            @((MarkupString)SelectedPost.Content)
+                        </div>
+                    </article>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<Footer Http="Http" />
+
+@code {
+    private List<BlogPost>? Posts;
+    private BlogPost? SelectedPost;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Posts = await Http.GetFromJsonAsync<List<BlogPost>>("sample-data/blog-posts.json") ?? new List<BlogPost>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading blog posts: {ex.Message}");
+            Posts = new List<BlogPost>();
+        }
+    }
+
+    private void SelectPost(BlogPost post)
+    {
+        SelectedPost = post;
+    }
+
+    private void DeselectPost()
+    {
+        SelectedPost = null;
+    }
+
+    private class BlogPost
+    {
+        [JsonPropertyName("id")]
+        public string Id { get; set; } = string.Empty;
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; } = string.Empty;
+
+        [JsonPropertyName("date")]
+        public string Date { get; set; } = string.Empty;
+
+        [JsonPropertyName("excerpt")]
+        public string Excerpt { get; set; } = string.Empty;
+
+        [JsonPropertyName("content")]
+        public string Content { get; set; } = string.Empty;
+
+        [JsonPropertyName("images")]
+        public List<string> Images { get; set; } = new();
+    }
+}
+
+<style>
+    .blog-posts-section {
+        padding: 4rem 0;
+        background: #060e1a;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .blog-posts-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle, rgba(26, 188, 156, 0.08) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .blog-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+
+    .blog-post-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 2rem;
+        background: rgba(238, 242, 247, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(26, 188, 156, 0.25);
+    }
+
+    .blog-post-card:hover {
+        transform: translateY(-4px);
+        background: rgba(238, 242, 247, 0.08);
+        box-shadow: 0 12px 40px rgba(26, 188, 156, 0.15);
+        border-color: #1abc9c;
+    }
+
+    .blog-post-card__content {
+        flex: 1;
+    }
+
+    .blog-post-card__title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #eef2f7;
+        margin: 0 0 0.5rem 0;
+        line-height: 1.4;
+    }
+
+    .blog-post-card__date {
+        display: block;
+        font-size: 0.8rem;
+        color: rgba(238, 242, 247, 0.5);
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .blog-post-card__excerpt {
+        font-size: 0.95rem;
+        color: rgba(238, 242, 247, 0.7);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .blog-post-card__arrow {
+        margin-top: 1.5rem;
+        font-size: 1.5rem;
+        color: #1abc9c;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .blog-post-card:hover .blog-post-card__arrow {
+        opacity: 1;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 1rem;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-dialog {
+        background: white;
+        border-radius: 12px;
+        max-height: 90vh;
+        overflow-y: auto;
+        max-width: 750px;
+        width: 100%;
+        position: relative;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #999;
+        z-index: 10;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.3s ease;
+    }
+
+    .modal-close:hover {
+        color: #333;
+    }
+
+    .blog-post-detail {
+        padding: 3rem;
+    }
+
+    .blog-post-detail__header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .blog-post-detail__header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0 0 0.75rem 0;
+        line-height: 1.3;
+    }
+
+    .blog-post-detail__header time {
+        display: block;
+        color: #999;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .blog-post-detail__images {
+        margin: 2rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .blog-post-detail__image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .blog-post-detail__content {
+        line-height: 1.8;
+        color: #444;
+        font-size: 1rem;
+    }
+
+    .blog-post-detail__content p {
+        margin-bottom: 1.25rem;
+    }
+
+    .blog-post-detail__content h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 2rem 0 1rem 0;
+    }
+
+    .blog-post-detail__content h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 1.5rem 0 0.75rem 0;
+    }
+
+    .blog-post-detail__content ul,
+    .blog-post-detail__content ol {
+        margin: 1.25rem 0;
+        padding-left: 2rem;
+    }
+
+    .blog-post-detail__content li {
+        margin-bottom: 0.5rem;
+    }
+
+    .blog-post-detail__content code {
+        background: #f4f4f4;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #d63384;
+    }
+
+    .blog-post-detail__content pre {
+        background: #f4f4f4;
+        padding: 1rem;
+        border-radius: 6px;
+        overflow-x: auto;
+        margin: 1.25rem 0;
+    }
+
+    .blog-post-detail__content pre code {
+        background: none;
+        padding: 0;
+        color: #333;
+    }
+
+    .blog-post-detail__content strong {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .blog-post-detail__content em {
+        font-style: italic;
+    }
+
+    @@media (max-width: 768px) {
+        .blog-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .blog-post-detail {
+            padding: 1.5rem;
+        }
+
+        .blog-post-detail__header h1 {
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            top: 1rem;
+            right: 1rem;
+        }
+    }
+</style>

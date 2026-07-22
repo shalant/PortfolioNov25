@@ -322,5 +322,5 @@ If Claude encounters ambiguity:
 
 ---
 
-**Last Updated:** May 29, 2026  
+**Last Updated:** July 22, 2026  
 **Maintained by:** Douglas Rosenberg
