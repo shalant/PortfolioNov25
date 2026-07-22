@@ -14,6 +14,7 @@ public class BlogPostService
     {
         _configuration = configuration;
         _httpClient = new HttpClient();
+        _httpClient.Timeout = TimeSpan.FromSeconds(60);
         _blogPostsPath = Path.Combine(
             Directory.GetCurrentDirectory(),
             "..",
@@ -27,10 +28,10 @@ public class BlogPostService
 
     public async Task<List<string>> GenerateVersionsAsync(string title, string content)
     {
-        var apiKey = _configuration["ANTHROPIC_API_KEY"];
+        var apiKey = _configuration["AI:AnthropicApiKey"];
         if (string.IsNullOrWhiteSpace(apiKey))
         {
-            throw new InvalidOperationException("ANTHROPIC_API_KEY not configured.");
+            throw new InvalidOperationException("AI:AnthropicApiKey not configured.");
         }
 
         var prompt = $@"Create 3 different versions of a beautiful, well-structured blog post from this raw content. Each version should:
@@ -58,7 +59,8 @@ Format your response EXACTLY as:
 
         var request = new
         {
-            model = "claude-3-5-sonnet-20241022",
+            //model = "claude-3-5-sonnet-20241022",
+            model = "claude-sonnet-5",
             max_tokens = 4000,
             messages = new[] {
                 new {
@@ -78,21 +80,33 @@ Format your response EXACTLY as:
             "application/json"
         );
 
+        //error here
         var response = await _httpClient.PostAsync("https://api.anthropic.com/v1/messages", jsonContent);
-        response.EnsureSuccessStatusCode();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            throw new InvalidOperationException(
+                $"Claude API error ({response.StatusCode}): {errorContent}"
+            );
+        }
 
         var responseJson = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
         var responseObj = JsonSerializer.Deserialize<ApiResponse>(responseJson, options);
 
-        if (responseObj?.Content?.FirstOrDefault()?.Text == null)
+        var textBlock = responseObj?.Content?.FirstOrDefault(c => c.Type == "text");
+        if (textBlock?.Text == null)
         {
             throw new InvalidOperationException("Invalid response from Claude API.");
         }
 
         var versions = new List<string>();
-        var responseText = responseObj.Content[0].Text;
+        var responseText = textBlock.Text;
+        Console.WriteLine($"DEBUG: Full response text:\n{responseText}");
+
         var versionTexts = responseText.Split("===VERSION");
+        Console.WriteLine($"DEBUG: versionTexts.Length = {versionTexts.Length}");
 
         for (int i = 1; i <= 3 && i < versionTexts.Length; i++)
         {
@@ -102,13 +116,15 @@ Format your response EXACTLY as:
             {
                 var htmlContent = versionText.Substring(contentStart).Trim();
                 versions.Add(htmlContent);
+                Console.WriteLine($"DEBUG: Added version {i}");
             }
         }
 
+        Console.WriteLine($"DEBUG: Total versions parsed = {versions.Count}");
         return versions;
     }
 
-    public async Task<BlogPost> SaveBlogPostAsync(string title, string content, string? excerpt = null)
+    public async Task<BlogPost> SaveBlogPostAsync(string title, string content, string? excerpt = null, List<string>? images = null)
     {
         var posts = await LoadBlogPostsAsync();
 
@@ -119,7 +135,7 @@ Format your response EXACTLY as:
             Date = DateTime.Now.ToString("yyyy-MM-dd"),
             Excerpt = excerpt ?? TruncateText(content, 200),
             Content = content,
-            Images = new List<string>()
+            Images = images ?? new List<string>()
         };
 
         posts.Add(post);
@@ -187,6 +203,9 @@ Format your response EXACTLY as:
 
     private class ContentBlock
     {
+        [JsonPropertyName("type")]
+        public string Type { get; set; } = string.Empty;
+
         [JsonPropertyName("text")]
         public string Text { get; set; } = string.Empty;
     }

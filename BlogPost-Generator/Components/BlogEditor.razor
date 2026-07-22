@@ -3,6 +3,8 @@
 @using System.Text.Json.Serialization
 @using Microsoft.Extensions.Configuration
 @using BlogPost_Generator.Services
+@using Microsoft.AspNetCore.Components.Web
+@rendermode RenderMode.InteractiveServer
 @inject IConfiguration Configuration
 @inject BlogPostService BlogService
 
@@ -33,6 +35,38 @@
                                   FullWidth="true"
                                   Lines="12"
                                   Class="mb-6" />
+
+                    <div class="mb-6">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2">Upload Photos (Optional)</MudText>
+                        <InputFile id="image-upload" OnChange="OnFilesSelected" accept=".jpg,.jpeg,.png,.gif,.webp" multiple style="display:none;" />
+                        <label for="image-upload" style="cursor: pointer; display: inline-block;">
+                            <MudButton HtmlTag="span"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                                Choose Images
+                            </MudButton>
+                        </label>
+
+                        @if (UploadedImages.Any())
+                        {
+                            <div class="mt-4">
+                                <MudText Typo="Typo.subtitle2" Class="mb-3">Uploaded Images (@UploadedImages.Count)</MudText>
+                                <div class="image-preview-grid">
+                                    @foreach (var (image, idx) in UploadedImages.Select((x, i) => (x, i)))
+                                    {
+                                        <div class="image-preview-item">
+                                            <img src="@image.DataUrl" alt="Preview" />
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                           Size="Size.Small"
+                                                           OnClick="() => RemoveImage(idx)"
+                                                           Class="delete-btn" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
 
                     <MudButton Variant="Variant.Filled"
                                Color="Color.Primary"
@@ -76,6 +110,7 @@
                 {
                     var version = Versions[i];
                     var versionNum = i + 1;
+                    var index = i;
 
                     <MudItem xs="12" sm="6" md="4">
                         <MudCard Class="mud-height-full">
@@ -90,7 +125,7 @@
                                 </MudText>
                             </MudCardContent>
                             <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => SelectVersion(i)">
+                                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => SelectVersion(index)">
                                     View & Select →
                                 </MudButton>
                             </MudCardActions>
@@ -169,6 +204,14 @@
     private string? ErrorMessage = null;
     private string? PublishMessage = null;
 
+    private List<UploadedImage> UploadedImages = new();
+
+    private class UploadedImage
+    {
+        public string DataUrl { get; set; } = string.Empty;
+        public string FileName { get; set; } = string.Empty;
+    }
+
     private async Task GenerateVersions()
     {
         Console.WriteLine($"GenerateVersions called - Title: {Title}, Content length: {Content?.Length ?? 0}");
@@ -229,7 +272,8 @@
 
         try
         {
-            await BlogService.SaveBlogPostAsync(Title, SelectedVersion);
+            var imageUrls = UploadedImages.Select(img => img.DataUrl).ToList();
+            await BlogService.SaveBlogPostAsync(Title, SelectedVersion, null, imageUrls);
             PublishMessage = "✅ Published! Your post is now live on your blog.";
 
             await Task.Delay(2000);
@@ -253,6 +297,42 @@
         SelectedVersion = null;
         ErrorMessage = null;
         PublishMessage = null;
+        UploadedImages.Clear();
+    }
+
+    private async Task OnFilesSelected(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles(10))
+        {
+            try
+            {
+                using var stream = file.OpenReadStream(maxAllowedSize: 5_242_880);
+                var buffer = new byte[stream.Length];
+                await stream.ReadAsync(buffer, 0, (int)stream.Length);
+
+                var base64 = Convert.ToBase64String(buffer);
+                var mimeType = file.ContentType;
+                var dataUrl = $"data:{mimeType};base64,{base64}";
+
+                UploadedImages.Add(new UploadedImage
+                {
+                    DataUrl = dataUrl,
+                    FileName = file.Name
+                });
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error uploading {file.Name}: {ex.Message}";
+            }
+        }
+    }
+
+    private void RemoveImage(int index)
+    {
+        if (index >= 0 && index < UploadedImages.Count)
+        {
+            UploadedImages.RemoveAt(index);
+        }
     }
 
     private string TruncateHtml(string html, int maxLength)
@@ -330,5 +410,37 @@
         padding: 0.2em 0.4em;
         border-radius: 3px;
         font-family: 'Courier New', monospace;
+    }
+
+    .image-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+
+    .image-preview-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+        aspect-ratio: 1;
+    }
+
+    .image-preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-preview-item .delete-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(255, 255, 255, 0.9);
+        display: none;
+    }
+
+    .image-preview-item:hover .delete-btn {
+        display: flex;
     }
 </style>

@@ -67,6 +67,7 @@ html {
 div#main {
   display: flex;
   flex-direction: column;
+  background-color: #060e1a;
 }
 
 section {

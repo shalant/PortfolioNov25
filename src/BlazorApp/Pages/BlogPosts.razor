@@ -59,6 +59,15 @@
                             <h1>@SelectedPost.Title</h1>
                             <time>@DateTime.Parse(SelectedPost.Date).ToString("MMMM d, yyyy")</time>
                         </header>
+                        @if (SelectedPost.Images?.Count > 0)
+                        {
+                            <div class="blog-post-detail__images">
+                                @foreach (var image in SelectedPost.Images)
+                                {
+                                    <img src="@image" alt="@SelectedPost.Title" class="blog-post-detail__image" />
+                                }
+                            </div>
+                        }
                         <div class="blog-post-detail__content">
                             @((MarkupString)SelectedPost.Content)
                         </div>
@@ -123,12 +132,27 @@
 <style>
     .blog-posts-section {
         padding: 4rem 0;
+        background: #060e1a;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .blog-posts-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle, rgba(26, 188, 156, 0.08) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 1;
     }
 
     .blog-container {
         max-width: 1000px;
         margin: 0 auto;
         padding: 0 1rem;
+        position: relative;
+        z-index: 2;
     }
 
     .blog-grid {
@@ -142,17 +166,20 @@
         flex-direction: column;
         justify-content: space-between;
         padding: 2rem;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        background: rgba(238, 242, 247, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid #f0f0f0;
+        border: 1px solid rgba(26, 188, 156, 0.25);
     }
 
     .blog-post-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        background: rgba(238, 242, 247, 0.08);
+        box-shadow: 0 12px 40px rgba(26, 188, 156, 0.15);
         border-color: #1abc9c;
     }
 
@@ -163,7 +190,7 @@
     .blog-post-card__title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #2c3e50;
+        color: #eef2f7;
         margin: 0 0 0.5rem 0;
         line-height: 1.4;
     }
@@ -171,7 +198,7 @@
     .blog-post-card__date {
         display: block;
         font-size: 0.8rem;
-        color: #999;
+        color: rgba(238, 242, 247, 0.5);
         margin-bottom: 1rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -179,7 +206,7 @@
 
     .blog-post-card__excerpt {
         font-size: 0.95rem;
-        color: #666;
+        color: rgba(238, 242, 247, 0.7);
         line-height: 1.6;
         margin: 0;
     }
@@ -273,6 +300,20 @@
         font-size: 0.9rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+    }
+
+    .blog-post-detail__images {
+        margin: 2rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .blog-post-detail__image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .blog-post-detail__content {

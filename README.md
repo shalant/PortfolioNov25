@@ -27,6 +27,16 @@ dotnet run --project src/BlazorApp/BlazorApp.csproj
 
 ---
 
+## Documentation
+
+- **[Development Guide](docs/DEVELOPMENT.md)** - How to work on this project, component architecture, code style
+- **[Security](docs/SECURITY.md)** - Blog infrastructure security, risks, and mitigations
+- **[Components Reference](docs/COMPONENTS.md)** - Detailed breakdown of all Blazor components
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community guidelines
+- **[Support](SUPPORT.md)** - How to get help
+
+---
+
 ## Project Structure
 
 ```
