@@ -4006,3 +4006,46 @@ a.music-album__title--link:hover {
     justify-content: flex-start;
   }
 }
+
+/* ============================================================================
+   NotFound (404) Page Animations & Responsive
+   ============================================================================ */
+
+@keyframes notfound-float {
+  0%, 100% {
+    transform: translateY(0px) rotateZ(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotateZ(5deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .notfound-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem 1rem;
+  }
+
+  .notfound-code {
+    font-size: 4rem;
+  }
+
+  .notfound-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .notfound-hexagon {
+    width: 200px;
+    height: 200px;
+  }
+
+  .notfound-nav ul {
+    gap: 0.5rem;
+  }
+
+  .notfound-nav a,
+  .notfound-nav :deep(.nav-link) {
+    font-size: 0.9rem;
+  }
+}
