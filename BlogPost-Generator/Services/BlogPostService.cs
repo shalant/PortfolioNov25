@@ -208,6 +208,9 @@ Format your response EXACTLY as:
 
         [JsonPropertyName("tags")]
         public List<string> Tags { get; set; } = new();
+
+        [JsonPropertyName("featured")]
+        public bool Featured { get; set; }
     }
 
     private class ApiResponse
