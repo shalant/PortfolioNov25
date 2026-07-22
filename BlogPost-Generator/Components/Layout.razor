@@ -1,0 +1,32 @@
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand">📝 Blog Post Generator</span>
+        </div>
+    </div>
+
+    <main class="container mt-4">
+        @Body
+    </main>
+</div>
+
+<style>
+    .page {
+        min-height: 100vh;
+        background: #f5f5f5;
+    }
+
+    .navbar-brand {
+        font-size: 1.3rem;
+        font-weight: bold;
+    }
+
+    main {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+</style>

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "hello-world",
+    "title": "Hello World: Welcome to My Blog",
+    "date": "2026-07-21",
+    "excerpt": "An introduction to my new blog where I'll share thoughts on software development, design, and technology.",
+    "content": "<p>Welcome to my blog! This is where I'll be sharing insights, tips, and stories about software development, design, and the technology landscape.</p><p>Whether you're a developer, designer, or just curious about tech, I hope you'll find something interesting here. Expect posts covering:</p><ul><li>Web development best practices</li><li>Design principles and UX insights</li><li>Tools and technologies I'm exploring</li><li>Reflections on the tech industry</li></ul><p>Thanks for stopping by, and feel free to reach out if you have any thoughts or questions!</p>",
+    "images": []
+  },
+  {
+    "id": "building-portfolio",
+    "title": "Building a Modern Portfolio with Blazor",
+    "date": "2026-07-15",
+    "excerpt": "A deep dive into creating an interactive portfolio using Blazor WebAssembly, CSS3, and modern web standards.",
+    "content": "<p>Creating a portfolio is more than just showcasing your work—it's an opportunity to demonstrate your skills and approach to development.</p><p>I decided to build mine using Blazor WebAssembly for several reasons:</p><ul><li><strong>C# everywhere:</strong> Write frontend logic in a language I'm comfortable with</li><li><strong>Component-based:</strong> Reusable, maintainable components</li><li><strong>Performance:</strong> Fast, interactive experiences without heavy frameworks</li><li><strong>Static hosting:</strong> Deploy anywhere, even to basic static hosts</li></ul><p>The result is a responsive, fast-loading portfolio that showcases both my work and my technical choices. If you're considering Blazor for your next project, I'd recommend it!</p>",
+    "images": []
+  }
+]

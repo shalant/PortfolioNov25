@@ -64,6 +64,16 @@
                     </a>
                 </li>
 
+                <li>
+                    <a class="nav-link" href="/blog">
+                        <!-- book/blog: open book pages -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                            <path d="M7 1 L7 13 M1 3 L7 3 M7 3 L13 3 M1 8 L7 8 M7 8 L13 8"/>
+                        </svg>
+                        blog
+                    </a>
+                </li>
+
                 <li class="nav-has-dropdown">
                     <span class="nav-link nav-link--page">
                         <!-- split branch: multiple services -->
@@ -144,11 +154,12 @@
             });
         };
 
-        // highlight consulting / web design links when on their pages
+        // highlight consulting / web design / blog links when on their pages
         const highlightPageLink = () => {
             const path = window.location.pathname.replace(/\/$/, '');
             const servicePages = ['/consulting', '/webdesign'];
             const isServicePage = servicePages.includes(path);
+            const isBlogPage = path === '/blog';
 
             // highlight parent services link when on a service subpage
             document.querySelectorAll('.nav-link--page:not([href])').forEach(link => {
@@ -159,6 +170,14 @@
             document.querySelectorAll('.nav-dropdown-item').forEach(link => {
                 const href = (link.getAttribute('href') ?? '').replace(/\/$/, '');
                 link.classList.toggle('active', href === path);
+            });
+
+            // highlight blog link when on blog page
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const href = (link.getAttribute('href') ?? '').replace(/\/$/, '');
+                if (href === '/blog') {
+                    link.classList.toggle('active', isBlogPage);
+                }
             });
         };
         highlightPageLink();
