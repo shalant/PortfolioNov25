@@ -59,9 +59,14 @@ BlogPost-Generator/              # Blog generator tool (Blazor Server)
 | `Header.razor` | Navigation bar with logo | Updating nav links, branding |
 | `Experience.razor` | Experience carousel | Styling carousel, loading logic |
 | `ToDo.razor` | Todo list with checkboxes | Editing todos, changing styling |
+| `Blog/BlogIndex.razor` | Blog landing page with featured posts | Adding sections, styling |
+| `Blog/BlogPost.razor` | Individual blog post with TOC & sharing | Post display, layout |
+| `Blog/BlogSearch.razor` | Search and filter interface | Search logic, filters |
+| `Blog/BlogArchive.razor` | Year/month grouped archive view | Archive layout |
 | `app.css` | Global styles + animations | Updating colors, fonts, effects |
 | `siteproperties.json` | Name, email, social links | Personal information |
 | `experience.json` | Experience entries for carousel | Work history, projects |
+| `blog-posts.json` | Published blog posts (with metadata) | Adding/editing posts (use generator) |
 
 ## Code Style & Conventions
 
@@ -95,6 +100,47 @@ protected override async Task OnInitializedAsync()
 - **Transitions:** Use `transition: property 0.3s ease` for smooth effects
 
 ## Common Tasks
+
+### Blog Features
+
+The blog now includes comprehensive features for content discovery and engagement:
+
+**Search & Filtering:**
+- Full-text search across all blog posts
+- Filter by tags and categories
+- Results update in real-time as user types
+
+**Archive & Discovery:**
+- Year/month grouped archive view
+- Easy browsing of older posts
+- Related posts suggestions on individual post pages
+
+**Content Enhancements:**
+- Reading time estimates (calculated based on word count)
+- Auto-generated table of contents for posts
+- Featured posts section on blog landing page
+- Social sharing buttons (copy link, share to social media)
+
+**Data Structure (blog-posts.json):**
+Blog post objects now include:
+```json
+{
+  "id": "unique-id",
+  "title": "Post Title",
+  "content": "HTML content",
+  "excerpt": "Brief summary",
+  "publishDate": "2026-07-23",
+  "tags": ["tag1", "tag2"],
+  "category": "Category Name",
+  "isFeatured": true,
+  "readingTimeMinutes": 5,
+  "tableOfContents": [
+    {"title": "Section Title", "id": "section-id"}
+  ],
+  "images": ["base64-encoded-images"],
+  "relatedPosts": ["related-post-ids"]
+}
+```
 
 ### Use the Blog Post Generator
 
@@ -237,6 +283,11 @@ dotnet publish -c Release -o ./publish src/BlazorApp/BlazorApp.csproj
 az webapp deployment source config-zip --resource-group YOUR_RG --name YOUR_APP --src-path ./publish
 ```
 
+**GitHub Pages Deployment:**
+- Configured to deploy **only on `main` branch** commits
+- Feature branches and fixes branches do not trigger deployment
+- Ensures stability and prevents incomplete features from going live
+
 ### Security Checklist
 
 **Before shipping to production:**
@@ -322,5 +373,5 @@ If Claude encounters ambiguity:
 
 ---
 
-**Last Updated:** May 29, 2026  
+**Last Updated:** July 23, 2026  
 **Maintained by:** Douglas Rosenberg
