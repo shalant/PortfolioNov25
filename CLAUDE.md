@@ -217,6 +217,17 @@ dotnet run --project BlogPost-Generator/BlogPost-Generator.csproj
 - Modify git history
 - Delete configuration files
 
+### Working with Claude Code
+
+Claude Code is more productive when working within clear constraints. This project uses:
+
+- **Code review checklist** (before committing) — catches issues early
+- **Branch strategy** (feature branches + PRs) — ensures quality gate
+- **Style guidelines** (naming, components, CSS) — maintains consistency
+- **Testing strategy** (unit tests + manual verification) — validates correctness
+
+Think of these constraints as quality multipliers. The more specific your guidelines, the better Claude performs. Rather than reading every line of agent-generated code, you can trust the output because it's been constrained and validated by these layers.
+
 ### Code Review Checklist
 
 Before committing, Claude should verify:
