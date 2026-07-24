@@ -328,6 +328,15 @@ var apiKey = configuration["AI:AnthropicApiKey"];
 
 ## Git Workflow
 
+### Branch Strategy
+
+**All code changes must be performed on a feature branch, not main.**
+- Create a branch for each feature or fix (e.g., `feature/my-feature`, `fix/bug-name`)
+- Work on the branch locally
+- Create a pull request to merge into `main`
+- Only push to `main` after PR approval and merge
+- This keeps `main` stable and deployable at all times
+
 ### Commit Messages
 
 Format: `[Category] Brief description`
@@ -338,11 +347,11 @@ Examples:
 - `[Fix] Correct navigation link to experience section`
 - `[Docs] Update README with installation instructions`
 
-### Branch Strategy
+### Branch Protection
 
-- Work on `main` for this project (no other branches)
-- Commit frequently with descriptive messages
-- Push after each logical change
+- `main` branch is protected and requires PRs before merging
+- Feature branches should be descriptive and short-lived
+- Delete branches after merging to keep the repo clean
 
 ## Resources
 
