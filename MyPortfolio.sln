@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp", "src\BlazorApp\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPost-Generator", "BlogPost-Generator\BlogPost-Generator.csproj", "{E39EB061-2457-D957-C6BD-1941C224117D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A1B2C3D4-E5F6-47G8-H9I0-J1K2L3M4N5O6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp.Tests", "tests\BlazorApp.Tests\BlazorApp.Tests.csproj", "{B2C3D4E5-F6A7-48H9-I0J1-K2L3M4N5O6P7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +27,17 @@ Global
 		{E39EB061-2457-D957-C6BD-1941C224117D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E39EB061-2457-D957-C6BD-1941C224117D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E39EB061-2457-D957-C6BD-1941C224117D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C3D4E5-F6A7-48H9-I0J1-K2L3M4N5O6P7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C3D4E5-F6A7-48H9-I0J1-K2L3M4N5O6P7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C3D4E5-F6A7-48H9-I0J1-K2L3M4N5O6P7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C3D4E5-F6A7-48H9-I0J1-K2L3M4N5O6P7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{024FE23B-7509-45FE-824D-5B884F91DEA3} = {555ADF87-3BD5-49F1-91D2-052D7FEAEF60}
+		{B2C3D4E5-F6A7-48H9-I0J1-K2L3M4N5O6P7} = {A1B2C3D4-E5F6-47G8-H9I0-J1K2L3M4N5O6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AED0752D-7EB2-4E19-BAC0-408350B62C42}
