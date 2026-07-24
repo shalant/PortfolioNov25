@@ -239,6 +239,16 @@ Before committing, Claude should verify:
 - [ ] Navigation links point to correct IDs
 - [ ] New assets (images, fonts) are referenced correctly
 - [ ] Comments are minimal (code speaks for itself)
+- [ ] **CLAUDE.md and/or todo.md updated** to reflect changes (new features, completed work, architectural decisions)
+
+### Pull Request Requirements
+
+Every PR must include:
+- Clear, descriptive commit messages with `[Category]` prefix
+- Changes to CLAUDE.md if adding features, tests, or architectural patterns
+- Changes to todo.md if completing planned work
+- All tests passing (if applicable)
+- No security or performance regressions
 
 ## Debugging Tips
 
