@@ -195,6 +195,32 @@ dotnet run --project BlogPost-Generator/BlogPost-Generator.csproj
 4. Toggle device toolbar (mobile view)
 5. Test breakpoints: 300px, 420px, 768px, 1024px
 
+## Testing
+
+### Unit Tests
+
+The project includes a test suite using **bUnit** and **xUnit**:
+
+```bash
+# Run all tests
+dotnet test
+
+# Run specific test project
+dotnet test tests/BlazorApp.Tests/BlazorApp.Tests.csproj
+```
+
+**Test Project Location:** `tests/BlazorApp.Tests/`
+
+**Current Coverage:**
+- Component type verification (Experience, ConsultingPage, WebDesignPage)
+- Ready for expansion to full component rendering tests using bUnit's TestContext
+
+**Adding New Tests:**
+1. Create test file in `tests/BlazorApp.Tests/Components/` or `Pages/`
+2. Inherit from xUnit's test class (not required for component tests)
+3. Use bUnit's `TestContext` to render and interact with components
+4. Run tests with `dotnet test`
+
 ## When Using Claude Code
 
 ### Things Claude Can Help With
@@ -393,5 +419,7 @@ If Claude encounters ambiguity:
 
 ---
 
-**Last Updated:** July 23, 2026  
+**Last Updated:** July 24, 2026  
 **Maintained by:** Douglas Rosenberg
+
+**Latest:** Quality assurance tasks complete (7/7), test infrastructure added, PR #6 open
