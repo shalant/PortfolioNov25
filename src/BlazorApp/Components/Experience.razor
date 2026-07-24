@@ -24,10 +24,11 @@
                         <button class="experience-list__item @(idx == _activeIndex ? "active" : "")"
                                 role="tab"
                                 aria-selected="@(idx == _activeIndex)"
+                                aria-label="@exp.Title"
                                 @onclick="() => SetActive(idx)">
                             <span class="experience-list__num">@((idx + 1).ToString("D2"))</span>
                             <span class="experience-list__logo-wrap">
-                                <img src="@exp.Image" alt="" class="experience-list__logo" />
+                                <img src="@exp.Image" alt="@exp.Title" class="experience-list__logo" />
                             </span>
                             <span class="experience-list__title">@exp.Title</span>
                         </button>
@@ -87,11 +88,26 @@
 
     private List<ExperienceModel>? experiences;
     private int _activeIndex = 0;
+    private string? _errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        experiences = await Http.GetFromJsonAsync<List<ExperienceModel>>("sample-data/experience.json");
+        try
+        {
+            experiences = await Http.GetFromJsonAsync<List<ExperienceModel>>("sample-data/experience.json");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = "Failed to load experience data";
+            experiences = null;
+        }
     }
 
-    private void SetActive(int index) => _activeIndex = index;
+    private void SetActive(int index)
+    {
+        if (experiences is not null && index >= 0 && index < experiences.Count)
+        {
+            _activeIndex = index;
+        }
+    }
 }
