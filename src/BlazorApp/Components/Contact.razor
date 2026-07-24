@@ -19,7 +19,7 @@
                     {
                         <a href="https://www.linkedin.com/in/@props.LinkedIn"
                            class="hero-btn hero-btn--ghost"
-                           target="_blank" rel="noopener">
+                           target="_blank" rel="noopener noreferrer">
                             LinkedIn ↗
                         </a>
                     }
@@ -53,6 +53,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        props = await Http.GetFromJsonAsync<SiteProperties>("sample-data/siteproperties.json");
+        try
+        {
+            props = await Http.GetFromJsonAsync<SiteProperties>("sample-data/siteproperties.json");
+        }
+        catch (Exception)
+        {
+            props = null;
+        }
     }
 }

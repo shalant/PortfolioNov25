@@ -21,49 +21,49 @@
                     @if (!string.IsNullOrWhiteSpace(property.Email))
                     {
                         <a href="mailto:@property.Email" class="site-footer__social" aria-label="Email">
-                            <img src="images/socials/envelope.svg" alt="" />
+                            <img src="images/socials/envelope.svg" alt="Email" />
                         </a>
                     }
                     @if (!string.IsNullOrWhiteSpace(property.GitHub))
                     {
                         <a href="https://github.com/@property.GitHub" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="GitHub">
-                            <img src="images/socials/github.svg" alt="" />
+                            <img src="images/socials/github.svg" alt="GitHub" />
                         </a>
                     }
                     @if (!string.IsNullOrWhiteSpace(property.LinkedIn))
                     {
                         <a href="https://linkedin.com/in/@property.LinkedIn" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="LinkedIn">
-                            <img src="images/socials/linkedin.svg" alt="" />
+                            <img src="images/socials/linkedin.svg" alt="LinkedIn" />
                         </a>
                     }
                     @if (!string.IsNullOrWhiteSpace(property.DevDotTo))
                     {
                         <a href="https://dev.to/@property.DevDotTo" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="Dev.to">
-                            <img src="images/socials/devdotto.svg" alt="" />
+                            <img src="images/socials/devdotto.svg" alt="Dev.to" />
                         </a>
                     }
                     @if (!string.IsNullOrWhiteSpace(property.Medium))
                     {
                         <a href="https://medium.com/@@property.Medium" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="Medium">
-                            <img src="images/socials/medium.svg" alt="" />
+                            <img src="images/socials/medium.svg" alt="Medium" />
                         </a>
                     }
                     @if (!string.IsNullOrWhiteSpace(property.Twitter))
                     {
                         <a href="https://twitter.com/@property.Twitter" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="Twitter / X">
-                            <img src="images/socials/twitter.svg" alt="" />
+                            <img src="images/socials/twitter.svg" alt="Twitter / X" />
                         </a>
                     }
                     @if (!string.IsNullOrWhiteSpace(property.YouTube))
                     {
                         <a href="https://youtube.com/@property.YouTube" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="YouTube">
-                            <img src="images/socials/youtube.svg" alt="" />
+                            <img src="images/socials/youtube.svg" alt="YouTube" />
                         </a>
                     }
                     @if (!string.IsNullOrWhiteSpace(property.Instagram))
                     {
                         <a href="https://instagram.com/@property.Instagram" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="Instagram">
-                            <img src="images/socials/instagram.svg" alt="" />
+                            <img src="images/socials/instagram.svg" alt="Instagram" />
                         </a>
                     }
                 </div>
@@ -103,6 +103,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        property = await Http.GetFromJsonAsync<SiteProperties>("sample-data/siteproperties.json");
+        try
+        {
+            property = await Http.GetFromJsonAsync<SiteProperties>("sample-data/siteproperties.json");
+        }
+        catch (Exception)
+        {
+            property = null;
+        }
     }
 }
