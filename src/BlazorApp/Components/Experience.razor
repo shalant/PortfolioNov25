@@ -28,7 +28,7 @@
                                 @onclick="() => SetActive(idx)">
                             <span class="experience-list__num">@((idx + 1).ToString("D2"))</span>
                             <span class="experience-list__logo-wrap">
-                                <img src="@exp.Image" alt="@exp.Title" class="experience-list__logo" />
+                                <img src="@exp.Image" alt="@exp.Title" class="experience-list__logo" loading="lazy" />
                             </span>
                             <span class="experience-list__title">@exp.Title</span>
                         </button>
@@ -43,7 +43,7 @@
                     <div class="experience-detail__num-bg" aria-hidden="true">@numStr</div>
 
                     <div class="experience-detail__logo-wrap">
-                        <img src="@active.Image" alt="@active.Title" class="experience-detail__logo" />
+                        <img src="@active.Image" alt="@active.Title" class="experience-detail__logo" loading="lazy" />
                     </div>
 
                     <h3 class="experience-detail__title">@active.Title</h3>
