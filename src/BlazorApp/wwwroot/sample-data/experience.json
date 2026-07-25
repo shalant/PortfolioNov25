@@ -5,7 +5,7 @@
     "description": "Built several modules, composed entire service layer",
     "url": "https://friars.us",
     "icons": "C#, Blazor, ASP.NET, Syncfusion, SQL, Azure",
-    "image": "/images/franciscan-frairs-logo-2023.jpg",
+    "image": "/images/franciscan-friars-modern.svg",
     "bulletpoints": [
       "🛠️ Developed a custom SQL data-masking tool to generate sanitized development databases, establishing a standardized, secure pipeline for internal and external contributors to interface with complex ERP data without risk.",
       "🔄 Orchestrated a seamless Salesforce integration to synchronize and reconcile disparate ERP and CRM records, ensuring data integrity and cross-platform consistency across the enterprise ecosystem.",
@@ -31,20 +31,6 @@
     ]
   },
   {
-    "title": "Junior Angular/.NET software engineer",
-    "description": "Contributed to the ongoing evolution of BridgestoneMarketing.com—a complex B2B platform—by enhancing features across Angular frontend, three ASP.NET servers, SQL database, and Kendo UI components",
-    "url": "https://bridgestonemarketing.com",
-    "icons": "Angular, ASP.NET, Kendo UI, SQL",
-    "image": "/images/cropped-SHIFTLogo_4-C.png",
-    "bulletpoints": [
-      "🌐 Contributed to the ongoing evolution of BridgestoneMarketing.com—a complex B2B platform—by enhancing features across Angular frontend, three ASP.NET servers, SQL database, and Kendo UI components",
-      "🌍 Engineered middleware to dynamically translate inventory content into French, adapting based on user profiles—boosting global accessibility and user relevance",
-      "⚡ Delivered high-volume feature enhancements and bug fixes with speed and precision—ensuring platform stability and continuous improvement",
-      "🔄 Managed seamless code deployments across local, staging, and production environments using TFS and Azure DevOps—upholding release integrity",
-      "🔐 Executed key security initiatives leveraging Microsoft 365, AlertLogic, and Xamin—fortifying system resilience and data protection"
-    ]
-  },
-  {
     "title": "Full-stack .NET software engineer",
     "description": "Engineered a robust, enterprise-grade ERP system for a global manufacturing firm—leveraged .NET Blazor, MudBlazor, SQL Server, and Azure to modernize operations from end to end",
     "url": "https://tcindustries.com/",
@@ -56,6 +42,20 @@
       "🧠 Led critical architecture sessions and captured technical insights through thorough documentation with Subject Matter Experts—bridging business needs with scalable design",
       "🧩 Built seven foundational layers—from Database to Web interface—ensuring seamless integration across DB, Repository, Domain, Domain Services, API, and UI",
       "🛠️ Maintained and debugged four legacy systems while simultaneously developing a new platform to handle essential business processes—ensuring zero disruption during transformation"
+    ]
+  },
+  {
+    "title": "Junior Angular/.NET software engineer",
+    "description": "Contributed to the ongoing evolution of BridgestoneMarketing.com—a complex B2B platform—by enhancing features across Angular frontend, three ASP.NET servers, SQL database, and Kendo UI components",
+    "url": "https://bridgestonemarketing.com",
+    "icons": "Angular, ASP.NET, Kendo UI, SQL",
+    "image": "/images/cropped-SHIFTLogo_4-C.png",
+    "bulletpoints": [
+      "🌐 Contributed to the ongoing evolution of BridgestoneMarketing.com—a complex B2B platform—by enhancing features across Angular frontend, three ASP.NET servers, SQL database, and Kendo UI components",
+      "🌍 Engineered middleware to dynamically translate inventory content into French, adapting based on user profiles—boosting global accessibility and user relevance",
+      "⚡ Delivered high-volume feature enhancements and bug fixes with speed and precision—ensuring platform stability and continuous improvement",
+      "🔄 Managed seamless code deployments across local, staging, and production environments using TFS and Azure DevOps—upholding release integrity",
+      "🔐 Executed key security initiatives leveraging Microsoft 365, AlertLogic, and Xamin—fortifying system resilience and data protection"
     ]
   }
 
