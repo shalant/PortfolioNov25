@@ -58,6 +58,14 @@
 
     <script src="_framework/blazor.webassembly.js"></script>
 
+    <script>
+        // Restore route after redirect from 404.html
+        if (sessionStorage.getItem('redirect')) {
+            var redirect = sessionStorage.getItem('redirect');
+            sessionStorage.removeItem('redirect');
+            window.history.replaceState(null, null, redirect);
+        }
+    </script>
 </body>
 
 </html>
