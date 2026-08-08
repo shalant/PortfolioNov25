@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Redirect</title>
+    <script>
+        // Redirect 404s to index.html so the Blazor router can handle them
+        var path = window.location.pathname;
+        sessionStorage.setItem('redirect', path);
+        window.location.href = '/';
+    </script>
+</head>
+<body>
+    Redirecting...
+</body>
+</html>
