@@ -5,4 +5,4 @@ Disallow: /_framework/
 Disallow: /*.json
 
 # Sitemaps
-Sitemap: https://www.dougrosenbergdev.com/sitemap.xml
+Sitemap: https://dougrosenbergdev.com/sitemap.xml
