@@ -7,24 +7,26 @@
 ---
 
 ## Phase 1: SEO Foundation (Week 1)
-**Status:** ⏳ Not started  
-**Effort:** 4-6 hours  
+**Status:** ✅ Complete (2026-08-09)  
+**Effort:** ~2 hours  
 **ROI:** High (organic traffic)
 
 SEO makes you discoverable. Google can't index you without meta tags, structured data, and sitemaps.
 
 ### Tasks
-- [ ] Add `<meta name="description">` to `index.html`
-- [ ] Add Open Graph tags (og:title, og:description, og:image, og:url)
-- [ ] Add canonical tag to prevent duplicate indexing
-- [ ] Create `robots.txt` (allow /; disallow admin paths)
-- [ ] Create `sitemap.xml` (list all pages)
-- [ ] Add Schema.org structured data (Person, Experience, Project)
-- [ ] Improve link text ("visit site" → "Visit ArborKin deployment")
-- [ ] Add `alt` text to all images
-- [ ] Test with Google Search Console
+- [x] Add `<meta name="description">` to `index.html`
+- [x] Add Open Graph tags (og:title, og:description, og:image, og:url)
+- [x] Add canonical tag to prevent duplicate indexing
+- [x] Create `robots.txt` (allow /; disallow admin paths)
+- [x] Create `sitemap.xml` (list all pages)
+- [x] Add Schema.org structured data (Person, WebSite, SoftwareApplication)
+- [x] Improve link text ("visit site" → "Visit Friars ERP", etc. — added `Company` field to experience data)
+- [x] Add `alt` text to all images (audited full live component tree)
+- [x] Test with Google Search Console — domain verified via DNS TXT record, sitemap submitted (Status: Success, 7 pages discovered)
 
-**Branch:** `feature/seo-foundation`
+**Bonus fix:** found and fixed a canonical/OG/sitemap mismatch — `www.dougrosenbergdev.com` 301-redirects to the apex domain, but every canonical tag, OG/Twitter tag, and sitemap `<loc>` was pointing at `www` instead of the URL that actually serves. This was blocking sitemap submission in Search Console.
+
+**Branch:** `feature/seo-foundation` (merged via PR #9)
 
 ---
 

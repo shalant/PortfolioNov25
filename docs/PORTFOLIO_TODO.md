@@ -20,21 +20,21 @@
 - **Risk:** Portfolio compromised, visitor data leaked, spam
 - **Effort:** 2-3 hours (audit + fixes)
 
-### 2. **SEO Foundation** 🔥 High Impact
+### 2. **SEO Foundation** 🔥 High Impact — ✅ Complete (2026-08-09)
 - **Why:** You're invisible to search engines; missing organic lead pipeline
-- **Current Gap:** No meta tags, no sitemap, no structured data, poor link text
 - **Scope:**
-  - [ ] Add `<meta name="description">` to `index.html`
-  - [ ] Add Open Graph tags (og:title, og:description, og:image, og:url)
-  - [ ] Add canonical tag to prevent duplicate indexing
-  - [ ] Create `robots.txt` → allow /; disallow admin paths (none, but good practice)
-  - [ ] Create `sitemap.xml` (list /, /blog, case studies)
-  - [ ] Add Schema.org structured data (Person, Experience, Project, BlogPosting)
-  - [ ] Improve link text: "visit site ↗" → "Visit Friars ERP deployment ↗"
-  - [ ] Add `alt` text to all images (hero photo, ArborKin screenshots)
-- **Effort:** 4-6 hours
-- **ROI:** High — organic traffic from Google, "full-stack .NET developer", "Blazor consultant"
+  - [x] Add `<meta name="description">` to `index.html`
+  - [x] Add Open Graph tags (og:title, og:description, og:image, og:url)
+  - [x] Add canonical tag to prevent duplicate indexing
+  - [x] Create `robots.txt` → allow /; disallow admin paths
+  - [x] Create `sitemap.xml` (homepage sections + blog)
+  - [x] Add Schema.org structured data (Person, WebSite, SoftwareApplication)
+  - [x] Improve link text: "visit site ↗" → "Visit Friars ERP ↗" (etc., per company)
+  - [x] Add `alt` text to all images (audited full live component tree)
+  - [x] Google Search Console: domain verified (DNS TXT), sitemap submitted successfully
+- **Fixed along the way:** canonical/OG/sitemap URLs were all pointing at `www.dougrosenbergdev.com`, which 301-redirects to the apex domain — this mismatch was blocking sitemap submission. Corrected everywhere to use the apex domain.
 - **Keyword targets:** "full-stack .NET developer", "Blazor consultant", "ERP systems", "Douglas Rosenberg"
+- **Remaining/known limitation:** this is a client-rendered Blazor WASM SPA, so per-page `<PageTitle>`/meta on `/consulting`, `/webdesign`, `/blog` only helps crawlers that execute JS — non-JS crawlers only ever see the root `index.html` meta tags. Not blocking, but worth knowing.
 
 ---
 
