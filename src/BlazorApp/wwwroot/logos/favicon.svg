@@ -19,8 +19,6 @@
       </feMerge>
     </filter>
   </defs>
-  <!-- Dark background -->
-  <rect width="256" height="256" fill="#0f1b2e" rx="32" />
   <!-- Hexagon mark centered -->
   <g transform="translate(128, 128)" filter="url(#hexGlowFav)">
     <polygon
