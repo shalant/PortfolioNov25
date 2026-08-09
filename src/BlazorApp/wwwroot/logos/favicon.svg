@@ -6,7 +6,7 @@
       <stop offset="100%" stop-color="#1ABC9C" />
     </linearGradient>
     <filter id="hexGlowFav" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
       <feColorMatrix in="blur" type="matrix"
         values="0 0 0 0 0.1
                 0 0 0 0 0.74
@@ -22,17 +22,22 @@
   <!-- Hexagon mark centered -->
   <g transform="translate(128, 128)" filter="url(#hexGlowFav)">
     <polygon
-      points="70,0 140,40 140,120 70,160 0,120 0,40"
-      fill="url(#hexGradFav)"
+        points="0,-125 108,-62 108,62 0,125 -108,62 -108,-62"
+        fill="url(#hexGradFav)"
     />
     <text
-      x="70" y="90"
+      x="0" y="30"
       text-anchor="middle"
       dominant-baseline="middle"
       fill="#FFFFFF"
       font-family="Montserrat, system-ui, sans-serif"
-      font-size="52"
+      font-size="140"
       font-weight="700"
       letter-spacing="0.02em">dr</text>
   </g>
 </svg>
+
+
+
+<!--points="70,0 140,40 140,120 70,160 0,120 0,40"-->
+<!--x="70" y="90"-->
