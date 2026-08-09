@@ -1131,6 +1131,8 @@ a:hover {
 }
 
 .experience-detail__link {
+  position: relative;
+  display: inline-block;
   font-family: 'Courier New', monospace;
   font-size: 0.76rem;
   color: rgba(26, 188, 156, 0.6) !important;
@@ -1141,8 +1143,25 @@ a:hover {
   transition: color 0.2s ease;
 }
 
+.experience-detail__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .experience-detail__link:hover {
   color: #1abc9c !important;
+}
+
+.experience-detail__link:hover::after {
+  transform: scaleX(1);
 }
 
 /* Responsive */
@@ -2723,6 +2742,8 @@ img.social-icon {
 }
 
 .wd-project__link {
+  position: relative;
+  display: inline-block;
   font-family: 'Courier New', monospace;
   font-size: 0.72rem;
   letter-spacing: 0.1em;
@@ -2731,8 +2752,25 @@ img.social-icon {
   transition: color 0.2s ease;
 }
 
+.wd-project__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .wd-project__link:hover {
   color: #1abc9c !important;
+}
+
+.wd-project__link:hover::after {
+  transform: scaleX(1);
 }
 
 .wd-project__link--gh {
@@ -4145,4 +4183,3 @@ a.music-album__title--link:hover {
 .skills-category__chips.reveal-on-scroll .tech-chip:nth-child(5)  { transition-delay: 0.20s; }
 .skills-category__chips.reveal-on-scroll .tech-chip:nth-child(6)  { transition-delay: 0.25s; }
 .skills-category__chips.reveal-on-scroll .tech-chip:nth-child(7)  { transition-delay: 0.30s; }
-}

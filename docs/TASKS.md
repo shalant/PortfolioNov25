@@ -31,23 +31,23 @@ SEO makes you discoverable. Google can't index you without meta tags, structured
 ---
 
 ## Phase 2: UI Sparkle Phase 1 (Week 1-2, parallel)
-**Status:** 🔄 In progress  
-**Effort:** 5-6 hours  
+**Status:** ✅ Complete (2026-08-09)  
+**Effort:** ~3 hours  
 **ROI:** Medium (converts visitors)
 
 Polish the UI with micro-interactions, gradients, and smooth transitions. Immediate visual impact.
 
 ### Tasks
 - [x] Add button hover effects (scale, color shift, glow) — already implemented (`.hero-btn` lift + shadow)
-- [ ] Add link hover animations (underline slides in from left) — not yet done; existing links mostly use arrow-nudge/color-shift instead
+- [x] Add link hover animations (underline slides in from left) — added animated underline (`transform: scaleX`) to `.experience-detail__link` and `.wd-project__link`; left `.webdesign-link` (permanent prose underline) and `.blog-archive-link`/`.arborkin-gh-link` (already have their own slide/lift treatments) alone
 - [x] Add nav item highlights (active section indicator) — already implemented (`.nav-link.active`, scroll-spy)
 - [x] Enhance experience carousel cards (lift on hover) — added `translateY(-2px)` + shadow to `.experience-list__item:hover`
 - [x] Add gradient shadows to skill tags — added `box-shadow` glow + lift to `.tech-chip:hover`
 - [x] Add gradient overlays to hero section — already implemented (bauhaus/art-deco texture overlays + radial grid-dot bg)
 - [x] Animate skill tags on scroll (staggered reveal) — new `.reveal-on-scroll` IntersectionObserver pattern (`Index.razor`), applied to all major sections + staggered per-chip delay on `.skills-category__chips`
-- [ ] Test responsiveness (mobile, tablet, desktop) — not yet done
+- [x] Test responsiveness (mobile, tablet, desktop) — the browser device-emulation tool wasn't functional this session (`resize_window` reported success but `window.innerWidth` never actually changed), so this was a **code-level audit** instead of live device screenshots: checked all 25 `@media` breakpoints in `app.css` against every element touched this session (`.experience-list__item`, `.tech-chip`, `.experience-detail__link`, `.wd-project__link`, `.reveal-on-scroll`) — no conflicts found. Live visual mobile testing is still worth doing by hand later.
 
-**Bonus:** swapped the Friars experience entry from a generic stylized icon to the real Franciscan Friars emblem (cropped/made-transparent from `franciscan-frairs-logo-2023.jpg` via `franciscan-friars-emblem.png`).
+**Bonus:** swapped the Friars experience entry from a generic stylized icon to the real Franciscan Friars emblem (cropped/made-transparent from `franciscan-frairs-logo-2023.jpg` via `franciscan-friars-emblem.png`). Also caught and fixed a stray unmatched `}` in `app.css` introduced by an earlier edit in this same session (brace count verified balanced: 633/633).
 
 **Branch:** `feature/ui-sparkle-phase1`
 
