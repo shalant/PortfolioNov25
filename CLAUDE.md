@@ -352,25 +352,52 @@ var apiKey = configuration["AI:AnthropicApiKey"];
 ### Branch Strategy
 
 **All code changes must be performed on a feature branch, not main.**
+
 - Create a branch for each feature or fix (e.g., `feature/my-feature`, `fix/bug-name`)
 - Work on the branch locally
-- Create a pull request to merge into `main`
-- Only push to `main` after PR approval and merge
+- Create a pull request to merge into `main` (or merge locally after self-review)
 - This keeps `main` stable and deployable at all times
+
+**Local pre-push hook enforces this:** Direct pushes to `main` are blocked; you must push feature branches instead.
 
 ### Commit Messages
 
 Format: `[Category] Brief description`
 
 Examples:
-- `[UI] Update navbar styling for better contrast`
+- `[UI] Add micro-interactions to buttons`
 - `[Feature] Add interactive todo list`
 - `[Fix] Correct navigation link to experience section`
 - `[Docs] Update README with installation instructions`
 
+### Workflow (Solo Developer)
+
+```bash
+# 1. Create feature branch
+git checkout -b feature/your-feature
+
+# 2. Make commits (frequently)
+git commit -m "[Category] Description"
+
+# 3. Push feature branch
+git push -u origin feature/your-feature
+
+# 4. Create PR on GitHub for visibility, or merge locally after review
+git checkout main && git merge feature/your-feature && git push origin main
+
+# 5. Delete feature branch
+git branch -d feature/your-feature && git push origin -d feature/your-feature
+```
+
+### Local Enforcement
+
+- A pre-push hook (`/.git/hooks/pre-push`) prevents pushing directly to `main`
+- To bypass (emergency only): `git push --no-verify`
+- Feature branches can be pushed freely
+
 ### Branch Protection
 
-- `main` branch is protected and requires PRs before merging
+- `main` branch is protected by local hook
 - Feature branches should be descriptive and short-lived
 - Delete branches after merging to keep the repo clean
 
