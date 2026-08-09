@@ -2,6 +2,7 @@
   {
     "title": "Full-stack .NET software engineer",
     "titleOLD": "Friar One, a custom ERP for the Franciscan Friars",
+    "company": "Friars ERP",
     "description": "Built several modules, composed entire service layer",
     "url": "https://friars.us",
     "icons": "C#, Blazor, ASP.NET, Syncfusion, SQL, Azure",
@@ -19,6 +20,7 @@
   {
     "title": "Front-end software engineer",
     "titleOLD": "Developed 4 applications, mainly front-end and design.",
+    "company": "Tackle.ai",
     "description": "Orchestrated end-to-end UI/UX design for four distinct applications, transforming initial requirements into sleek, user-friendly interfaces using Figma, .NET Blazor, Syncfusion controls, and custom CSS",
     "url": "https://tackle.ai",
     "icons": "Figma, Blazor, ASP.NET, Syncfusion, CSS",
@@ -32,6 +34,7 @@
   },
   {
     "title": "Full-stack .NET software engineer",
+    "company": "TC Industries",
     "description": "Engineered a robust, enterprise-grade ERP system for a global manufacturing firm—leveraged .NET Blazor, MudBlazor, SQL Server, and Azure to modernize operations from end to end",
     "url": "https://tcindustries.com/",
     "icons": "Blazor, ASP.NET, MudBlazor, SQL, Azure",
@@ -46,6 +49,7 @@
   },
   {
     "title": "Junior Angular/.NET software engineer",
+    "company": "Bridgestone Marketing",
     "description": "Contributed to the ongoing evolution of BridgestoneMarketing.com—a complex B2B platform—by enhancing features across Angular frontend, three ASP.NET servers, SQL database, and Kendo UI components",
     "url": "https://bridgestonemarketing.com",
     "icons": "Angular, ASP.NET, Kendo UI, SQL",
