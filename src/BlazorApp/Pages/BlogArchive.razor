@@ -161,7 +161,7 @@
 <style>
     .archive-section {
         padding: 4rem 0;
-        background: #060e1a;
+        background: url('/images/artDecoBackground1.png') center / cover no-repeat fixed;
         position: relative;
         overflow: hidden;
     }
@@ -170,8 +170,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background-image: radial-gradient(circle, rgba(26, 188, 156, 0.05) 1px, transparent 1px);
-        background-size: 40px 40px;
+        background: rgba(6, 14, 26, 0.65);
         pointer-events: none;
         z-index: 1;
     }
@@ -222,16 +221,18 @@
     }
 
     .archive-month {
-        background: rgba(238, 242, 247, 0.03);
-        border: 1px solid rgba(26, 188, 156, 0.1);
+        background: rgba(238, 242, 247, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(26, 188, 156, 0.25);
         border-radius: 8px;
         padding: 1.5rem;
         transition: all 0.3s ease;
     }
 
     .archive-month:hover {
-        background: rgba(238, 242, 247, 0.06);
-        border-color: rgba(26, 188, 156, 0.2);
+        background: rgba(238, 242, 247, 0.08);
+        border-color: rgba(26, 188, 156, 0.4);
     }
 
     .archive-month__title {
