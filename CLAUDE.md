@@ -2,6 +2,13 @@
 
 This document provides guidance for developing the DR Codeworks portfolio using Claude Code.
 
+> **📖 Reference docs** — See [`docs/`](./docs/) folder for full documentation:
+> - [`PORTFOLIO.md`](./docs/PORTFOLIO.md) — Project context & vision
+> - [`COMPONENTS.md`](./docs/COMPONENTS.md) — Component reference
+> - [`SECURITY.md`](./docs/SECURITY.md) — Security policy
+> - [`PORTFOLIO_TODO.md`](./docs/PORTFOLIO_TODO.md) — Full roadmap
+> - [`TASKS.md`](./docs/TASKS.md) — Current sprint tracking
+
 ## Project Overview
 
 **Type:** Blazor WebAssembly SPA  
