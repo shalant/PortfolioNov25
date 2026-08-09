@@ -246,14 +246,15 @@ Before committing, Claude should verify:
 - [ ] Navigation links point to correct IDs
 - [ ] New assets (images, fonts) are referenced correctly
 - [ ] Comments are minimal (code speaks for itself)
-- [ ] **CLAUDE.md and/or todo.md updated** to reflect changes (new features, completed work, architectural decisions)
+- [ ] **Docs updated in this same branch** (see rule below) — not deferred to a follow-up PR
 
 ### Pull Request Requirements
 
+**Rule: docs are updated *before* a PR is opened, in the same branch as the change — never as a separate follow-up PR.** If a task completes work tracked in `docs/TASKS.md` or `docs/PORTFOLIO_TODO.md`, check off/update those items as part of the same commit(s) that do the work. If the change adds a feature, test, or architectural pattern worth documenting, update `CLAUDE.md` too. Opening a docs-only PR after the fact is a sign this rule was skipped — fix it by amending the still-open branch, not by adding another PR.
+
 Every PR must include:
 - Clear, descriptive commit messages with `[Category]` prefix
-- Changes to CLAUDE.md if adding features, tests, or architectural patterns
-- Changes to todo.md if completing planned work
+- Docs updated per the rule above (CLAUDE.md, TASKS.md, PORTFOLIO_TODO.md — whichever apply)
 - All tests passing (if applicable)
 - No security or performance regressions
 
