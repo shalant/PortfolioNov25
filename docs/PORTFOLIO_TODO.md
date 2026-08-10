@@ -7,18 +7,19 @@
 
 ## 🚨 Critical Issues (This Week)
 
-### 1. **Security Audit** 
+### 1. **Security Audit** — ✅ Complete (2026-08-10)
 - **Why:** You mentioned uncertainty about security; portfolio is public-facing and may collect contact info
 - **Scope:**
-  - [ ] HTTPS enabled? (check browser address bar)
-  - [ ] CSP headers configured? (check DevTools → Network → Response Headers)
-  - [ ] No secrets in code? (API keys, passwords, tokens)
-  - [ ] Form submission safe? (input validation, rate limiting on contact form)
-  - [ ] Azure App Service security settings reviewed? (CORS, allowed hosts, etc.)
-  - [ ] Blazor bundle size / no embedded credentials?
-  - [ ] Contact form email address not scraped (anti-spam)
+  - [x] HTTPS enabled? — yes, GitHub Pages enforces it automatically
+  - [x] CSP headers configured? — no, and **not achievable on plain GitHub Pages** (no server config surface exists). Would require a Cloudflare (or similar) reverse proxy in front of the domain. Documented as a deliberate "someday" item in SECURITY.md, not a quick fix.
+  - [x] No secrets in code? — confirmed via repo-wide scan (API key patterns, private key blocks): none found
+  - [x] Form submission safe? — moot; the "contact form" is actually a `mailto:` link, no submission endpoint exists to attack
+  - [x] ~~Azure App Service security settings reviewed?~~ — **there is no Azure.** This item and `docs/SECURITY.md`'s prior Azure-based recommendations were describing infrastructure that doesn't exist; rewrote the doc to match actual GitHub Pages + local-only BlogPost-Generator reality.
+  - [x] Blazor bundle size / no embedded credentials? — confirmed no credentials embedded; bundle size not yet measured (see Core Web Vitals item, #10)
+  - [x] Contact form email address not scraped — N/A, same as above (mailto link, not a scraped/exposed form)
+- **Also fixed:** `.gitignore` had no `.env`/`appsettings.*.json` exclusion despite SECURITY.md recommending `.env` usage — hardened both root and verified it covers `BlogPost-Generator/`. Removed three orphaned/dead components (`Portfolio.razor`, `Consulting2.razor`, and the unfinished `ContactDialog.razor` stub it referenced) found during the audit — unused surface area, not a security hole, but confusing dead code.
 - **Risk:** Portfolio compromised, visitor data leaked, spam
-- **Effort:** 2-3 hours (audit + fixes)
+- **Effort:** ~1.5 hours (audit + fixes)
 
 ### 2. **SEO Foundation** 🔥 High Impact — ✅ Complete (2026-08-09)
 - **Why:** You're invisible to search engines; missing organic lead pipeline
@@ -330,23 +331,25 @@
 
 ## 🔐 Security Hardening (Ongoing)
 
-### 26. **Contact Form Security** 
+> **Reality check (2026-08-10):** items #26-28 below were written assuming a real backend contact form and Azure App Service hosting. Neither exists — the "contact form" is a `mailto:` link (no submission endpoint to secure), and hosting is 100% GitHub Pages (no App Service, no Azure account at all). Rewritten to reflect what's actually applicable. Full detail in [`SECURITY.md`](./SECURITY.md).
+
+### 26. **Real Contact Form** (if you decide you want one)
+Currently N/A — there's nothing to secure because there's no submission endpoint. Only relevant if you replace the `mailto:` link with an actual form (e.g. a form service, or a small serverless function):
 - [ ] Validate email format server-side
 - [ ] Rate limit (max 5 submissions per IP per hour)
 - [ ] Add CAPTCHA (Cloudflare free tier) if spam becomes issue
 - [ ] Log submissions to catch attacks
 - [ ] Send confirmation email to visitor ("Thanks, I'll reply within 24 hours")
 
-### 27. **Content Security Policy (CSP)** 
-- [ ] Add CSP headers to prevent XSS
-- [ ] Restrict script sources (self only)
+### 27. **Content Security Policy (CSP)** — deferred, infrastructure decision
+Not achievable via GitHub Pages configuration (no server-side headers support). Requires a reverse proxy in front of the domain:
+- [ ] Decide whether it's worth moving DNS to Cloudflare (free tier) to gain header-injection capability
+- [ ] If yes: add CSP via Cloudflare Transform Rules (starter policy already drafted in `SECURITY.md`)
+- [ ] Restrict script sources (self + CDN/fonts actually in use)
 - [ ] Restrict image sources (self + googleapis for fonts)
 
-### 28. **Azure App Service Hardening**
-- [ ] Enable HTTPS only (no HTTP redirect)
-- [ ] Set `Strict-Transport-Security` header
-- [ ] Check `AllowedHosts` in `appsettings.json`
-- [ ] Review CORS settings (should be restrictive)
+### 28. ~~Azure App Service Hardening~~ — N/A, no Azure
+There is no Azure App Service. HTTPS is already enforced automatically by GitHub Pages. `AllowedHosts`/CORS settings apply to `BlogPost-Generator` (local-only ASP.NET Core app), not the live portfolio — review those in `BlogPost-Generator/appsettings.json` only if that tool is ever exposed beyond localhost, which it currently is not and should not be.
 
 ---
 

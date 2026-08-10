@@ -300,60 +300,42 @@ Every PR must include:
 
 ## Deployment & Security
 
-See **[SECURITY.md](./SECURITY.md)** for detailed blog infrastructure security & risks.
+See **[SECURITY.md](./SECURITY.md)** for the full security audit and infrastructure details.
 
-### Quick Deploy (Azure)
+**Actual hosting: GitHub Pages. There is no Azure anywhere in this project.** The portfolio is a static Blazor WASM build deployed entirely via GitHub Actions (`.github/workflows/publish-gh-pages.yml`) — no App Service, no Azure Key Vault, no server to configure. If you're about to reach for an Azure Portal setting or a `Web.config`, stop — neither applies here.
 
-```bash
-# Build for production
-dotnet publish -c Release -o ./publish src/BlazorApp/BlazorApp.csproj
+### Deploy
 
-# Deploy to Azure App Service
-az webapp deployment source config-zip --resource-group YOUR_RG --name YOUR_APP --src-path ./publish
-```
+Deployment is automatic: push/merge to `main` triggers the GitHub Actions workflow, which builds and publishes to GitHub Pages. There is no manual deploy step and no separate "production" environment to configure.
 
-**GitHub Pages Deployment:**
 - Configured to deploy **only on `main` branch** commits
-- Feature branches and fixes branches do not trigger deployment
-- Ensures stability and prevents incomplete features from going live
+- Feature branches trigger the build+test job but not the deploy job
+- Custom domain (`dougrosenbergdev.com`) is wired via the `CNAME` file in `wwwroot/`; DNS is managed externally (see SECURITY.md for what that means for security headers)
 
 ### Security Checklist
 
 **Before shipping to production:**
 
-- [ ] **HTTPS only** - Enable HTTPS/TLS (Azure App Service does this by default)
-- [ ] **API Keys** - Store `ANTHROPIC_API_KEY` in Azure Key Vault, NOT in code
-- [ ] **Environment variables** - Use secrets management, not appsettings.json
-- [ ] **Input validation** - Blog title/content validated before sending to Claude API
-- [ ] **File size limits** - Images capped at 5MB per upload (already in code)
-- [ ] **CSP headers** - Add Content Security Policy headers to prevent XSS
-- [ ] **Regular updates** - Keep .NET, MudBlazor, and all packages current
-- [ ] **Monitoring** - Enable Application Insights in Azure to catch errors/attacks
-- [ ] **Backups** - Back up `blog-posts.json` before major changes
+- [x] **HTTPS only** — GitHub Pages enforces this automatically on the custom domain
+- [x] **API Keys** — `ANTHROPIC_API_KEY`/`AI:AnthropicApiKey` supplied via environment variable or `dotnet user-secrets` for the local-only BlogPost-Generator; never committed. `.gitignore` excludes `.env` and `appsettings.*.json` (except the committed, secret-free base `appsettings.json`).
+- [ ] **Input validation** — Blog title/content validated before sending to Claude API
+- [x] **File size limits** — Images capped at 5MB per upload (already in code)
+- [ ] **CSP headers** — not achievable on plain GitHub Pages; would require a reverse proxy (e.g. Cloudflare) in front of the domain. See SECURITY.md for the honest tradeoff.
+- [ ] **Regular updates** — Keep .NET, MudBlazor, and all packages current (no fixed cadence established yet)
+- [ ] **Backups** — `blog-posts.json` is versioned in git, which is the backup
 
-### Environment Setup (Production)
+### BlogPost-Generator
 
-**BlogPost-Generator API Key:**
-```csharp
-// In Program.cs, use Key Vault for secrets:
-builder.Configuration.AddAzureKeyVault(
-    new Uri($"https://{keyVaultName}.vault.azure.net/"),
-    new DefaultAzureCredential());
-
-// Access in services:
-var apiKey = configuration["AI:AnthropicApiKey"];
-```
-
-**✅ BlogPost-Generator stays private** - Never deploy publicly. Runs locally only. To publish blog posts: export JSON from generator, copy to `src/BlazorApp/wwwroot/sample-data/blog-posts.json`, deploy portfolio normally.
+**✅ Stays private** — never deploy publicly. Runs locally only (`dotnet run`, localhost). To publish blog posts: export JSON from the generator, copy to `src/BlazorApp/wwwroot/sample-data/blog-posts.json`, commit, and merge to `main` like any other change.
 
 ### Blocking Common Attacks
 
 | Attack | Prevention |
 |--------|-----------|
-| **XSS** | Input validation on blog content, use `@Html.Raw()` only for trusted sources |
-| **CSRF** | Blazor has built-in CSRF protection; don't disable it |
-| **SQL Injection** | N/A - using JSON files, not SQL. Still sanitize inputs. |
-| **DDoS** | Azure DDoS Protection Standard |
+| **XSS** | Blog content originates from your own writing via the Claude API, not arbitrary user input; `MarkupString` usage is scoped to that trusted content |
+| **CSRF** | No state-changing server endpoints exist on the live site to forge a request against |
+| **SQL Injection** | N/A — using JSON files, not SQL |
+| **DDoS** | Handled by GitHub Pages' own infrastructure; no additional protection configured or needed at this scale |
 
 ## Git Workflow
 
