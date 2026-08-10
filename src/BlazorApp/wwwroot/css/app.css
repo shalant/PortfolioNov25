@@ -936,6 +936,8 @@ a:hover {
 
 .experience-list__item:hover {
   background: rgba(26, 188, 156, 0.04);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 
 .experience-list__item:hover .experience-list__title {
@@ -1129,6 +1131,8 @@ a:hover {
 }
 
 .experience-detail__link {
+  position: relative;
+  display: inline-block;
   font-family: 'Courier New', monospace;
   font-size: 0.76rem;
   color: rgba(26, 188, 156, 0.6) !important;
@@ -1139,8 +1143,25 @@ a:hover {
   transition: color 0.2s ease;
 }
 
+.experience-detail__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .experience-detail__link:hover {
   color: #1abc9c !important;
+}
+
+.experience-detail__link:hover::after {
+  transform: scaleX(1);
 }
 
 /* Responsive */
@@ -1979,6 +2000,8 @@ img.social-icon {
   border-color: #1abc9c;
   background: rgba(26, 188, 156, 0.14);
   color: #1abc9c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(26, 188, 156, 0.25);
 }
 
 /* Wordmark vendor logos (Syncfusion, DevExpress) render as the logo alone,
@@ -2719,6 +2742,8 @@ img.social-icon {
 }
 
 .wd-project__link {
+  position: relative;
+  display: inline-block;
   font-family: 'Courier New', monospace;
   font-size: 0.72rem;
   letter-spacing: 0.1em;
@@ -2727,8 +2752,25 @@ img.social-icon {
   transition: color 0.2s ease;
 }
 
+.wd-project__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .wd-project__link:hover {
   color: #1abc9c !important;
+}
+
+.wd-project__link:hover::after {
+  transform: scaleX(1);
 }
 
 .wd-project__link--gh {
@@ -4097,3 +4139,47 @@ a.music-album__title--link:hover {
     font-size: 1.25rem;
   }
 }
+
+/* ============================================================================
+   SCROLL-REVEAL (fade in + slide up as sections enter viewport)
+   ============================================================================ */
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Staggered chip reveal — each tech-chip fades in ~50ms after the previous
+   one once its parent .skills-category__chips crosses into view. */
+.skills-category__chips.reveal-on-scroll .tech-chip {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.skills-category__chips.reveal-on-scroll.is-visible .tech-chip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.skills-category__chips.reveal-on-scroll .tech-chip:nth-child(1)  { transition-delay: 0.00s; }
+.skills-category__chips.reveal-on-scroll .tech-chip:nth-child(2)  { transition-delay: 0.05s; }
+.skills-category__chips.reveal-on-scroll .tech-chip:nth-child(3)  { transition-delay: 0.10s; }
+.skills-category__chips.reveal-on-scroll .tech-chip:nth-child(4)  { transition-delay: 0.15s; }
+.skills-category__chips.reveal-on-scroll .tech-chip:nth-child(5)  { transition-delay: 0.20s; }
+.skills-category__chips.reveal-on-scroll .tech-chip:nth-child(6)  { transition-delay: 0.25s; }
+.skills-category__chips.reveal-on-scroll .tech-chip:nth-child(7)  { transition-delay: 0.30s; }

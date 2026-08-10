@@ -6,7 +6,7 @@
     "description": "Built several modules, composed entire service layer",
     "url": "https://friars.us",
     "icons": "C#, Blazor, ASP.NET, Syncfusion, SQL, Azure",
-    "image": "/images/franciscan-friars-modern.svg",
+    "image": "/images/franciscan-friars-emblem.png",
     "bulletpoints": [
       "🛠️ Developed a custom SQL data-masking tool to generate sanitized development databases, establishing a standardized, secure pipeline for internal and external contributors to interface with complex ERP data without risk.",
       "🔄 Orchestrated a seamless Salesforce integration to synchronize and reconcile disparate ERP and CRM records, ensuring data integrity and cross-platform consistency across the enterprise ecosystem.",
