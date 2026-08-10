@@ -59,7 +59,6 @@ Format your response EXACTLY as:
 
         var request = new
         {
-            //model = "claude-3-5-sonnet-20241022",
             model = "claude-sonnet-5",
             max_tokens = 4000,
             messages = new[] {
