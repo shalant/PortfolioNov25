@@ -2792,6 +2792,51 @@ img.social-icon {
   border-radius: 2px;
 }
 
+.wd-project__frame {
+  border-radius: 4px;
+  overflow: hidden;
+  background: #0a1220;
+  border: 1px solid rgba(26, 188, 156, 0.12);
+  margin: -0.5rem -0.5rem 0.5rem;
+}
+
+.wd-project__frame-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  background: #0a1220;
+}
+
+.wd-project__frame-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(238, 242, 247, 0.15);
+  flex-shrink: 0;
+}
+
+.wd-project__frame-url {
+  margin-left: 0.4rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: rgba(26, 188, 156, 0.5);
+}
+
+.wd-project__frame-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(0.92);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.wd-project:hover .wd-project__frame-img {
+  filter: saturate(1.05);
+  transform: scale(1.015);
+}
+
 .wd-projects-grid--3 {
   grid-template-columns: repeat(3, 1fr);
 }
