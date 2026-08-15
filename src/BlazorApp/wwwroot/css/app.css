@@ -4719,62 +4719,38 @@ a.music-album__title--link:hover {
 }
 
 /* ============================================================================
-   Haxbyte brand card — shared cross-promo on /webdesign and /consulting
+   Haxbyte cross-promo — styled as a normal card inside each page's existing
+   grid (Live Sites / services), not a separate banner section.
    ============================================================================ */
 
-.haxbyte-card {
-  background: #060e1a;
-  padding: 3rem 0;
-  border-top: 1px solid rgba(26, 188, 156, 0.1);
-  border-bottom: 1px solid rgba(26, 188, 156, 0.1);
+.wd-project--haxbyte {
+  background-color: rgba(26, 188, 156, 0.05);
+  border-style: dashed;
 }
 
-.haxbyte-card__container {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.haxbyte-card__mark {
-  font-family: 'Courier New', monospace;
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: #1abc9c;
-}
-
-.haxbyte-card__text {
+.wd-project__haxbyte-text {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 300;
   line-height: 1.7;
-  color: rgba(238, 242, 247, 0.6);
+  color: rgba(238, 242, 247, 0.55);
   margin: 0;
+  flex: 1;
 }
 
-.haxbyte-card__text strong {
-  color: rgba(238, 242, 247, 0.85);
-  font-weight: 600;
+.consulting-service-card--haxbyte {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background-color: rgba(26, 188, 156, 0.05);
+  border-style: dashed;
 }
 
-.haxbyte-card__link {
+.consulting-service-card__link {
+  display: inline-block;
+  margin-top: 0.5rem;
   font-family: 'Courier New', monospace;
   font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  color: #1abc9c !important;
-  text-decoration: none;
-  border: 1px solid rgba(26, 188, 156, 0.3);
-  padding: 0.5rem 1.1rem;
-  border-radius: 2px;
-  transition: all 0.25s ease;
-}
-
-.haxbyte-card__link:hover {
-  background: rgba(26, 188, 156, 0.1);
-  border-color: #1abc9c;
+  letter-spacing: 0.06em;
+  color: #1abc9c;
 }

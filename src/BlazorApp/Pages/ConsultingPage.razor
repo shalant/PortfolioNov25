@@ -32,8 +32,6 @@
 
 @if (consulting is not null)
 {
-    <HaxbyteBrandCard />
-
     <section class="consulting-services">
         <div class="consulting-services__container">
             <span class="section-eyebrow">// services</span>
@@ -47,6 +45,11 @@
                         <p>@svc.Description</p>
                     </div>
                 }
+                <a href="https://haxbyte.com" target="_blank" rel="noopener noreferrer" class="consulting-service-card consulting-service-card--haxbyte">
+                    <span class="consulting-service-card__icon">&lt;/&gt;</span>
+                    <h3>Haxbyte</h3>
+                    <p>This work is delivered under Haxbyte, a dedicated web design &amp; consulting studio. <span class="consulting-service-card__link">Visit haxbyte.com ↗</span></p>
+                </a>
             </div>
         </div>
     </section>
