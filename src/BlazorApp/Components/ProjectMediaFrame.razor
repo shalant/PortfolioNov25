@@ -8,18 +8,11 @@
         {
             @if (Images.Count > 1)
             {
-                <style>
-                    @@keyframes wd-xfade-@(Images.Count) {
-                        0%, @(FadeStartPct)% { opacity: 1; }
-                        @(HoldPct)%, 100% { opacity: 0; }
-                    }
-                </style>
+                <style>@((MarkupString)AllKeyframesCss)</style>
             }
             @for (var i = 0; i < Images.Count; i++)
             {
-                var imgStyle = Images.Count > 1
-                    ? $"animation-name:wd-xfade-{Images.Count};animation-delay:{i * 4}s"
-                    : "";
+                var imgStyle = Images.Count > 1 ? $"animation-name:{KeyframeName(i)}" : "";
                 <img class="wd-project__frame-img" src="@Images[i]" alt="@Alt" style="@imgStyle" loading="lazy" />
             }
         }
@@ -36,12 +29,6 @@
     /// <summary>When set, renders a looping muted video instead of the crossfading images. Drop a recording's path in here once one exists — no other changes needed.</summary>
     [Parameter]
     public string? VideoUrl { get; set; }
-
-    // Each image gets an equal 100/N-percent slot of the shared cycle, with most
-    // of that slot spent as a slow cross-dissolve into the next image — sized
-    // per-N so there's never a gap where every image is simultaneously faded out.
-    private double HoldPct => Math.Round(100.0 / Images.Count, 2);
-    private double FadeStartPct => Math.Round(HoldPct * 0.6, 2);
 
     private bool _active;
     private CancellationTokenSource? _hoverCts;
@@ -79,5 +66,53 @@
         _hoverCts?.Cancel();
         _active = false;
         StateHasChanged();
+    }
+
+    // Each image owns its own complete keyframe rule spanning the full shared
+    // cycle — no animation-delay involved — so there's no fill-mode/delay-phase
+    // edge case to reason about. Every image fades IN at the start of its slot
+    // (overlapping the previous image's fade-out) and fades OUT at the end
+    // (overlapping the next image's fade-in), including the wrap from the last
+    // image back to the first. animation-delay is never used, so the very first
+    // activation is exactly as smooth as every later loop.
+    private string KeyframeName(int i) => $"wd-xfade-{Images.Count}-{i}";
+
+    private double HoldPct => 100.0 / Images.Count;
+    private double OverlapPct => Math.Round(HoldPct * 0.4, 2);
+
+    private string AllKeyframesCss =>
+        string.Join("\n", Enumerable.Range(0, Images.Count).Select(BuildKeyframeRule));
+
+    private string BuildKeyframeRule(int i)
+    {
+        var hold = HoldPct;
+        var overlap = OverlapPct;
+        var name = KeyframeName(i);
+
+        if (i == 0)
+        {
+            // Visible from the very start (matches the already-visible resting
+            // state, so the first activation has no flash), fades out at the end
+            // of its slot, then fades back in during the tail of the cycle as the
+            // last image hands back off to it — the loop wrap is itself a normal
+            // crossfade, not a special case.
+            var fadeOutStart = Math.Round(hold - overlap, 2);
+            var wrapStart = Math.Round(100 - overlap, 2);
+            return $"@keyframes {name} {{ 0%, {fadeOutStart.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 1; }} " +
+                   $"{hold.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 0; }} " +
+                   $"{wrapStart.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 0; }} " +
+                   $"100% {{ opacity: 1; }} }}";
+        }
+
+        var start = Math.Round(i * hold, 2);
+        var fadeInBegin = Math.Round(start - overlap, 2);
+        var end = Math.Round((i + 1) * hold, 2);
+        var fadeOutBegin = Math.Round(end - overlap, 2);
+
+        return $"@keyframes {name} {{ 0%, {fadeInBegin.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 0; }} " +
+               $"{start.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 1; }} " +
+               $"{fadeOutBegin.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 1; }} " +
+               $"{end.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 0; }} " +
+               $"100% {{ opacity: 0; }} }}";
     }
 }
