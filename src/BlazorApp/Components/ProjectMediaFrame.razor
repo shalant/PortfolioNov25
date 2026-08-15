@@ -12,7 +12,13 @@
             }
             @for (var i = 0; i < Images.Count; i++)
             {
-                var imgStyle = Images.Count > 1 ? $"animation-name:{KeyframeName(i)}" : "";
+                // animation-name only gets assigned once _active is true, at the same
+                // moment the CSS below applies the real duration/iteration-count. That
+                // way the browser always sees a fresh animation-name go from "none" to
+                // a real value with its final timing already in place — never a
+                // duration change on an animation that was already (finished-)running
+                // at 0s, which is the case that can glitch the first frame.
+                var imgStyle = (Images.Count > 1 && _active) ? $"animation-name:{KeyframeName(i)}" : "";
                 <img class="wd-project__frame-img" src="@Images[i]" alt="@Alt" style="@imgStyle" loading="lazy" />
             }
         }
