@@ -9,7 +9,6 @@
 <Home Http=@Http HeroImageService=@HeroImageService />
 <About Http=@Http />
 <Experience Http=@Http HeroImageService=@HeroImageService />
-<ArborKin />
 <TechnicalSkills />
 <Casual Http="@Http" HeroImageService="@HeroImageService" />
 <Music Http="@Http" HeroImageService="@HeroImageService" />
@@ -40,7 +39,7 @@
         }
 
         // sections render statically on first paint, but retry once for
-        // safety against slower async-loaded content (ArborKin, Experience)
+        // safety against slower async-loaded content (Experience)
         setTimeout(initScrollReveal, 300);
         setTimeout(initScrollReveal, 800);
     })();

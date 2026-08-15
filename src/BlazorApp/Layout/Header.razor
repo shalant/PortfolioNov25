@@ -36,18 +36,14 @@
                 </li>
 
                 <li>
-                    <a class="nav-link" href="/#arborkin">
-                        <!-- Y-branch: family tree / branching structure -->
+                    <a class="nav-link" href="/webdesign">
+                        <!-- split branch: craft/build, now the featured offering -->
                         <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                            <line x1="7"   y1="13"  x2="7"   y2="7"/>
-                            <line x1="7"   y1="7"   x2="2.5" y2="2.5"/>
-                            <line x1="7"   y1="7"   x2="11.5" y2="2.5"/>
-                            <line x1="2.5" y1="2.5" x2="1"   y2="1"/>
-                            <line x1="2.5" y1="2.5" x2="4"   y2="1"/>
-                            <line x1="11.5" y1="2.5" x2="10" y2="1"/>
-                            <line x1="11.5" y1="2.5" x2="13" y2="1"/>
+                            <line x1="7" y1="13" x2="7" y2="7"/>
+                            <line x1="7" y1="7" x2="3" y2="3"/>
+                            <line x1="7" y1="7" x2="11" y2="3"/>
                         </svg>
-                        arborkin
+                        web design
                     </a>
                 </li>
 
@@ -74,21 +70,14 @@
                     </a>
                 </li>
 
-                <li class="nav-has-dropdown">
-                    <span class="nav-link nav-link--page">
-                        <!-- split branch: multiple services -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                            <line x1="7" y1="13" x2="7" y2="7"/>
-                            <line x1="7" y1="7" x2="3" y2="3"/>
-                            <line x1="7" y1="7" x2="11" y2="3"/>
+                <li>
+                    <a class="nav-link" href="/consulting">
+                        <!-- speech bubble: consulting conversation -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M1.5 2.5 H12.5 V9 H5.5 L3 11.5 V9 H1.5 Z"/>
                         </svg>
-                        services
-                        <span class="nav-caret">▾</span>
-                    </span>
-                    <div class="nav-dropdown">
-                        <a href="/consulting" class="nav-dropdown-item">↗ consulting</a>
-                        <a href="/webdesign" class="nav-dropdown-item">╱ web design</a>
-                    </div>
+                        consulting
+                    </a>
                 </li>
 
             </ul>
@@ -154,35 +143,19 @@
             });
         };
 
-        // highlight consulting / web design / blog links when on their pages
+        // highlight consulting / web design / blog links when on their own page
+        // (anything not a "/#section" hash link, which trackActive already handles)
         const highlightPageLink = () => {
             const path = window.location.pathname.replace(/\/$/, '');
-            const servicePages = ['/consulting', '/webdesign'];
-            const isServicePage = servicePages.includes(path);
-            const isBlogPage = path === '/blog';
-
-            // highlight parent services link when on a service subpage
-            document.querySelectorAll('.nav-link--page:not([href])').forEach(link => {
-                link.classList.toggle('active', isServicePage);
-            });
-
-            // highlight dropdown items when on their pages
-            document.querySelectorAll('.nav-dropdown-item').forEach(link => {
-                const href = (link.getAttribute('href') ?? '').replace(/\/$/, '');
-                link.classList.toggle('active', href === path);
-            });
-
-            // highlight blog link when on blog page
-            document.querySelectorAll('.nav-link').forEach(link => {
-                const href = (link.getAttribute('href') ?? '').replace(/\/$/, '');
-                if (href === '/blog') {
-                    link.classList.toggle('active', isBlogPage);
-                }
+            document.querySelectorAll('.nav-link[href]').forEach(link => {
+                const href = link.getAttribute('href') ?? '';
+                if (href.startsWith('/#')) return;
+                link.classList.toggle('active', href.replace(/\/$/, '') === path);
             });
         };
         highlightPageLink();
 
-        // re-scroll to hash after async sections (e.g. ArborKin) finish rendering
+        // re-scroll to hash after async sections finish rendering
         const scrollToHash = () => {
             const hash = window.location.hash;
             if (!hash) return;
@@ -198,7 +171,7 @@
         // highlight page links (consulting/web design) after Blazor renders
         setTimeout(highlightPageLink, 300);
         setTimeout(highlightPageLink, 800);
-        // two-pass scroll: first pass for fast sections, second for slow async ones (ArborKin)
+        // two-pass scroll: first pass for fast sections, second for slower async ones
         setTimeout(scrollToHash, 400);
         setTimeout(scrollToHash, 1200);
     })();

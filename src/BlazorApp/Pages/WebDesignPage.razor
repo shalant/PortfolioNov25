@@ -5,49 +5,32 @@
 
 <Header />
 
-<section class="subpage-hero" id="webdesign-hero">
-    <div class="subpage-hero__grid-bg"></div>
-    <div class="subpage-hero__content subpage-hero__content--centered">
-        <span class="section-eyebrow">// web design</span>
-        @if (webDesign is null)
-        {
-            <h1 class="subpage-hero__title subpage-hero__title--centered">UI/UX Design</h1>
-        }
-        else
-        {
-            <h1 class="subpage-hero__title subpage-hero__title--centered">@webDesign.Headline</h1>
-            <p class="subpage-hero__sub subpage-hero__sub--centered">@webDesign.Subheadline</p>
-        }
-    </div>
-</section>
-
 @if (webDesign is not null)
 {
-    <section class="webdesign-tools">
-        <div class="webdesign-tools__container">
-            <span class="section-eyebrow">// toolkit</span>
-            <h2 class="webdesign-tools__heading">Tools &amp; Frameworks</h2>
-            @* <div class="webdesign-tools__chips">
-                @foreach (var tool in webDesign.Tools)
+    var marqueeImages = webDesign.Projects.SelectMany(p => p.Images).ToList();
+
+    <section class="wd2-hero">
+        <div class="wd2-hero__marquee wd2-hero__marquee--back">
+            <div class="wd2-hero__track wd2-hero__track--slow">
+                @foreach (var src in marqueeImages.Concat(marqueeImages))
                 {
-                    <span class="about-skill-chip">@tool</span>
+                    <img src="@src" alt="" loading="eager" />
                 }
-            </div> *@
-            <div class="skills-category">
-                <span class="skills-category__label">Frameworks &amp; UI</span>
-                <div class="skills-category__chips">
-                    <TechChip Name="Figma" />
-                    <TechChip Name="Canva" />
-                    <TechChip Name="Claude" />
-                    <TechChip Name="Squarespace" />
-                    <TechChip Name="Blazor" />
-                    <TechChip Name="Angular" />
-                    <TechChip Name="CSS / Animations" />
-                    <TechChip Name="MudBlazor" />
-                    <TechChip Name="Bootstrap" />
-                    <TechChip Name="Syncfusion" />
-                </div>
             </div>
+        </div>
+        <div class="wd2-hero__marquee wd2-hero__marquee--front">
+            <div class="wd2-hero__track wd2-hero__track--fast wd2-hero__track--reverse">
+                @foreach (var src in marqueeImages.Concat(marqueeImages))
+                {
+                    <img src="@src" alt="" loading="eager" />
+                }
+            </div>
+        </div>
+        <div class="wd2-hero__scrim"></div>
+        <div class="wd2-hero__glass">
+            <span class="section-eyebrow">// web design</span>
+            <h1 class="wd2-hero__title">@webDesign.Headline</h1>
+            <p class="wd2-hero__sub">@webDesign.Subheadline</p>
         </div>
     </section>
 
@@ -56,72 +39,37 @@
             <span class="section-eyebrow">// selected work</span>
             <h2 class="webdesign-projects__heading">Live Sites</h2>
 
-            <div class="wd-projects-grid wd-projects-grid--3">
+            <div class="wd-projects-grid">
 
-                <article class="wd-project">
-                    <div class="wd-project__meta">
-                        <span class="wd-project__num">01</span>
-                        <span class="about-skill-chip">Squarespace</span>
-                    </div>
-                    <h3 class="wd-project__name">Hardware Etc LLC</h3>
-                    <p class="wd-project__industry">Bulk materials supplier — multi-family residential</p>
-                    <ul class="wd-project__bullets">
-                        <li>Clean, professional layout communicating product quality and quick-ship availability to developer clients</li>
-                        <li>Organized services and private-label cabinet catalog for high-volume procurement audiences</li>
-                        <li>Responsive build optimized for both desktop spec-review and mobile field use</li>
-                    </ul>
-                    <div class="wd-project__links">
-                        <a href="https://www.hardwareetc.net/" target="_blank" rel="noopener noreferrer" class="wd-project__link">
-                            hardwareetc.net ↗
-                        </a>
-                    </div>
-                </article>
+                @foreach (var project in webDesign.Projects)
+                {
+                    <a href="/webdesign/@project.Slug" class="wd-project">
+                        <ProjectMediaFrame
+                            Alt="@($"{project.Name} website")"
+                            Images="@project.Images" />
+                        <div class="wd-project__meta">
+                            <span class="wd-project__num">@project.Number</span>
+                            <span class="about-skill-chip">@project.Platform</span>
+                            @if (!string.IsNullOrEmpty(project.Status))
+                            {
+                                <span class="wd-project__wip">@project.Status</span>
+                            }
+                        </div>
+                        <h3 class="wd-project__name">@project.Name</h3>
+                        <p class="wd-project__industry">@project.Industry</p>
+                        <ul class="wd-project__bullets">
+                            @foreach (var bullet in project.Bullets)
+                            {
+                                <li>@bullet</li>
+                            }
+                        </ul>
+                        <span class="wd-project__cta">view case study →</span>
+                    </a>
+                }
 
-                <article class="wd-project">
+                <article class="wd-project wd-project--static">
                     <div class="wd-project__meta">
-                        <span class="wd-project__num">02</span>
-                        <span class="about-skill-chip">Squarespace</span>
-                    </div>
-                    <h3 class="wd-project__name">Sonus Construction Group</h3>
-                    <p class="wd-project__industry">General contractor — multi-family value-add renovation</p>
-                    <ul class="wd-project__bullets">
-                        <li>Minimalist editorial aesthetic with high-quality project photography driving the narrative</li>
-                        <li>Structured around the "we think like owners" brand positioning, built for investor and developer audiences</li>
-                        <li>Clear hierarchy across services, process, and material sourcing sections</li>
-                    </ul>
-                    <div class="wd-project__links">
-                        <a href="https://www.sonusconstruction.com/" target="_blank" rel="noopener noreferrer" class="wd-project__link">
-                            sonusconstruction.com ↗
-                        </a>
-                    </div>
-                </article>
-
-                <article class="wd-project">
-                    <div class="wd-project__meta">
-                        <span class="wd-project__num">03</span>
-                        <span class="about-skill-chip">Blazor WASM</span>
-                        <span class="wd-project__wip">in progress</span>
-                    </div>
-                    <h3 class="wd-project__name">dougrosenberg.com</h3>
-                    <p class="wd-project__industry">Composer &amp; musician — personal artist site</p>
-                    <ul class="wd-project__bullets">
-                        <li>Custom Blazor WebAssembly build — same stack as this portfolio — replacing the previous site</li>
-                        <li>Searchable sheet music library, album showcase with purchase links, and responsive photo gallery with lightbox</li>
-                        <li>Six switchable color themes persisted in localStorage; scroll-spy navigation and animated counters</li>
-                    </ul>
-                    <div class="wd-project__links">
-                        <a href="https://www.dougrosenberg.com" target="_blank" rel="noopener noreferrer" class="wd-project__link">
-                            dougrosenberg.com ↗
-                        </a>
-                        <a href="https://github.com/shalant/newMusicWebsiteJan26" target="_blank" rel="noopener noreferrer" class="wd-project__link wd-project__link--gh">
-                            github ↗
-                        </a>
-                    </div>
-                </article>
-
-                <article class="wd-project">
-                    <div class="wd-project__meta">
-                        <span class="wd-project__num">04</span>
+                        <span class="wd-project__num">05</span>
                         <span class="about-skill-chip">Blazor Server</span>
                         <span class="wd-project__wip">in progress</span>
                     </div>
@@ -130,22 +78,31 @@
                     <ul class="wd-project__bullets">
                         <li>Custom Blazor Server, DB, cheap deployment, AI document consumption</li>
                     </ul>
-                    <div class="wd-project__links">
-                        <a href="https://www.bizmachina.com" target="_blank" rel="noopener noreferrer" class="wd-project__link">
-                            bizmachina.com ↗
-                        </a>
-                        <a href="https://github.com/shalant/DocIntakeERP" target="_blank" rel="noopener noreferrer" class="wd-project__link wd-project__link--gh">
-                            github ↗
-                        </a>
-                    </div>
                 </article>
 
-            </div>
+                <a href="https://haxbyte.com" target="_blank" rel="noopener noreferrer" class="wd-project wd-project--haxbyte">
+                    <div class="wd-project__meta">
+                        <span class="about-skill-chip">the brand behind this work</span>
+                    </div>
+                    <h3 class="wd-project__name">Haxbyte</h3>
+                    <p class="wd-project__industry">Web design &amp; consulting studio</p>
+                    <p class="wd-project__haxbyte-text">This work is delivered under Haxbyte — a dedicated studio, not a one-off side gig.</p>
+                    <span class="wd-project__cta">visit haxbyte.com →</span>
+                </a>
 
-            <p class="webdesign-projects__note">
-                For a deeper technical case study,
-                <a href="/#arborkin" class="webdesign-link">see the ArborKin project ↗</a>
-            </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="wd2-tools">
+        <div class="wd2-tools__container">
+            <span class="section-eyebrow">// toolkit</span>
+            <div class="wd2-tools__chips">
+                @foreach (var tool in webDesign.Tools)
+                {
+                    <span class="about-skill-chip">@tool</span>
+                }
+            </div>
         </div>
     </section>
 }

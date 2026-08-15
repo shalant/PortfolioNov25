@@ -1,0 +1,124 @@
+<div class="wd-project__frame" @onmouseenter="HandleMouseEnter" @onmouseleave="HandleMouseLeave">
+    <div class="wd-project__frame-stage @(_active ? "is-active" : "")" style="--wd-frame-cycle:@(Images.Count * 1.8)s">
+        @if (!string.IsNullOrEmpty(VideoUrl))
+        {
+            <video class="wd-project__frame-video" src="@VideoUrl" poster="@Images.FirstOrDefault()" muted loop playsinline preload="metadata"></video>
+        }
+        else
+        {
+            @if (Images.Count > 1)
+            {
+                <style>@((MarkupString)AllKeyframesCss)</style>
+            }
+            @for (var i = 0; i < Images.Count; i++)
+            {
+                // animation-name only gets assigned once _active is true, at the same
+                // moment the CSS below applies the real duration/iteration-count. That
+                // way the browser always sees a fresh animation-name go from "none" to
+                // a real value with its final timing already in place — never a
+                // duration change on an animation that was already (finished-)running
+                // at 0s, which is the case that can glitch the first frame.
+                var imgStyle = (Images.Count > 1 && _active) ? $"animation-name:{KeyframeName(i)}" : "";
+                <img class="wd-project__frame-img" src="@Images[i]" alt="@Alt" style="@imgStyle" loading="lazy" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public required List<string> Images { get; set; }
+
+    [Parameter, EditorRequired]
+    public required string Alt { get; set; }
+
+    /// <summary>When set, renders a looping muted video instead of the crossfading images. Drop a recording's path in here once one exists — no other changes needed.</summary>
+    [Parameter]
+    public string? VideoUrl { get; set; }
+
+    private bool _active;
+    private CancellationTokenSource? _hoverCts;
+
+    // Hover-intent: only start the crossfade after the pointer actually rests on
+    // the card for a beat, so skimming across several cards doesn't set all of
+    // them animating at once. Leaving cancels immediately — no delay reverting.
+    private void HandleMouseEnter()
+    {
+        _hoverCts?.Cancel();
+        _hoverCts = new CancellationTokenSource();
+        _ = ActivateAfterDelay(_hoverCts.Token);
+    }
+
+    private async Task ActivateAfterDelay(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(200, token);
+        }
+        catch (TaskCanceledException)
+        {
+            return;
+        }
+
+        if (!token.IsCancellationRequested)
+        {
+            _active = true;
+            StateHasChanged();
+        }
+    }
+
+    private void HandleMouseLeave()
+    {
+        _hoverCts?.Cancel();
+        _active = false;
+        StateHasChanged();
+    }
+
+    // Each image owns its own complete keyframe rule spanning the full shared
+    // cycle — no animation-delay involved — so there's no fill-mode/delay-phase
+    // edge case to reason about. Every image fades IN at the start of its slot
+    // (overlapping the previous image's fade-out) and fades OUT at the end
+    // (overlapping the next image's fade-in), including the wrap from the last
+    // image back to the first. animation-delay is never used, so the very first
+    // activation is exactly as smooth as every later loop.
+    private string KeyframeName(int i) => $"wd-xfade-{Images.Count}-{i}";
+
+    private double HoldPct => 100.0 / Images.Count;
+    private double OverlapPct => Math.Round(HoldPct * 0.5, 2);
+
+    private string AllKeyframesCss =>
+        string.Join("\n", Enumerable.Range(0, Images.Count).Select(BuildKeyframeRule));
+
+    private string BuildKeyframeRule(int i)
+    {
+        var hold = HoldPct;
+        var overlap = OverlapPct;
+        var name = KeyframeName(i);
+
+        if (i == 0)
+        {
+            // Visible from the very start (matches the already-visible resting
+            // state, so the first activation has no flash), fades out at the end
+            // of its slot, then fades back in during the tail of the cycle as the
+            // last image hands back off to it — the loop wrap is itself a normal
+            // crossfade, not a special case.
+            var fadeOutStart = Math.Round(hold - overlap, 2);
+            var wrapStart = Math.Round(100 - overlap, 2);
+            return $"@keyframes {name} {{ 0%, {fadeOutStart.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 1; }} " +
+                   $"{hold.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 0; }} " +
+                   $"{wrapStart.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 0; }} " +
+                   $"100% {{ opacity: 1; }} }}";
+        }
+
+        var start = Math.Round(i * hold, 2);
+        var fadeInBegin = Math.Round(start - overlap, 2);
+        var end = Math.Round((i + 1) * hold, 2);
+        var fadeOutBegin = Math.Round(end - overlap, 2);
+
+        return $"@keyframes {name} {{ 0%, {fadeInBegin.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 0; }} " +
+               $"{start.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 1; }} " +
+               $"{fadeOutBegin.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 1; }} " +
+               $"{end.ToString(System.Globalization.CultureInfo.InvariantCulture)}% {{ opacity: 0; }} " +
+               $"100% {{ opacity: 0; }} }}";
+    }
+}
