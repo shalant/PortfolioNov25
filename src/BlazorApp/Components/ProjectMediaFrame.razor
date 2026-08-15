@@ -1,5 +1,5 @@
-<div class="wd-project__frame">
-    <div class="wd-project__frame-stage" style="--wd-frame-cycle:@(Images.Count * 4)s">
+<div class="wd-project__frame" @onmouseenter="HandleMouseEnter" @onmouseleave="HandleMouseLeave">
+    <div class="wd-project__frame-stage @(_active ? "is-active" : "")" style="--wd-frame-cycle:@(Images.Count * 4)s">
         @if (!string.IsNullOrEmpty(VideoUrl))
         {
             <video class="wd-project__frame-video" src="@VideoUrl" poster="@Images.FirstOrDefault()" muted loop playsinline preload="metadata"></video>
@@ -37,9 +37,47 @@
     [Parameter]
     public string? VideoUrl { get; set; }
 
-    // Each image gets an equal 100/N-percent slot of the shared cycle, with the last
-    // quarter of its slot used as a crossfade into the next image — sized per-N so
-    // there's never a gap where every image is simultaneously faded out.
+    // Each image gets an equal 100/N-percent slot of the shared cycle, with most
+    // of that slot spent as a slow cross-dissolve into the next image — sized
+    // per-N so there's never a gap where every image is simultaneously faded out.
     private double HoldPct => Math.Round(100.0 / Images.Count, 2);
-    private double FadeStartPct => Math.Round(HoldPct * 0.75, 2);
+    private double FadeStartPct => Math.Round(HoldPct * 0.6, 2);
+
+    private bool _active;
+    private CancellationTokenSource? _hoverCts;
+
+    // Hover-intent: only start the crossfade after the pointer actually rests on
+    // the card for a beat, so skimming across several cards doesn't set all of
+    // them animating at once. Leaving cancels immediately — no delay reverting.
+    private void HandleMouseEnter()
+    {
+        _hoverCts?.Cancel();
+        _hoverCts = new CancellationTokenSource();
+        _ = ActivateAfterDelay(_hoverCts.Token);
+    }
+
+    private async Task ActivateAfterDelay(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(200, token);
+        }
+        catch (TaskCanceledException)
+        {
+            return;
+        }
+
+        if (!token.IsCancellationRequested)
+        {
+            _active = true;
+            StateHasChanged();
+        }
+    }
+
+    private void HandleMouseLeave()
+    {
+        _hoverCts?.Cancel();
+        _active = false;
+        StateHasChanged();
+    }
 }
