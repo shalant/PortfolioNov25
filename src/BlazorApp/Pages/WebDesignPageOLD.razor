@@ -1,36 +1,53 @@
-@page "/webdesign2"
+@page "/webdesignOLD"
 @inject HttpClient Http
 
 <PageTitle>Web Design — Doug Rosenberg Dev</PageTitle>
 
 <Header />
 
+<section class="subpage-hero" id="webdesign-hero">
+    <div class="subpage-hero__grid-bg"></div>
+    <div class="subpage-hero__content subpage-hero__content--centered">
+        <span class="section-eyebrow">// web design</span>
+        @if (webDesign is null)
+        {
+            <h1 class="subpage-hero__title subpage-hero__title--centered">UI/UX Design</h1>
+        }
+        else
+        {
+            <h1 class="subpage-hero__title subpage-hero__title--centered">@webDesign.Headline</h1>
+            <p class="subpage-hero__sub subpage-hero__sub--centered">@webDesign.Subheadline</p>
+        }
+    </div>
+</section>
+
 @if (webDesign is not null)
 {
-    var marqueeImages = webDesign.Projects.SelectMany(p => p.Images).ToList();
-
-    <section class="wd2-hero">
-        <div class="wd2-hero__marquee wd2-hero__marquee--back">
-            <div class="wd2-hero__track wd2-hero__track--slow">
-                @foreach (var src in marqueeImages.Concat(marqueeImages))
+    <section class="webdesign-tools">
+        <div class="webdesign-tools__container">
+            <span class="section-eyebrow">// toolkit</span>
+            <h2 class="webdesign-tools__heading">Tools &amp; Frameworks</h2>
+            @* <div class="webdesign-tools__chips">
+                @foreach (var tool in webDesign.Tools)
                 {
-                    <img src="@src" alt="" loading="eager" />
+                    <span class="about-skill-chip">@tool</span>
                 }
+            </div> *@
+            <div class="skills-category">
+                <span class="skills-category__label">Frameworks &amp; UI</span>
+                <div class="skills-category__chips">
+                    <TechChip Name="Figma" />
+                    <TechChip Name="Canva" />
+                    <TechChip Name="Claude" />
+                    <TechChip Name="Squarespace" />
+                    <TechChip Name="Blazor" />
+                    <TechChip Name="Angular" />
+                    <TechChip Name="CSS / Animations" />
+                    <TechChip Name="MudBlazor" />
+                    <TechChip Name="Bootstrap" />
+                    <TechChip Name="Syncfusion" />
+                </div>
             </div>
-        </div>
-        <div class="wd2-hero__marquee wd2-hero__marquee--front">
-            <div class="wd2-hero__track wd2-hero__track--fast wd2-hero__track--reverse">
-                @foreach (var src in marqueeImages.Concat(marqueeImages))
-                {
-                    <img src="@src" alt="" loading="eager" />
-                }
-            </div>
-        </div>
-        <div class="wd2-hero__scrim"></div>
-        <div class="wd2-hero__glass">
-            <span class="section-eyebrow">// web design</span>
-            <h1 class="wd2-hero__title">@webDesign.Headline</h1>
-            <p class="wd2-hero__sub">@webDesign.Subheadline</p>
         </div>
     </section>
 
@@ -43,7 +60,7 @@
 
                 @foreach (var project in webDesign.Projects)
                 {
-                    <a href="/webdesign/@project.Slug" class="wd-project">
+                    <article class="wd-project">
                         <ProjectMediaFrame
                             Alt="@($"{project.Name} website")"
                             Images="@project.Images" />
@@ -63,11 +80,27 @@
                                 <li>@bullet</li>
                             }
                         </ul>
-                        <span class="wd-project__cta">view case study →</span>
-                    </a>
+                        <div class="wd-project__links">
+                            <a href="/webdesign/@project.Slug" class="wd-project__link">
+                                case study ↗
+                            </a>
+                            @if (!string.IsNullOrEmpty(project.ExternalUrl))
+                            {
+                                <a href="@project.ExternalUrl" target="_blank" rel="noopener noreferrer" class="wd-project__link">
+                                    @project.SiteLabel ↗
+                                </a>
+                            }
+                            @if (!string.IsNullOrEmpty(project.GitHubUrl))
+                            {
+                                <a href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="wd-project__link wd-project__link--gh">
+                                    github ↗
+                                </a>
+                            }
+                        </div>
+                    </article>
                 }
 
-                <a href="/#arborkin" class="wd-project">
+                <article class="wd-project">
                     <ProjectMediaFrame
                         Alt="ArborKin family tree app"
                         Images="@(new List<string> {
@@ -88,10 +121,17 @@
                         <li>Custom drag-state ownership bridging JS gestures and Blazor persistence</li>
                         <li>~8k lines of C#, 12 EF migrations, shipped to Azure and used by real people</li>
                     </ul>
-                    <span class="wd-project__cta">view case study →</span>
-                </a>
+                    <div class="wd-project__links">
+                        <a href="/#arborkin" class="wd-project__link">
+                            full case study ↗
+                        </a>
+                        <a href="https://github.com/shalant/FamilyTree" target="_blank" rel="noopener noreferrer" class="wd-project__link wd-project__link--gh">
+                            github ↗
+                        </a>
+                    </div>
+                </article>
 
-                <article class="wd-project wd-project--static">
+                <article class="wd-project">
                     <div class="wd-project__meta">
                         <span class="wd-project__num">05</span>
                         <span class="about-skill-chip">Blazor Server</span>
@@ -102,20 +142,16 @@
                     <ul class="wd-project__bullets">
                         <li>Custom Blazor Server, DB, cheap deployment, AI document consumption</li>
                     </ul>
+                    <div class="wd-project__links">
+                        <a href="https://www.bizmachina.com" target="_blank" rel="noopener noreferrer" class="wd-project__link">
+                            bizmachina.com ↗
+                        </a>
+                        <a href="https://github.com/shalant/DocIntakeERP" target="_blank" rel="noopener noreferrer" class="wd-project__link wd-project__link--gh">
+                            github ↗
+                        </a>
+                    </div>
                 </article>
 
-            </div>
-        </div>
-    </section>
-
-    <section class="wd2-tools">
-        <div class="wd2-tools__container">
-            <span class="section-eyebrow">// toolkit</span>
-            <div class="wd2-tools__chips">
-                @foreach (var tool in webDesign.Tools)
-                {
-                    <span class="about-skill-chip">@tool</span>
-                }
             </div>
         </div>
     </section>
