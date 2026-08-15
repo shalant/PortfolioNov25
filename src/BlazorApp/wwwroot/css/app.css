@@ -1345,37 +1345,88 @@ img.social-icon {
   top: 0.5rem;
 }
 
+.app-loading {
+  position: relative;
+  width: 8rem;
+  margin: 20vh auto 0 auto;
+}
+
+.app-loading::before {
+  content: "";
+  position: absolute;
+  inset: -1.15rem;
+  border: 1px solid rgba(26, 188, 156, 0.22);
+  transform: rotate(45deg);
+  animation: appLoadingSpin 14s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes appLoadingSpin {
+  to {
+    transform: rotate(405deg);
+  }
+}
+
 .loading-progress {
   position: relative;
   display: block;
   width: 8rem;
   height: 8rem;
-  margin: 20vh auto 1rem auto;
+  filter: drop-shadow(0 0 10px rgba(26, 188, 156, 0.35));
 }
 
 .loading-progress circle {
   fill: none;
-  stroke: #e0e0e0;
-  stroke-width: 0.6rem;
+  stroke: #1a252f;
+  stroke-width: 0.5rem;
   transform-origin: 50% 50%;
   transform: rotate(-90deg);
 }
 
+.loading-progress circle:first-child {
+  stroke: rgba(26, 188, 156, 0.18);
+}
+
 .loading-progress circle:last-child {
-  stroke: #1b6ec2;
+  stroke: #1abc9c;
+  stroke-linecap: round;
   stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
-  transition: stroke-dasharray 0.05s ease-in-out;
+  transition: stroke-dasharray 0.15s ease-in-out;
 }
 
 .loading-progress-text {
   position: absolute;
+  inset: 3.1rem 0 auto 0;
   text-align: center;
-  font-weight: bold;
-  inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+  font-family: 'Courier New', 'Courier', monospace;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #eef2f7;
+  letter-spacing: 0.04em;
 }
 
 .loading-progress-text:after {
   content: var(--blazor-load-percentage-text, "Loading");
+}
+
+.app-loading__eyebrow {
+  display: block;
+  text-align: center;
+  margin-top: 2rem;
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: #1abc9c;
+  animation: appLoadingPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes appLoadingPulse {
+  0%, 100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.95;
+  }
 }
 
 /* ============================================================================
@@ -2383,6 +2434,208 @@ img.social-icon {
   }
 }
 
+/* Web design project case-study page (/webdesign/{slug}) — same visual
+   language as the ArborKin case study above, generalized for JSON-driven
+   project data instead of hardcoded content. */
+.wd-case {
+  background: linear-gradient(170deg, #071320 0%, #0a1a2e 50%, #0b1e30 100%);
+  padding: 5rem 0 6rem;
+  color: white;
+  border-top: 1px solid rgba(26, 188, 156, 0.08);
+}
+
+.wd-case__container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+
+.wd-case__back {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: #1abc9c;
+  text-decoration: none;
+  margin-bottom: 2.5rem;
+  transition: transform 0.2s ease;
+}
+
+.wd-case__back:hover {
+  color: #eef2f7;
+  transform: translateX(-3px);
+}
+
+.wd-case__facts {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(26, 188, 156, 0.12);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+
+.wd-case__fact {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.4rem 1rem;
+  border-right: 1px solid rgba(26, 188, 156, 0.12);
+}
+
+.wd-case__fact:last-child {
+  border-right: none;
+}
+
+.wd-case__fact-value {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #1abc9c;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.wd-case__fact-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(238, 242, 247, 0.35);
+  margin-top: 0.4rem;
+  text-align: center;
+}
+
+.wd-case__hero-shot {
+  margin: 0 0 3.5rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(26, 188, 156, 0.12);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+}
+
+.wd-case__hero-shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.wd-case__approach {
+  max-width: 720px;
+  margin-bottom: 3.5rem;
+}
+
+.wd-case__approach p {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: rgba(238, 242, 247, 0.65);
+  line-height: 1.8;
+  margin: 0 0 1.25rem 0;
+}
+
+.wd-case__highlights-label {
+  margin-bottom: 1.5rem;
+}
+
+.wd-case__highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3.5rem;
+}
+
+.wd-case__highlight-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(26, 188, 156, 0.12);
+  border-radius: 4px;
+  padding: 2rem 1.75rem;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.wd-case__highlight-card:hover {
+  border-color: rgba(26, 188, 156, 0.3);
+  background: rgba(26, 188, 156, 0.04);
+}
+
+.wd-case__highlight-num {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #1abc9c;
+  letter-spacing: 0.2em;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.wd-case__highlight-card h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #eef2f7;
+  margin: 0 0 0.75rem 0;
+}
+
+.wd-case__highlight-card p {
+  font-size: 0.88rem;
+  color: rgba(238, 242, 247, 0.55);
+  line-height: 1.75;
+  margin: 0;
+}
+
+.wd-case__shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 3.5rem;
+}
+
+.wd-case__shot {
+  margin: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(26, 188, 156, 0.1);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.wd-case__shot:hover {
+  border-color: rgba(26, 188, 156, 0.25);
+  transform: translateY(-4px);
+}
+
+.wd-case__shot img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.wd-case__cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .wd-case__container {
+    padding: 0 2rem;
+  }
+
+  .wd-case__facts {
+    flex-wrap: wrap;
+  }
+
+  .wd-case__fact {
+    flex: 1 1 calc(50% - 1px);
+    border-bottom: 1px solid rgba(26, 188, 156, 0.12);
+  }
+
+  .wd-case__highlights {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ============================================================================
    15. SUBPAGES (CONSULTING / WEB DESIGN)
    ============================================================================ */
@@ -2798,30 +3051,6 @@ img.social-icon {
   margin: -0.5rem -0.5rem 0.5rem;
 }
 
-.wd-project__frame-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 0.7rem;
-  background: #0a1220;
-}
-
-.wd-project__frame-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(238, 242, 247, 0.15);
-  flex-shrink: 0;
-}
-
-.wd-project__frame-url {
-  margin-left: 0.4rem;
-  font-family: 'Courier New', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  color: rgba(26, 188, 156, 0.5);
-}
-
 .wd-project__frame-stage {
   position: relative;
   aspect-ratio: 16 / 10;
@@ -2841,7 +3070,7 @@ img.social-icon {
   transition: filter 0.3s ease;
 }
 
-.wd-project__frame-img:first-child {
+.wd-project__frame-img:first-of-type {
   opacity: 1;
 }
 
@@ -2854,8 +3083,7 @@ img.social-icon {
 
 @media (hover: hover) {
   .wd-project:hover .wd-project__frame-img {
-    filter: saturate(1.05);
-    animation-duration: var(--wd-frame-cycle, 4.8s);
+    animation-duration: var(--wd-frame-cycle, 8s);
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
   }
@@ -4233,3 +4461,168 @@ a.music-album__title--link:hover {
 .skills-category__chips.reveal-on-scroll .tech-chip:nth-child(5)  { transition-delay: 0.20s; }
 .skills-category__chips.reveal-on-scroll .tech-chip:nth-child(6)  { transition-delay: 0.25s; }
 .skills-category__chips.reveal-on-scroll .tech-chip:nth-child(7)  { transition-delay: 0.30s; }
+
+/* ============================================================================
+   /webdesign2 — scrolling-screenshot hero (glass, depth, motion)
+   ============================================================================ */
+
+.wd2-hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #05111f;
+}
+
+.wd2-hero__marquee {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.wd2-hero__track {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: max-content;
+  will-change: transform;
+}
+
+.wd2-hero__track img {
+  display: block;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Back row: smaller, blurred, dimmer — pushed into depth */
+.wd2-hero__marquee--back .wd2-hero__track img {
+  width: 300px;
+  height: 190px;
+  filter: blur(2px) brightness(0.55) saturate(0.9);
+}
+
+/* Front row: larger, sharp — reads as foreground */
+.wd2-hero__marquee--front .wd2-hero__track img {
+  width: 380px;
+  height: 240px;
+  filter: brightness(0.85);
+}
+
+.wd2-hero__track--slow {
+  animation: wd2-scroll-left 70s linear infinite;
+}
+
+.wd2-hero__track--fast.wd2-hero__track--reverse {
+  animation: wd2-scroll-right 40s linear infinite;
+}
+
+@keyframes wd2-scroll-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes wd2-scroll-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.wd2-hero:hover .wd2-hero__track {
+  animation-play-state: paused;
+}
+
+.wd2-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(5, 17, 31, 0.45) 0%, rgba(5, 17, 31, 0.88) 75%);
+  pointer-events: none;
+}
+
+.wd2-hero__glass {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  margin: 0 2rem;
+  padding: 3.25rem 3.5rem;
+  text-align: center;
+  background: rgba(6, 14, 26, 0.5);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(26, 188, 156, 0.22);
+  border-radius: 20px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  animation: wd2-glass-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.wd2-hero__glass .section-eyebrow {
+  text-align: center;
+}
+
+.wd2-hero__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -1.5px;
+  color: #eef2f7;
+  margin: 0.5rem 0 1.25rem 0;
+}
+
+.wd2-hero__sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: rgba(238, 242, 247, 0.65);
+  line-height: 1.75;
+  margin: 0;
+}
+
+@keyframes wd2-glass-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 820px) {
+  .wd2-hero__glass {
+    padding: 2.25rem 1.75rem;
+    margin: 0 1.25rem;
+  }
+  .wd2-hero__marquee--back .wd2-hero__track img {
+    width: 220px;
+    height: 140px;
+  }
+  .wd2-hero__marquee--front .wd2-hero__track img {
+    width: 260px;
+    height: 165px;
+  }
+}
+
+/* Tooling moved to the bottom of /webdesign2 — deliberately quiet: no
+   heading, just labeled chips, so it reads as a footnote, not a pitch. */
+.wd2-tools {
+  padding: 3rem 0 4rem;
+}
+
+.wd2-tools__container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+
+.wd2-tools__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 820px) {
+  .wd2-tools__container {
+    padding: 0 1.5rem;
+  }
+}

@@ -5,6 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>a93527af-1ac0-446a-b298-ce2c65e570a0</UserSecretsId>
+    <!-- No culture-specific formatting in this app (dates use explicit format strings) —
+         invariant mode skips downloading full ICU globalization data, cutting WASM payload. -->
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>

@@ -38,25 +38,15 @@
         } else if (path[path.length - 1].length != 0) {
             window.location.replace(window.location.origin + window.location.pathname + '/' + window.location.search);
         }
-
-        function fallbackBootstrap() {
-            var link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'css/bootstrap/bootstrap.min.css';
-            document.head.appendChild(link);
-        }
     </script>
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" onerror="fallbackBootstrap()">
 
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/svg+xml" sizes="any" href="logos/favicon.svg" />
     <link rel="apple-touch-icon" href="logos/favicon.svg" />
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geom:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <link href="_content/MudBlazor/MudBlazor.min.css?v=@(MudBlazor.Metadata.Version)" rel="stylesheet" />
 
     <link href="BlazorApp.styles.css" rel="stylesheet" />
@@ -129,11 +119,14 @@
 
 <body>
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+        <div class="app-loading">
+            <svg class="loading-progress">
+                <circle r="40%" cx="50%" cy="50%" />
+                <circle r="40%" cx="50%" cy="50%" />
+            </svg>
+            <div class="loading-progress-text"></div>
+            <span class="app-loading__eyebrow">// loading experience</span>
+        </div>
     </div>
 
     <div id="blazor-error-ui">

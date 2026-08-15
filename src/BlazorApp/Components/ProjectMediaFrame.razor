@@ -1,11 +1,5 @@
 <div class="wd-project__frame">
-    <div class="wd-project__frame-bar">
-        <span class="wd-project__frame-dot"></span>
-        <span class="wd-project__frame-dot"></span>
-        <span class="wd-project__frame-dot"></span>
-        <span class="wd-project__frame-url">@Url</span>
-    </div>
-    <div class="wd-project__frame-stage" style="--wd-frame-cycle:@(Images.Count * 2.4)s">
+    <div class="wd-project__frame-stage" style="--wd-frame-cycle:@(Images.Count * 4)s">
         @if (!string.IsNullOrEmpty(VideoUrl))
         {
             <video class="wd-project__frame-video" src="@VideoUrl" poster="@Images.FirstOrDefault()" muted loop playsinline preload="metadata"></video>
@@ -24,7 +18,7 @@
             @for (var i = 0; i < Images.Count; i++)
             {
                 var imgStyle = Images.Count > 1
-                    ? $"animation-name:wd-xfade-{Images.Count};animation-delay:{i * 2.4}s"
+                    ? $"animation-name:wd-xfade-{Images.Count};animation-delay:{i * 4}s"
                     : "";
                 <img class="wd-project__frame-img" src="@Images[i]" alt="@Alt" style="@imgStyle" loading="lazy" />
             }
@@ -38,9 +32,6 @@
 
     [Parameter, EditorRequired]
     public required string Alt { get; set; }
-
-    [Parameter, EditorRequired]
-    public required string Url { get; set; }
 
     /// <summary>When set, renders a looping muted video instead of the crossfading images. Drop a recording's path in here once one exists — no other changes needed.</summary>
     [Parameter]

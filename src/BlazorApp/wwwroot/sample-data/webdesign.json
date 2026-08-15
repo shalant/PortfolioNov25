@@ -1,5 +1,106 @@
 {
   "headline": "UI/UX Design & Web Development",
   "subheadline": "Design-led development from wireframe to production. Specializing in Blazor, Angular, and modern frontend systems backed by real UX thinking.",
-  "tools": [ "Figma", "Squarespace", "Blazor", "Angular", "Bootstrap", "CSS / Animations", "MudBlazor", "Syncfusion", "DevExpress" ]
+  "tools": [ "Figma", "Squarespace", "Blazor", "Angular", "Bootstrap", "CSS / Animations", "MudBlazor", "Syncfusion", "DevExpress" ],
+  "projects": [
+    {
+      "slug": "hardware-etc",
+      "number": "01",
+      "name": "Hardware Etc LLC",
+      "industry": "Bulk materials supplier — multi-family residential",
+      "platform": "Squarespace",
+      "status": null,
+      "siteLabel": "hardwareetc.net",
+      "externalUrl": "https://www.hardwareetc.net/",
+      "gitHubUrl": null,
+      "images": [ "images/webdesign/hardwareetc-hero.jpg", "images/webdesign/hardwareetc-2.jpg" ],
+      "bullets": [
+        "Clean, professional layout communicating product quality and quick-ship availability to developer clients",
+        "Organized services and private-label cabinet catalog for high-volume procurement audiences",
+        "Responsive build optimized for both desktop spec-review and mobile field use"
+      ],
+      "tagline": "A bulk-materials supplier's site built to read as credible to spec-writers doing desktop diligence, and fast to use for crews checking specs on-site.",
+      "approach": [
+        "Hardware Etc sells into multi-family residential construction — a market where the buyer is often a developer or GC comparing suppliers before ever placing a call. The site's job is to close that credibility gap before the first email.",
+        "The build centers on two audiences that use the site differently: spec-writers doing careful desktop research, and field crews pulling up a spec sheet on a phone mid-install. Layout, navigation, and image weight were tuned for both without picking a favorite.",
+        "The private-label cabinet catalog needed to read as a real product line, not an afterthought — it's organized and photographed as its own section, structured for high-volume procurement browsing rather than a one-off consumer purchase."
+      ],
+      "highlights": [
+        { "title": "Two Audiences, One Site", "description": "Desktop spec-review and mobile field use get equal design priority — the same information hierarchy has to work seated at a laptop and standing on a job site." },
+        { "title": "Private-Label Catalog Structure", "description": "The cabinet line is organized and presented as a standalone product catalog, built for procurement audiences comparing options at volume." },
+        { "title": "Trust Signals for Developer Clients", "description": "Layout and copy choices — quick-ship messaging, clear service breakdowns — are aimed squarely at a B2B buyer evaluating suppliers, not a walk-in retail customer." }
+      ],
+      "facts": [
+        { "label": "Platform", "value": "Squarespace" },
+        { "label": "Industry", "value": "Bulk materials supplier" },
+        { "label": "Role", "value": "Design & build" }
+      ]
+    },
+    {
+      "slug": "sonus-construction",
+      "number": "02",
+      "name": "Sonus Construction Group",
+      "industry": "General contractor — multi-family value-add renovation",
+      "platform": "Squarespace",
+      "status": null,
+      "siteLabel": "sonusconstruction.com",
+      "externalUrl": "https://www.sonusconstruction.com/",
+      "gitHubUrl": null,
+      "images": [ "images/webdesign/sonusconstruction-hero.jpg", "images/webdesign/sonusconstruction-2.jpg" ],
+      "bullets": [
+        "Minimalist editorial aesthetic with high-quality project photography driving the narrative",
+        "Structured around the \"we think like owners\" brand positioning, built for investor and developer audiences",
+        "Clear hierarchy across services, process, and material sourcing sections"
+      ],
+      "tagline": "An editorial-style site for a general contractor whose real audience is investors and developers vetting a partner, not homeowners browsing a portfolio.",
+      "approach": [
+        "Sonus works multi-family value-add renovation — the people reading this site are doing diligence on a construction partner, not shopping for a remodel. That shifted the design away from typical contractor-site conventions (big hero CTA, testimonial carousel) toward something closer to an editorial one-pager.",
+        "The \"we think like owners\" positioning isn't just a headline — it shaped the information architecture directly. Process and material sourcing get the same visual weight as the project portfolio, because that's what a developer actually checks before signing.",
+        "High-quality project photography does most of the persuasive work; the layout stays minimal and gets out of its way."
+      ],
+      "highlights": [
+        { "title": "Editorial, Not Corporate", "description": "A minimalist layout lets real project photography carry the narrative instead of stock-photo boilerplate or a generic contractor template." },
+        { "title": "Brand Positioning Baked Into Structure", "description": "\"We think like owners\" shows up in the page order itself — process and material sourcing sit alongside the portfolio, not buried below it." },
+        { "title": "Investor-Grade Hierarchy", "description": "Services, process, and sourcing are each cleanly separated so a developer doing diligence isn't hunting for the section that matters to them." }
+      ],
+      "facts": [
+        { "label": "Platform", "value": "Squarespace" },
+        { "label": "Industry", "value": "General contractor" },
+        { "label": "Role", "value": "Design & build" }
+      ]
+    },
+    {
+      "slug": "dougrosenberg-music",
+      "number": "03",
+      "name": "dougrosenberg.com",
+      "industry": "Composer & musician — personal artist site",
+      "platform": "Blazor WASM",
+      "status": "in progress",
+      "siteLabel": "dougrosenberg.com",
+      "externalUrl": "https://www.dougrosenberg.com",
+      "gitHubUrl": "https://github.com/shalant/newMusicWebsiteJan26",
+      "images": [ "images/webdesign/dougrosenberg-hero.jpg", "images/webdesign/dougrosenberg-2.jpg" ],
+      "bullets": [
+        "Custom Blazor WebAssembly build — same stack as this portfolio — replacing the previous site",
+        "Searchable sheet music library, album showcase with purchase links, and responsive photo gallery with lightbox",
+        "Six switchable color themes persisted in localStorage; scroll-spy navigation and animated counters"
+      ],
+      "tagline": "A working musician's site built the way a real product gets built — searchable catalog, live theme switching, and interactions a page builder can't give a single-artist brand.",
+      "approach": [
+        "This is a personal artist site, built on the same Blazor WebAssembly stack as this portfolio, replacing a previous version. The goal was a site that does what a page-builder template can't: real search over a growing catalog, and a brand presentation that can flex per release without a redesign.",
+        "Musicians live and die by two things online — selling the music and being found by other players who want the sheet music. Both got dedicated, searchable sections rather than a flat page of links.",
+        "The six switchable color themes exist because an artist's visual identity shifts by album, tour, or season — the site needed to keep up with that without a rebuild every time."
+      ],
+      "highlights": [
+        { "title": "Six Themes, Zero Reload", "description": "A full color-theme switcher persisted in localStorage — the site can match a new release's visual identity in one click, no redeploy required." },
+        { "title": "Searchable Sheet Music Library", "description": "Real search and filtering over a sheet-music catalog, built for other musicians looking for a specific chart — not a static PDF dump." },
+        { "title": "Album Showcase With Purchase Links", "description": "Album art gallery wired directly to purchase links, plus a responsive photo gallery with lightbox for press and promo shots." }
+      ],
+      "facts": [
+        { "label": "Platform", "value": "Blazor WebAssembly" },
+        { "label": "Industry", "value": "Musician / composer" },
+        { "label": "Role", "value": "Design & full-stack build" }
+      ]
+    }
+  ]
 }

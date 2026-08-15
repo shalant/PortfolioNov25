@@ -1,0 +1,111 @@
+@page "/webdesign/{Slug}"
+@inject HttpClient Http
+
+<PageTitle>@(project?.Name ?? "Case Study") — Doug Rosenberg Dev</PageTitle>
+
+<Header />
+
+@if (project is not null)
+{
+    <section class="subpage-hero" id="wd-case-hero">
+        <div class="subpage-hero__grid-bg"></div>
+        <div class="subpage-hero__content subpage-hero__content--centered">
+            <span class="section-eyebrow">// case study</span>
+            <h1 class="subpage-hero__title subpage-hero__title--centered">@project.Name</h1>
+            <p class="subpage-hero__sub subpage-hero__sub--centered">@project.Tagline</p>
+        </div>
+    </section>
+
+    <section class="wd-case">
+        <div class="wd-case__container">
+            <a href="/webdesign" class="wd-case__back">← all web design work</a>
+
+            <div class="wd-case__facts">
+                @foreach (var fact in project.Facts)
+                {
+                    <div class="wd-case__fact">
+                        <span class="wd-case__fact-value">@fact.Value</span>
+                        <span class="wd-case__fact-label">@fact.Label</span>
+                    </div>
+                }
+            </div>
+
+            @if (project.Images.Count > 0)
+            {
+                <figure class="wd-case__hero-shot">
+                    <img src="@project.Images[0]" alt="@project.Name — primary screenshot" loading="lazy" />
+                </figure>
+            }
+
+            <div class="wd-case__approach">
+                @foreach (var paragraph in project.Approach)
+                {
+                    <p>@paragraph</p>
+                }
+            </div>
+
+            @if (project.Highlights.Count > 0)
+            {
+                <div class="wd-case__highlights-label">
+                    <span class="section-eyebrow">// design &amp; build highlights</span>
+                </div>
+                <div class="wd-case__highlights">
+                    @for (var i = 0; i < project.Highlights.Count; i++)
+                    {
+                        var highlight = project.Highlights[i];
+                        <div class="wd-case__highlight-card">
+                            <span class="wd-case__highlight-num">@((i + 1).ToString("D2"))</span>
+                            <h3>@highlight.Title</h3>
+                            <p>@highlight.Description</p>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (project.Images.Count > 1)
+            {
+                <div class="wd-case__shots">
+                    @foreach (var image in project.Images.Skip(1))
+                    {
+                        <figure class="wd-case__shot">
+                            <img src="@image" alt="@project.Name additional screenshot" loading="lazy" />
+                        </figure>
+                    }
+                </div>
+            }
+
+            <div class="wd-case__cta">
+                @if (!string.IsNullOrEmpty(project.ExternalUrl))
+                {
+                    <a href="@project.ExternalUrl" target="_blank" rel="noopener noreferrer" class="hero-btn hero-btn--primary">
+                        Visit @project.SiteLabel ↗
+                    </a>
+                }
+                @if (!string.IsNullOrEmpty(project.GitHubUrl))
+                {
+                    <a href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="hero-btn hero-btn--ghost">
+                        View on GitHub ↗
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+}
+else if (webDesign is not null)
+{
+    <NotFound />
+}
+
+@code {
+    [Parameter]
+    public string Slug { get; set; } = string.Empty;
+
+    private WebDesignModel? webDesign;
+    private WebDesignProject? project;
+
+    protected override async Task OnInitializedAsync()
+    {
+        webDesign = await Http.GetFromJsonAsync<WebDesignModel>("sample-data/webdesign.json");
+        project = webDesign?.Projects.FirstOrDefault(p => p.Slug == Slug);
+    }
+}
