@@ -43,7 +43,7 @@
 
                 @foreach (var project in webDesign.Projects)
                 {
-                    <article class="wd-project">
+                    <a href="/webdesign/@project.Slug" class="wd-project">
                         <ProjectMediaFrame
                             Alt="@($"{project.Name} website")"
                             Images="@project.Images" />
@@ -63,27 +63,11 @@
                                 <li>@bullet</li>
                             }
                         </ul>
-                        <div class="wd-project__links">
-                            <a href="/webdesign/@project.Slug" class="wd-project__link">
-                                case study ↗
-                            </a>
-                            @if (!string.IsNullOrEmpty(project.ExternalUrl))
-                            {
-                                <a href="@project.ExternalUrl" target="_blank" rel="noopener noreferrer" class="wd-project__link">
-                                    @project.SiteLabel ↗
-                                </a>
-                            }
-                            @if (!string.IsNullOrEmpty(project.GitHubUrl))
-                            {
-                                <a href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="wd-project__link wd-project__link--gh">
-                                    github ↗
-                                </a>
-                            }
-                        </div>
-                    </article>
+                        <span class="wd-project__cta">view case study →</span>
+                    </a>
                 }
 
-                <article class="wd-project">
+                <a href="/#arborkin" class="wd-project">
                     <ProjectMediaFrame
                         Alt="ArborKin family tree app"
                         Images="@(new List<string> {
@@ -104,17 +88,10 @@
                         <li>Custom drag-state ownership bridging JS gestures and Blazor persistence</li>
                         <li>~8k lines of C#, 12 EF migrations, shipped to Azure and used by real people</li>
                     </ul>
-                    <div class="wd-project__links">
-                        <a href="/#arborkin" class="wd-project__link">
-                            full case study ↗
-                        </a>
-                        <a href="https://github.com/shalant/FamilyTree" target="_blank" rel="noopener noreferrer" class="wd-project__link wd-project__link--gh">
-                            github ↗
-                        </a>
-                    </div>
-                </article>
+                    <span class="wd-project__cta">view case study →</span>
+                </a>
 
-                <article class="wd-project">
+                <article class="wd-project wd-project--static">
                     <div class="wd-project__meta">
                         <span class="wd-project__num">05</span>
                         <span class="about-skill-chip">Blazor Server</span>
@@ -125,14 +102,6 @@
                     <ul class="wd-project__bullets">
                         <li>Custom Blazor Server, DB, cheap deployment, AI document consumption</li>
                     </ul>
-                    <div class="wd-project__links">
-                        <a href="https://www.bizmachina.com" target="_blank" rel="noopener noreferrer" class="wd-project__link">
-                            bizmachina.com ↗
-                        </a>
-                        <a href="https://github.com/shalant/DocIntakeERP" target="_blank" rel="noopener noreferrer" class="wd-project__link wd-project__link--gh">
-                            github ↗
-                        </a>
-                    </div>
                 </article>
 
             </div>

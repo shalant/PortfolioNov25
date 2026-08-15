@@ -1,5 +1,5 @@
 <div class="wd-project__frame" @onmouseenter="HandleMouseEnter" @onmouseleave="HandleMouseLeave">
-    <div class="wd-project__frame-stage @(_active ? "is-active" : "")" style="--wd-frame-cycle:@(Images.Count * 4)s">
+    <div class="wd-project__frame-stage @(_active ? "is-active" : "")" style="--wd-frame-cycle:@(Images.Count * 1.8)s">
         @if (!string.IsNullOrEmpty(VideoUrl))
         {
             <video class="wd-project__frame-video" src="@VideoUrl" poster="@Images.FirstOrDefault()" muted loop playsinline preload="metadata"></video>
@@ -84,7 +84,7 @@
     private string KeyframeName(int i) => $"wd-xfade-{Images.Count}-{i}";
 
     private double HoldPct => 100.0 / Images.Count;
-    private double OverlapPct => Math.Round(HoldPct * 0.4, 2);
+    private double OverlapPct => Math.Round(HoldPct * 0.5, 2);
 
     private string AllKeyframesCss =>
         string.Join("\n", Enumerable.Range(0, Images.Count).Select(BuildKeyframeRule));
