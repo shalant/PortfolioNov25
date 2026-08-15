@@ -34,6 +34,8 @@
         </div>
     </section>
 
+    <HaxbyteBrandCard />
+
     <section class="webdesign-projects">
         <div class="webdesign-projects__container">
             <span class="section-eyebrow">// selected work</span>
@@ -66,30 +68,6 @@
                         <span class="wd-project__cta">view case study →</span>
                     </a>
                 }
-
-                <a href="/#arborkin" class="wd-project">
-                    <ProjectMediaFrame
-                        Alt="ArborKin family tree app"
-                        Images="@(new List<string> {
-                            "images/arborkin/familytree-hero.png",
-                            "images/arborkin/familytree-detaildrawer.png",
-                            "images/arborkin/familytree-edit.png",
-                            "images/arborkin/familytree-hero__dark.png"
-                        })" />
-                    <div class="wd-project__meta">
-                        <span class="wd-project__num">04</span>
-                        <span class="about-skill-chip">Blazor Server</span>
-                        <span class="wd-project__wip">live · invite-only</span>
-                    </div>
-                    <h3 class="wd-project__name">ArborKin</h3>
-                    <p class="wd-project__industry">Private, multi-user family tree app — solo full-stack build</p>
-                    <ul class="wd-project__bullets">
-                        <li>JS-free tree layout — every node's pixel position computed server-side in C#, no post-render flicker</li>
-                        <li>Custom drag-state ownership bridging JS gestures and Blazor persistence</li>
-                        <li>~8k lines of C#, 12 EF migrations, shipped to Azure and used by real people</li>
-                    </ul>
-                    <span class="wd-project__cta">view case study →</span>
-                </a>
 
                 <article class="wd-project wd-project--static">
                     <div class="wd-project__meta">

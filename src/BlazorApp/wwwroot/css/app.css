@@ -2522,6 +2522,24 @@ img.social-icon {
   display: block;
 }
 
+.wd-case__hero-shot figcaption,
+.wd-case__shot figcaption {
+  padding: 0.85rem 1.1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: rgba(238, 242, 247, 0.5);
+  background: rgba(10, 18, 32, 0.6);
+  border-top: 1px solid rgba(26, 188, 156, 0.1);
+}
+
+.wd-case__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: -1.5rem 0 3rem 0;
+}
+
 .wd-case__approach {
   max-width: 720px;
   margin-bottom: 3.5rem;
@@ -4698,4 +4716,65 @@ a.music-album__title--link:hover {
   .wd2-tools__container {
     padding: 0 1.5rem;
   }
+}
+
+/* ============================================================================
+   Haxbyte brand card — shared cross-promo on /webdesign and /consulting
+   ============================================================================ */
+
+.haxbyte-card {
+  background: #060e1a;
+  padding: 3rem 0;
+  border-top: 1px solid rgba(26, 188, 156, 0.1);
+  border-bottom: 1px solid rgba(26, 188, 156, 0.1);
+}
+
+.haxbyte-card__container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.haxbyte-card__mark {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #1abc9c;
+}
+
+.haxbyte-card__text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(238, 242, 247, 0.6);
+  margin: 0;
+}
+
+.haxbyte-card__text strong {
+  color: rgba(238, 242, 247, 0.85);
+  font-weight: 600;
+}
+
+.haxbyte-card__link {
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: #1abc9c !important;
+  text-decoration: none;
+  border: 1px solid rgba(26, 188, 156, 0.3);
+  padding: 0.5rem 1.1rem;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+
+.haxbyte-card__link:hover {
+  background: rgba(26, 188, 156, 0.1);
+  border-color: #1abc9c;
 }

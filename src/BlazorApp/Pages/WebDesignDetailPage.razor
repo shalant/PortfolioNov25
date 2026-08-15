@@ -34,7 +34,21 @@
             {
                 <figure class="wd-case__hero-shot">
                     <img src="@project.Images[0]" alt="@project.Name — primary screenshot" loading="lazy" />
+                    @if (project.ImageCaptions.Count > 0 && !string.IsNullOrEmpty(project.ImageCaptions[0]))
+                    {
+                        <figcaption>@project.ImageCaptions[0]</figcaption>
+                    }
                 </figure>
+            }
+
+            @if (project.Stack.Count > 0)
+            {
+                <div class="wd-case__stack">
+                    @foreach (var tech in project.Stack)
+                    {
+                        <span class="about-skill-chip">@tech</span>
+                    }
+                </div>
             }
 
             <div class="wd-case__approach">
@@ -65,10 +79,15 @@
             @if (project.Images.Count > 1)
             {
                 <div class="wd-case__shots">
-                    @foreach (var image in project.Images.Skip(1))
+                    @for (var i = 1; i < project.Images.Count; i++)
                     {
+                        var caption = i < project.ImageCaptions.Count ? project.ImageCaptions[i] : null;
                         <figure class="wd-case__shot">
-                            <img src="@image" alt="@project.Name additional screenshot" loading="lazy" />
+                            <img src="@project.Images[i]" alt="@project.Name additional screenshot" loading="lazy" />
+                            @if (!string.IsNullOrEmpty(caption))
+                            {
+                                <figcaption>@caption</figcaption>
+                            }
                         </figure>
                     }
                 </div>

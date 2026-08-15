@@ -27,6 +27,12 @@ public class WebDesignProject
     public List<string> Approach { get; set; } = [];
     public List<WebDesignHighlight> Highlights { get; set; } = [];
     public List<WebDesignFact> Facts { get; set; } = [];
+
+    /// <summary>Tech-stack chips shown on the detail page. Optional — projects without one (Squarespace builds) just skip the row.</summary>
+    public List<string> Stack { get; set; } = [];
+
+    /// <summary>Parallel to Images by index; empty string (or a short list) means no caption for that image.</summary>
+    public List<string> ImageCaptions { get; set; } = [];
 }
 
 public class WebDesignHighlight

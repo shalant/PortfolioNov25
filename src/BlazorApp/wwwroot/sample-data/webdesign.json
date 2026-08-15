@@ -101,6 +101,53 @@
         { "label": "Industry", "value": "Musician / composer" },
         { "label": "Role", "value": "Design & full-stack build" }
       ]
+    },
+    {
+      "slug": "arborkin",
+      "number": "04",
+      "name": "ArborKin",
+      "industry": "Private, multi-user family tree app — solo full-stack build",
+      "platform": "Blazor Server",
+      "status": "live · invite-only",
+      "siteLabel": null,
+      "externalUrl": null,
+      "gitHubUrl": "https://github.com/shalant/FamilyTree",
+      "images": [
+        "images/arborkin/familytree-hero.png",
+        "images/arborkin/familytree-detaildrawer.png",
+        "images/arborkin/familytree-hero__dark.png",
+        "images/arborkin/familytree-edit.png"
+      ],
+      "imageCaptions": [
+        "The tree canvas. Focus person is centered; ancestors flow upward, descendants downward. The Y-axis is a real birth-year timeline — generation gaps render proportionally.",
+        "Detail drawer — vitals, bio & photos without leaving the canvas",
+        "Dark mode — single CSS variable swap, persisted to localStorage",
+        "Edit form — relationship pickers with full autocomplete"
+      ],
+      "stack": [".NET 10", "C# 13", "Blazor Server", "EF Core", "MudBlazor", "Azure App Service", "Azure SQL", "Blob Storage"],
+      "bullets": [
+        "JS-free tree layout — every node's pixel position computed server-side in C#, no post-render flicker",
+        "Custom drag-state ownership bridging JS gestures and Blazor persistence",
+        "~8k lines of C#, 12 EF migrations, shipped to Azure and used by real people"
+      ],
+      "tagline": "A private, multi-user family tree app — built solo, shipped to Azure, used by real people. Full stack from data model to layout algorithm to auth system.",
+      "approach": [
+        "ArborKin is a private, invite-only family tree app — not a portfolio demo, a real product with real users adding real relatives. The brief was self-imposed: build something with the same architectural discipline as client work, end to end, alone.",
+        "The core design problem was the tree canvas itself: laying out generations so the visual hierarchy is instantly readable, without a JS layout library doing the work. Every node's pixel position is computed in C# before the browser ever paints — the Y-axis is a real birth-year timeline, so generation gaps render proportionally instead of as evenly-spaced rows.",
+        "Beyond layout, most of the hard problems were about Blazor Server's specific constraints — SignalR round-trip latency on uploads, re-renders fighting client-side drag state — solved by being deliberate about which layer (C#, JS interop, or the browser itself) owns which piece of behavior."
+      ],
+      "highlights": [
+        { "title": "JS-Free Tree Layout", "description": "Every node's pixel position is computed in C# before anything renders. No getBoundingClientRect, no post-render step, no flicker. The SVG connector layer uses the same pre-calculated coordinates — always aligned on first paint." },
+        { "title": "Blazor Upload Latency", "description": "Photos were taking five minutes. Root cause: every byte travels over SignalR to the server before reaching Azure Blob Storage. Fix: Canvas API compression in the browser first — a 12 MB phone photo becomes ~400 KB before Blazor ever touches it. Minutes to seconds." },
+        { "title": "Drag State Ownership", "description": "Blazor re-renders reset dragged element positions mid-gesture. Solution: JS owns the gesture (mousemove updates style.left/top directly), and on mouseup calls a [JSInvokable] method. Blazor stores the result, persists it to localStorage, and restores it on next mount — no conflicts." }
+      ],
+      "facts": [
+        { "label": "lines of C#", "value": "~8k" },
+        { "label": "EF migrations", "value": "12" },
+        { "label": "xUnit tests", "value": "11" },
+        { "label": "Azure services", "value": "3" },
+        { "label": "full-stack build", "value": "solo" }
+      ]
     }
   ]
 }
