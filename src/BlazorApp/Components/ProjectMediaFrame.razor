@@ -1,0 +1,54 @@
+<div class="wd-project__frame">
+    <div class="wd-project__frame-bar">
+        <span class="wd-project__frame-dot"></span>
+        <span class="wd-project__frame-dot"></span>
+        <span class="wd-project__frame-dot"></span>
+        <span class="wd-project__frame-url">@Url</span>
+    </div>
+    <div class="wd-project__frame-stage" style="--wd-frame-cycle:@(Images.Count * 2.4)s">
+        @if (!string.IsNullOrEmpty(VideoUrl))
+        {
+            <video class="wd-project__frame-video" src="@VideoUrl" poster="@Images.FirstOrDefault()" muted loop playsinline preload="metadata"></video>
+        }
+        else
+        {
+            @if (Images.Count > 1)
+            {
+                <style>
+                    @@keyframes wd-xfade-@(Images.Count) {
+                        0%, @(FadeStartPct)% { opacity: 1; }
+                        @(HoldPct)%, 100% { opacity: 0; }
+                    }
+                </style>
+            }
+            @for (var i = 0; i < Images.Count; i++)
+            {
+                var imgStyle = Images.Count > 1
+                    ? $"animation-name:wd-xfade-{Images.Count};animation-delay:{i * 2.4}s"
+                    : "";
+                <img class="wd-project__frame-img" src="@Images[i]" alt="@Alt" style="@imgStyle" loading="lazy" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public required List<string> Images { get; set; }
+
+    [Parameter, EditorRequired]
+    public required string Alt { get; set; }
+
+    [Parameter, EditorRequired]
+    public required string Url { get; set; }
+
+    /// <summary>When set, renders a looping muted video instead of the crossfading images. Drop a recording's path in here once one exists — no other changes needed.</summary>
+    [Parameter]
+    public string? VideoUrl { get; set; }
+
+    // Each image gets an equal 100/N-percent slot of the shared cycle, with the last
+    // quarter of its slot used as a crossfade into the next image — sized per-N so
+    // there's never a gap where every image is simultaneously faded out.
+    private double HoldPct => Math.Round(100.0 / Images.Count, 2);
+    private double FadeStartPct => Math.Round(HoldPct * 0.75, 2);
+}
