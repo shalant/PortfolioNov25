@@ -56,7 +56,7 @@
             <span class="section-eyebrow">// selected work</span>
             <h2 class="webdesign-projects__heading">Live Sites</h2>
 
-            <div class="wd-projects-grid wd-projects-grid--3">
+            <div class="wd-projects-grid">
 
                 <article class="wd-project">
                     <div class="wd-project__frame">
@@ -147,8 +147,40 @@
                 </article>
 
                 <article class="wd-project">
+                    <div class="wd-project__frame">
+                        <div class="wd-project__frame-bar">
+                            <span class="wd-project__frame-dot"></span>
+                            <span class="wd-project__frame-dot"></span>
+                            <span class="wd-project__frame-dot"></span>
+                            <span class="wd-project__frame-url">arborkin — tree canvas</span>
+                        </div>
+                        <img class="wd-project__frame-img" src="images/arborkin/familytree-hero.png" alt="ArborKin family tree canvas" loading="lazy" />
+                    </div>
                     <div class="wd-project__meta">
                         <span class="wd-project__num">04</span>
+                        <span class="about-skill-chip">Blazor Server</span>
+                        <span class="wd-project__wip">live · invite-only</span>
+                    </div>
+                    <h3 class="wd-project__name">ArborKin</h3>
+                    <p class="wd-project__industry">Private, multi-user family tree app — solo full-stack build</p>
+                    <ul class="wd-project__bullets">
+                        <li>JS-free tree layout — every node's pixel position computed server-side in C#, no post-render flicker</li>
+                        <li>Custom drag-state ownership bridging JS gestures and Blazor persistence</li>
+                        <li>~8k lines of C#, 12 EF migrations, shipped to Azure and used by real people</li>
+                    </ul>
+                    <div class="wd-project__links">
+                        <a href="/#arborkin" class="wd-project__link">
+                            full case study ↗
+                        </a>
+                        <a href="https://github.com/shalant/FamilyTree" target="_blank" rel="noopener noreferrer" class="wd-project__link wd-project__link--gh">
+                            github ↗
+                        </a>
+                    </div>
+                </article>
+
+                <article class="wd-project">
+                    <div class="wd-project__meta">
+                        <span class="wd-project__num">05</span>
                         <span class="about-skill-chip">Blazor Server</span>
                         <span class="wd-project__wip">in progress</span>
                     </div>
@@ -168,11 +200,6 @@
                 </article>
 
             </div>
-
-            <p class="webdesign-projects__note">
-                For a deeper technical case study,
-                <a href="/#arborkin" class="webdesign-link">see the ArborKin project ↗</a>
-            </p>
         </div>
     </section>
 }
