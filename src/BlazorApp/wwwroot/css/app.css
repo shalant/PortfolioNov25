@@ -4499,7 +4499,11 @@ a.music-album__title--link:hover {
 
 .wd2-hero {
   position: relative;
-  min-height: 90vh;
+  /* Capped in px, not just vh — on a tall/square viewport (e.g. 1000x1000)
+     90vh leaves no room for the next section to peek in at the bottom as a
+     "there's more below" cue. The cap keeps that peek on any aspect ratio
+     while staying close to the old 90vh on typical wide desktop windows. */
+  min-height: min(90vh, 760px);
   display: flex;
   align-items: center;
   justify-content: center;
