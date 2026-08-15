@@ -95,6 +95,42 @@ Set up clear services offering, booking, blog preview.
 
 ---
 
+## Phase 4: Port /webdesign + /webdesign2 to Astro (separate session/repo)
+**Status:** ⏳ Not started — deliberately deferred, not a quick add-on
+**Effort:** Unscoped (new repo, likely several sessions)
+**ROI:** High for the lead-facing pages specifically — Blazor WASM's runtime download is the main
+cost tonight's design work can't fix with CSS alone.
+
+**Why:** Measured tonight — this app's `_framework` payload is ~18MB uncompressed / ~3.2MB
+brotli-compressed just for the .NET WASM runtime shell, before any real content renders. Haxbyte's
+entire Astro site (every page, every image) is 561KB total. That gap matters most on exactly the
+pages meant to convert a warm referral fast (`/webdesign`, `/webdesign2`), less so on the rest of
+the site.
+
+**How it deploys (already confirmed, no redirect/separate host needed):** dougrosenbergdev.com is
+static-served via GitHub Pages (`CNAME` + `.github/workflows/publish-gh-pages.yml`) — Blazor WASM's
+build output is already just static files. Astro's build output is also static files, so it can sit
+in the same published `wwwroot` tree, same domain, same deploy — no cross-origin redirect. GitHub
+Pages serves whichever file matches the path; a real static file always wins over the repo's
+`404.html` Blazor SPA-routing fallback, so `/webdesign` would load as plain HTML with zero WASM
+boot.
+
+### Scope, when picked up
+- [ ] New Astro repo (mirrors the Haxbyte pattern), start with just `/webdesign` + `/webdesign2` +
+      their `/webdesign/{slug}` case-study detail pages — not the rest of the site
+- [ ] Hand-author an Astro equivalent of `<Header>` so nav matches the Blazor pages pixel-for-pixel
+- [ ] Add an Astro build step to `publish-gh-pages.yml`, output merged into the same publish
+      directory before the Pages deploy step
+- [ ] Remove the Blazor `@page "/webdesign"` / `@page "/webdesign/{Slug}"` routes once the static
+      pages are live at those paths
+- [ ] Port the project data (`webdesign.json` → Astro content collection or direct JSON import),
+      the crossfade card component, and the webdesign2 marquee/glass hero
+
+**Not now:** porting the rest of the site (Home/About/Experience/Skills/Blog) — no measured problem
+there yet, and it's a much bigger lift than the two lead-facing pages.
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)
