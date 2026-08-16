@@ -227,15 +227,51 @@ site accurate as of 2026
 ---
 
 ## Phase 3: Lead Generation (Week 3)
-**Status:** ⏳ Not started  
+**Status:** 🟡 In progress — Services page done, rest not started
 **Effort:** 8-12 hours  
 **ROI:** High (converts leads to clients)
 
 Set up clear services offering, booking, blog preview.
 
 ### Tasks
-- [ ] Create Services page (3-4 service definitions + pricing/engagement model)
-- [ ] Add Calendly booking integration (30-min discovery call widget)
+- [x] Create Services page (2026-08-15) — new `/services` route (`ServicesPage.razor` +
+      `ServicesModel.cs` + `services.json`), mirrors the existing `/consulting` page's
+      `subpage-hero` pattern for visual consistency. 4 offerings: Custom Web & App Development,
+      ERP & Business Systems Consulting, AI-Assisted Development & Modernization, Ongoing Support
+      & Maintenance — each with a description, an "includes" bullet list, and an **engagement
+      model** (hourly/project/retainer). Initially shipped without dollar pricing — that's a real
+      business decision, didn't want to fabricate it. User asked for rate-setting advice
+      afterward (context: currently $106k salaried, wants solid income but is willing to
+      price lower early on to build the portfolio); talked through the standard freelance math
+      (salaried-equivalent hourly × 2-3x to cover self-employment tax, no benefits, non-billable
+      time) and recommended pricing the four offerings differently rather than one flat rate,
+      since they span very different markets. **Added as price ranges per card** (2026-08-15):
+        - Custom Web & App Development: **$750 – $3,000/project** — the "pay your dues" tier,
+          intentionally priced near what's already being quoted to real leads ($500-1,000)
+        - ERP & Business Systems Consulting: **$125 – $175/hr** — this is existing day-job
+          expertise, not something that needs to be proven, so priced at senior rates from day one
+        - AI-Assisted Development & Modernization: **$100 – $150/hr** — similar band to ERP,
+          slightly lower until there are dedicated case studies for this specifically
+        - Ongoing Support & Maintenance: **$300 – $800/month** retainer
+      **These are Claude's suggested ranges, not verified against real market data — sanity-check
+      before this goes live.**
+    - Added a nav link (`/services`, briefcase icon) between "blog" and "consulting"
+    - Reused an orphaned hero image (`DrPortraitV5.png`, listed in `heroimages.json` under
+      "technical skills" but never actually fetched by any component) — resized to its 2x display
+      size (760×1140) and converted to WebP: 2.57MB → 74KB, same treatment as Phase 0
+    - Content is derived from existing site data (`aboutme.json`'s ERP/full-stack description,
+      `webdesign.json`'s stack, `consulting.json`'s "Ongoing Maintenance") — not fabricated from
+      nothing, but **worth a read-through before publishing** since I drafted the copy
+    - Noted, not addressed: `/consulting` already has its own 4-service grid with a different
+      framing ("neighborhood IT partner" for small business) — there's some conceptual overlap
+      between the two pages worth thinking about, but consolidating them is a content decision,
+      not something to do unilaterally
+    - User flagged after seeing it live: nav is genuinely tight now (7 links + CTA — a
+      compression breakpoint at 1200px already exists just to keep everything on one line,
+      which means it was designed with headroom for fewer items). Discussed grouping options
+      (visual divider, "more" dropdown) but no changes made — pending a decision
+- [ ] Add Calendly booking integration (30-min discovery call widget) — **on hold, user doesn't
+      have a Calendly account yet**
 - [ ] Add blog preview section on homepage (3 latest posts)
 - [ ] Create 1-2 first blog posts (technical deep-dives)
 - [ ] Add testimonials section (2-3 quotes from past colleagues)
@@ -243,7 +279,7 @@ Set up clear services offering, booking, blog preview.
 - [ ] Create PRIVACY.md (GDPR/privacy policy snippet)
 
 **Branches:**
-- `feature/services-page`
+- `feature/services-page` (this session)
 - `feature/blog-preview`
 - `feature/testimonials`
 - `feature/newsletter`

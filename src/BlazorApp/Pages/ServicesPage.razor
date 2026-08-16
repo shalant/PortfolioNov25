@@ -1,0 +1,79 @@
+@page "/services"
+@inject HttpClient Http
+
+<PageTitle>Services — Doug Rosenberg Dev</PageTitle>
+
+<Header />
+
+<section class="subpage-hero" id="services-hero">
+    <div class="subpage-hero__grid-bg"></div>
+    <div class="subpage-hero__content">
+        <div class="subpage-hero__text">
+            <span class="section-eyebrow">// services</span>
+            @if (services is null)
+            {
+                <h1 class="subpage-hero__title">How I Can Help</h1>
+                <p class="subpage-hero__sub">Loading...</p>
+            }
+            else
+            {
+                <h1 class="subpage-hero__title">@services.Headline</h1>
+                <p class="subpage-hero__sub">@services.Subheadline</p>
+                <a href="mailto:doug.rosenberg@gmail.com" class="hero-btn hero-btn--primary">
+                    @services.Cta
+                </a>
+            }
+        </div>
+        <div class="subpage-hero__img">
+            <img src="images/DrPortraitV5.webp" alt="Doug Rosenberg" />
+        </div>
+    </div>
+</section>
+
+@if (services is not null)
+{
+    <section class="consulting-services">
+        <div class="consulting-services__container">
+            <span class="section-eyebrow">// offerings</span>
+            <h2 class="consulting-services__heading">What I Offer</h2>
+            <div class="consulting-services__grid">
+                @foreach (var svc in services.Offerings)
+                {
+                    <div class="consulting-service-card">
+                        <span class="consulting-service-card__icon">@svc.Icon</span>
+                        <h3>@svc.Title</h3>
+                        <p>@svc.Description</p>
+                        <ul class="service-card__includes">
+                            @foreach (var item in svc.Includes)
+                            {
+                                <li>@item</li>
+                            }
+                        </ul>
+                        <div class="service-card__pricing">
+                            <span class="service-card__price">@svc.PriceRange</span>
+                            <span class="service-card__engagement">@svc.Engagement</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="consulting-cta">
+        <div class="consulting-cta__container">
+            <p class="consulting-cta__tagline">Every engagement is scoped individually — reach out and let's talk about what you need.</p>
+            <a href="mailto:doug.rosenberg@gmail.com" class="hero-btn hero-btn--primary">
+                @services.Cta
+            </a>
+        </div>
+    </section>
+}
+
+@code {
+    private ServicesModel? services;
+
+    protected override async Task OnInitializedAsync()
+    {
+        services = await Http.GetFromJsonAsync<ServicesModel>("sample-data/services.json");
+    }
+}
