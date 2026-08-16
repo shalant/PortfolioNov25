@@ -1,7 +1,7 @@
 [
   {
     "name": "home",
-    "src": "images/DrCorporateHacker.png",
+    "src": "images/DrCorporateHacker.webp",
     "alt": "Handsome man with glasses"
   },
   {
@@ -21,7 +21,7 @@
   },
   {
     "name": "experience",
-    "src": "images/artDecoBackground1.png",
+    "src": "images/artDecoBackground1.webp",
     "alt": "desktop with books and laptop"
   },
   {

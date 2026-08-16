@@ -7,8 +7,8 @@
 ---
 
 ## Phase 0: Image Optimization (This Week — before lead demo)
-**Status:** ⏳ Not started
-**Effort:** 2-3 hours
+**Status:** ✅ Complete (2026-08-15)
+**Effort:** ~1.5 hours
 **ROI:** High — direct fix for a measured problem, no infrastructure risk, reversible
 
 **Why now:** Site felt fast on mobile but slow on desktop to a warm lead. Measured live on
@@ -37,15 +37,29 @@ for the 7.5MB of images. Not worth a DNS cutover the same week as the demo. That
 migration tasks stay de-prioritized; this phase is the actual fix.
 
 ### Tasks
-- [ ] Resize `DrCorporateHacker.png` to ~840×1260 (2x its 420×630 display size, for retina) and
-      convert to WebP
-- [ ] Re-encode `artDecoBackground1.png` and `artDecoBackground2.png` as WebP — check visually for
-      banding/seams at tile boundaries before merging, since these are tiling textures
-- [ ] Update image references in `Index.razor`/`app.css` to the new files
-- [ ] Re-measure total page weight with the same method, confirm it drops from ~10.5MB toward
-      ~3.5MB
-- [ ] Spot-check the footer/hero decoration still looks right at a few breakpoints (300px, 420px,
-      768px, 1024px)
+- [x] Resize `DrCorporateHacker.png` to 840×1260 (2x its 420×630 display size — confirmed via
+      `.hero-portrait` CSS, capped at `min(420px, 38vw)` on all breakpoints) and convert to WebP —
+      installed ImageMagick (`winget install ImageMagick.ImageMagick`) to do the conversion.
+      Result: 3.24MB → 180KB
+- [x] Re-encode `artDecoBackground1.png` and `artDecoBackground2.png` as WebP at native resolution
+      (left dimensions untouched — they're referenced by ~20 different `background-size` rules
+      across `app.css`, too risky to also resize in this pass). Viewed both outputs directly
+      (Bauhaus geometric shapes) — clean edges, no banding. Results: 1.95MB → 25KB,
+      2.46MB → 90KB
+- [x] Updated references in `heroimages.json` (hero portrait + the unused "experience" entry),
+      `app.css` (19 rules), `BlogArchive.razor`, `BlogPosts.razor` — not `Index.razor`, the actual
+      hero `<img>` lives in `Home.razor`, driven by `heroimages.json` via `HeroImageService`.
+      Deleted the three old PNGs from `wwwroot/images/`.
+- [x] Verified: `dotnet build` and `dotnet publish -c Release` both succeed; published
+      `wwwroot/images/` contains the new `.webp` files. Ran the dev server and loaded the live
+      page in Chrome — hero portrait and both Bauhaus overlays (navbar strip + footer deco)
+      render correctly, no visual artifacts. Re-measured via `performance.getEntriesByType`:
+      the three swapped files now total **295KB, down from 7.4MB (96% reduction)**
+- [~] Breakpoint spot-check: confirmed the sizing rule (`min(420px, 38vw)` desktop /
+      `min(260px, 55vw)` mobile, single CSS source of truth) covers all breakpoints, and visually
+      checked the default desktop viewport. Did **not** take actual screenshots at 300/420/768px —
+      worth a quick manual check on a real phone before the demo, same as the original mobile
+      load-time test
 
 **Also noted, not in scope here:** all assets serve `cache-control: max-age=600` (10 minutes) —
 a repeat visitor re-downloads the full page every 10 minutes. Worth revisiting cache headers in
