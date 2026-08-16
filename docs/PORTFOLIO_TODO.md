@@ -96,26 +96,47 @@
 
 ## 💼 Services & Positioning (Week 3-4)
 
-### 7. **Services Page** 
+### 7. **Services Page** — ✅ Complete (2026-08-15)
 - **Why:** "Services" nav link implies you offer services, but no clarity → confuses visitors
 - **Scope:**
-  - [ ] Create `/services` page or expand Hero CTA
-  - [ ] Define 3-4 services:
-    1. **ERP System Architecture** — design, data modeling, Azure deployment
-    2. **Blazor Full-Stack Development** — from design to production
-    3. **Consulting** — code review, performance optimization, mentoring
-    4. **Contract / Retainer Work** — ongoing support, team augmentation
-  - [ ] For each service: description, typical project scope, pricing/engagement model
-  - [ ] Add CTA: "Schedule a free 30-min consultation → [Calendly link]"
-  - [ ] Link from Homepage "About Me" section
-- **Engagement Model:** Consider offering (pick 1-2):
-  - [ ] Hourly rate ($X/hour)
-  - [ ] Project-based (starting at $X)
-  - [ ] Retainer ($X/month for 10 hours/week)
-  - [ ] Equity / revenue share for early-stage startups
-- **Effort:** 4-6 hours (page design, service definitions, pricing research)
+  - [x] Created `/services` page (`ServicesPage.razor` + `ServicesModel.cs` + `services.json`),
+        mirrors `/consulting`'s `subpage-hero` pattern. Nav link added (briefcase icon, between
+        blog and consulting)
+  - [x] Defined 4 services (ended up different from the original sketch below — these map to
+        actual current expertise rather than a generic ERP-architect framing):
+    1. **Custom Web & App Development** — Blazor/Angular/Astro, design-led via Figma
+    2. **ERP & Business Systems Consulting** — integrations, data pipelines, reporting
+    3. **AI-Assisted Development & Modernization** — legacy modernization, AI-assisted workflows
+    4. **Ongoing Support & Maintenance** — retainer-based
+  - [x] Each service has a description, an "includes" list, an engagement model, and a price range
+  - [x] CTA is a `mailto:` link ("Get a Free Quote") — no Calendly yet, see #8
+  - [ ] Not yet linked from Homepage "About Me" section
+- **Engagement Model (shipped):**
+  - Custom Web & App Dev: project-based, **$750–$3,000/project**
+  - ERP & Business Systems: hourly/retainer, **$125–$175/hr**
+  - AI-Assisted Dev: project or ongoing, **$100–$150/hr**
+  - Ongoing Support: monthly retainer, **$300–$800/month**
+- **Pricing philosophy (worth remembering, not just this pass):**
+  - Chicago market — comfortably above national average, not SF/NYC-tier. The numbers above
+    lean toward the lower-middle of a Chicago-appropriate range; skew toward the top of each
+    band (e.g. ERP $150–225/hr) if leaning into "solid income," not "getting launched."
+  - **The core risk of starting cheap: pricing anchors.** A client who hires you at a low rate
+    will resist a higher one later — "starting cheap" doesn't ease you into higher rates, it
+    usually means eventually replacing early clients rather than raising their rate. Low pricing
+    also does adverse selection: it disproportionately attracts price-sensitive, high-maintenance
+    clients optimizing for cost over quality.
+  - **This logic applies unevenly across the four services.** "Pay your dues" pricing makes
+    sense for Custom Web & App Dev, where there's genuinely no portfolio yet and a client is
+    taking a bet. It does **not** apply to ERP & Business Systems Consulting — that's existing
+    day-job expertise, not something that needs to be proven from zero. Underpricing that tier
+    doesn't buy credibility that's already there; it just leaves money on the table.
+  - **Middle path if "paying dues" still feels right:** keep the listed rate where it should be,
+    and discount specific early engagements individually (in exchange for a testimonial or
+    case-study rights) rather than lowering the public number itself. Keeps the rate card intact
+    while still getting the first few reference projects.
+- **Effort:** ~2.5 hours across two sessions (page + icons + trim + pricing)
 
-### 8. **Calendly / Booking Integration** 
+### 8. **Calendly / Booking Integration** — ⏸️ On hold (2026-08-15: no Calendly account yet)
 - **Why:** Make it frictionless for leads to schedule a call
 - **Scope:**
   - [ ] Sign up for Calendly free tier (1 calendar, unlimited bookings)
