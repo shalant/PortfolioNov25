@@ -286,6 +286,47 @@ Set up clear services offering, booking, blog preview.
 
 ---
 
+## Overnight housekeeping (2026-08-16)
+**Status:** ✅ Complete
+**Effort:** ~1 hour
+**Context:** user asked "anything you can work on overnight" after merging the Services page PR.
+Picked safe, well-scoped items from the backlog that didn't need content decisions only they
+could make (no fabricated blog posts, no invented testimonials, no Calendly signup).
+
+### Tasks
+- [x] Audited every image over 300KB still in `wwwroot/images/` for actual usage. Found the
+      **only** other live oversized image left after Phase 0/2C: `DrComputerConsultant2.png`
+      (2.72MB, `/consulting` page's `subpage-hero__img`). Resized to its 2x display size
+      (760×1140) and converted to WebP → 101KB, same treatment as before. Updated
+      `ConsultingPage.razor`, `heroimages.json`, and (for correctness, even though it's dead code)
+      `Components/Consulting.razor`'s hardcoded reference.
+    - Everything else large (`Douglas_Rosenberg_Rev.png` 4.7MB, `DougCartoon4.png` 2.3MB,
+      `DrCyberPunk.png` 1.6MB, `tealRectangle.png`) is **orphaned** — referenced only by dead
+      components (`Consulting.razor`/`3`/`4`, never routed or embedded anywhere) or unused
+      `heroimages.json` entries nothing fetches. Left alone per the "don't remove components
+      without asking" rule — noted here for a future cleanup pass, not acted on.
+    - Skipped resume PDF compression (still 4.1MB) — would've required installing Ghostscript,
+      new system software, which felt like the wrong call to make unattended without asking first.
+- [x] Closed out Phase 0's partial mobile-breakpoint item — but not the way originally planned.
+      `resize_window` in the Chrome tool reports success without actually changing
+      `window.innerWidth` (same limitation noted in an earlier session) — burned two attempts
+      confirming this before falling back to a code-level audit instead of a live screenshot:
+      verified `.subpage-hero__img` (now used by both `/consulting` and `/services`) has a sane
+      `≤820px` override (`min(240px, 60vw)`), well within both images' 760px source resolution,
+      and confirmed `.consulting-services__grid` collapses to one column on mobile so the new
+      Services page cards stack correctly.
+- [x] Addressed the nav crowding/grouping concern flagged after the Services page shipped.
+      Discovered `.nav-link--page` already existed in `app.css` (dimmer default color, distinct
+      active-state glow/outline) but was **never actually applied to any nav link** — built for
+      exactly this grouping and left unused. Reordered the nav into two visual clusters (page
+      sections: about/experience/skills, then a divider, then destinations: web
+      design/services/consulting/blog) and applied the existing class. No items removed, fully
+      reversible, verified live in Chrome including active-state highlighting on the new order.
+
+**Branch:** `feature/perf-and-nav-cleanup`
+
+---
+
 ## Phase 4: Port /webdesign + /webdesign2 to Astro (separate session/repo)
 **Status:** ⏳ Not started — deliberately deferred, not a quick add-on
 **Effort:** Unscoped (new repo, likely several sessions)

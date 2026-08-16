@@ -394,6 +394,13 @@ a:hover {
   position: relative;
 }
 
+.nav-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(238, 242, 247, 0.15);
+  margin: 0 0.5rem;
+}
+
 .nav-link,
 .nav-link--page,
 .nav-link--archive {
@@ -742,6 +749,12 @@ a:hover {
 
   .nav-items li {
     width: 100%;
+  }
+
+  .nav-divider {
+    width: calc(100% - 3rem);
+    height: 1px;
+    margin: 0.4rem 1.5rem;
   }
 
   .nav-link,
