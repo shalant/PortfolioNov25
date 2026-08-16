@@ -153,10 +153,14 @@ site accurate as of 2026
 
 ### Tasks
 - [x] Added a "Download Resume ↓" button in `About.razor`, styled with the existing
-      `.hero-btn--ghost` treatment, linking to `resume/Douglas-Rosenberg-Resume.pdf`
+      `.hero-btn--ghost` treatment
 - [x] Scaffolded `wwwroot/resume/` with a `README.md` placeholder explaining the expected
-      filename — **the actual PDF still needs to be dropped in by hand** (not something Claude
-      generates); until then the download link 404s
+      filename — **user then dropped in the real PDF** as `DouglasRosenbergResumeAugust26.pdf`
+      (not something Claude generates); updated the button's `href` to match the actual filename
+      and deleted the now-obsolete README. Verified via `curl` that it 200s with
+      `content-type: application/pdf` at the right size (4.1MB, 6 pages — a bit heavy for a
+      resume but it's an on-demand download, not part of page load, so out of scope for the
+      Phase 0 weight work)
 - [x] Added new `TechChip`s to `TechnicalSkills.razor`: `.NET MAUI (Blazor Hybrid)` and `Astro`
       under Frameworks & UI, `macOS` under Cloud & Infrastructure, and a new **AI Tools**
       category (`Claude`, `Gemini`, `Copilot`)
@@ -164,12 +168,19 @@ site accurate as of 2026
       `claude-logo.png` (lowercase), but the file on disk was `Claude-logo.png`. Windows'
       case-insensitive filesystem hid this locally; GitHub Pages (Linux) would have 404'd the
       icon in production. Renamed the file to match.
-- [x] Gemini/Copilot/Astro/MAUI have no local brand icon yet, so they render as text-only chips
-      (already a supported fallback in `TechChip.razor` — no icon, just the label). Didn't fetch
-      new logo assets from the internet for this pass since that needs a separate go-ahead.
+- [x] Fetched real brand icons for Astro, Gemini, and Copilot (user requested this explicitly in
+      a follow-up) — Astro from devicon (`astro-plain.svg`, MIT), Copilot/Gemini from Simple
+      Icons (CC0). None of the three source SVGs had a fill color baked in (path-only, meant to
+      inherit `currentColor`/black), so injected each one's official brand hex directly into the
+      path: Astro `#BC52EE`, Gemini `#8E75B2`. Copilot's official hex is `#000000`, which would
+      be invisible on this site's dark background, so used the site's existing light-text token
+      (`#eef2f7`) instead of the literal brand black. Rendered each on a navy background via
+      ImageMagick and viewed them before wiring in. `.NET MAUI` still has no icon — checked
+      devicon, Simple Icons, and the `dotnet/maui`/`dotnet/docs-maui` GitHub repos directly, no
+      standalone logo asset found; stays a text-only chip
 - [x] Verified: `dotnet build` and `dotnet publish -c Release` succeed; loaded both sections live
-      in Chrome — resume button renders correctly, all 5 new/changed chips render correctly
-      (icon + text-only both look right against the existing style)
+      in Chrome — resume button renders correctly, all chips render correctly (icon + text-only
+      both look right against the existing style)
 
 **Branch:** `feature/resume-and-skills`
 
