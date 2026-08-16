@@ -2841,13 +2841,27 @@ img.social-icon {
   color: #1abc9c;
 }
 
+.service-card__pricing {
+  margin: 1.25rem 0 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(26, 188, 156, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.service-card__price {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #eef2f7;
+}
+
 .service-card__engagement {
   font-size: 0.78rem !important;
   color: #1abc9c !important;
   letter-spacing: 0.03em;
-  margin: 1.25rem 0 0 0 !important;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(26, 188, 156, 0.15);
+  margin: 0 !important;
 }
 
 /* Consulting CTA bar */

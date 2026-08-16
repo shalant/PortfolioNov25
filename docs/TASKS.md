@@ -239,10 +239,22 @@ Set up clear services offering, booking, blog preview.
       `subpage-hero` pattern for visual consistency. 4 offerings: Custom Web & App Development,
       ERP & Business Systems Consulting, AI-Assisted Development & Modernization, Ongoing Support
       & Maintenance — each with a description, an "includes" bullet list, and an **engagement
-      model** (hourly/project/retainer). **Deliberately left out specific dollar pricing** — that's
-      a real business decision only you should make, not something to fabricate; each card
-      currently just states the engagement type. Add real rates before this goes live if you want
-      pricing shown.
+      model** (hourly/project/retainer). Initially shipped without dollar pricing — that's a real
+      business decision, didn't want to fabricate it. User asked for rate-setting advice
+      afterward (context: currently $106k salaried, wants solid income but is willing to
+      price lower early on to build the portfolio); talked through the standard freelance math
+      (salaried-equivalent hourly × 2-3x to cover self-employment tax, no benefits, non-billable
+      time) and recommended pricing the four offerings differently rather than one flat rate,
+      since they span very different markets. **Added as price ranges per card** (2026-08-15):
+        - Custom Web & App Development: **$750 – $3,000/project** — the "pay your dues" tier,
+          intentionally priced near what's already being quoted to real leads ($500-1,000)
+        - ERP & Business Systems Consulting: **$125 – $175/hr** — this is existing day-job
+          expertise, not something that needs to be proven, so priced at senior rates from day one
+        - AI-Assisted Development & Modernization: **$100 – $150/hr** — similar band to ERP,
+          slightly lower until there are dedicated case studies for this specifically
+        - Ongoing Support & Maintenance: **$300 – $800/month** retainer
+      **These are Claude's suggested ranges, not verified against real market data — sanity-check
+      before this goes live.**
     - Added a nav link (`/services`, briefcase icon) between "blog" and "consulting"
     - Reused an orphaned hero image (`DrPortraitV5.png`, listed in `heroimages.json` under
       "technical skills" but never actually fetched by any component) — resized to its 2x display

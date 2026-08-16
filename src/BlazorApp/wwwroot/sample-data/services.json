@@ -13,6 +13,7 @@
         "Responsive, accessible builds"
       ],
       "engagement": "Project-based, scoped after a free discovery call.",
+      "priceRange": "$750 – $3,000 per project",
       "icon": "🖥️"
     },
     {
@@ -25,6 +26,7 @@
         "CI/CD pipeline setup"
       ],
       "engagement": "Hourly or retainer, depending on scope and duration.",
+      "priceRange": "$125 – $175 / hr",
       "icon": "🔧"
     },
     {
@@ -37,6 +39,7 @@
         "Documentation & knowledge transfer"
       ],
       "engagement": "Project-based or ongoing partnership.",
+      "priceRange": "$100 – $150 / hr",
       "icon": "🤖"
     },
     {
@@ -49,6 +52,7 @@
         "Direct access, no ticket queue"
       ],
       "engagement": "Monthly retainer.",
+      "priceRange": "$300 – $800 / month",
       "icon": "⚙️"
     }
   ]
