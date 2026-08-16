@@ -65,6 +65,17 @@ migration tasks stay de-prioritized; this phase is the actual fix.
 a repeat visitor re-downloads the full page every 10 minutes. Worth revisiting cache headers in
 GitHub Pages config separately.
 
+**Bonus fix (found while testing the above in the browser):** the hero section flashed through
+3 visible states on load — the native `.app-loading` splash, then Blazor's *first* synchronous
+render of `Home.razor` with `property`/`hero` still `null` (an empty `<h1>&nbsp;</h1>`, no
+portrait), then a jarring pop once `siteproperties.json`/`heroimages.json` finished fetching and
+the component re-rendered. The name/title/portrait are effectively static content, so gated the
+first paint on a network round-trip for no reason. Fixed by rendering `property?.Name ??
+FallbackName` (etc.) directly in `Home.razor` — the fallback constants match the current JSON
+verbatim, so visible output is unchanged, but real content is now present on the very first
+render and the existing `fadeInDown`/`fadeInUp` entrance animations play against real content
+instead of empty markup.
+
 **Branch:** `feature/image-optimization`
 
 ---

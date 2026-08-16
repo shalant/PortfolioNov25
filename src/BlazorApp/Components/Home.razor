@@ -4,19 +4,9 @@
     <div class="hero-content">
         <div class="hero-text">
             <span class="hero-eyebrow">// software engineer</span>
-            @if (property is null)
-            {
-                <h1 class="hero-name">&nbsp;</h1>
-            }
-            else
-            {
-                <h1 class="hero-name">@property.Name</h1>
-            }
+            <h1 class="hero-name">@(property?.Name ?? FallbackName)</h1>
             <div class="hero-divider"></div>
-            @if (property is not null)
-            {
-                <p class="hero-subtitle">@property.Title</p>
-            }
+            <p class="hero-subtitle">@(property?.Title ?? FallbackTitle)</p>
             <div class="hero-cta">
                 <a href="#experience" class="hero-btn hero-btn--primary" target="_top">View Work</a>
                 <a href="#about" class="hero-btn hero-btn--ghost" target="_top">About Me</a>
@@ -24,10 +14,7 @@
         </div>
 
         <div class="hero-portrait">
-            @if (hero is not null)
-            {
-                <img src="@hero.Src" alt="@hero.Alt" class="hero-portrait__img" />
-            }
+            <img src="@(hero?.Src ?? FallbackHeroSrc)" alt="@(hero?.Alt ?? FallbackHeroAlt)" class="hero-portrait__img" />
         </div>
     </div>
 
@@ -42,6 +29,11 @@
 
     [Parameter, EditorRequired]
     public required HeroImageService HeroImageService { get; set; }
+
+    private const string FallbackName = "douglas rosenberg";
+    private const string FallbackTitle = "software engineer focused on blazor, erp systems, and ux-forward design";
+    private const string FallbackHeroSrc = "images/DrCorporateHacker.webp";
+    private const string FallbackHeroAlt = "Handsome man with glasses";
 
     private SiteProperties? property;
     private HeroImage? hero;
