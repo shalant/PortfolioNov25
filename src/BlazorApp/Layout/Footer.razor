@@ -1,3 +1,5 @@
+@inject SitePropertiesService SitePropertiesService
+
 <footer class="site-footer">
 
     <div class="site-footer__deco"></div>
@@ -66,6 +68,15 @@
                             <img src="images/socials/instagram.svg" alt="Instagram" />
                         </a>
                     }
+                    @if (!string.IsNullOrWhiteSpace(property.Music))
+                    {
+                        <a href="@property.Music" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="Music">
+                            <img src="images/socials/music-note.svg" alt="Music" />
+                        </a>
+                    }
+                    <a href="https://haxbyte.com" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="Haxbyte">
+                        <img src="images/socials/haxbyte.svg" alt="Haxbyte" />
+                    </a>
                 </div>
             }
 
@@ -93,9 +104,6 @@
 </footer>
 
 @code {
-    [Parameter, EditorRequired]
-    public required HttpClient Http { get; set; }
-
     [Parameter] public string PrimaryColor { get; set; } = string.Empty;
     [Parameter] public string SecondaryColor { get; set; } = string.Empty;
 
@@ -105,7 +113,7 @@
     {
         try
         {
-            property = await Http.GetFromJsonAsync<SiteProperties>("sample-data/siteproperties.json");
+            property = await SitePropertiesService.GetAsync();
         }
         catch (Exception)
         {

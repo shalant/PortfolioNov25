@@ -74,7 +74,7 @@
     </div>
 </section>
 
-<Footer Http="Http" />
+<Footer />
 
 @code {
     private List<YearGroup>? GroupedPosts;
@@ -164,6 +164,14 @@
         background: url('/images/artDecoBackground1.webp') center / cover no-repeat fixed;
         position: relative;
         overflow: hidden;
+    }
+
+    @@media (max-width: 768px) {
+        /* fixed backgrounds force a repaint on every scroll frame on iOS Safari — drop
+           the parallax attachment on mobile, keep it on desktop */
+        .archive-section {
+            background-attachment: scroll;
+        }
     }
 
     .archive-section::before {

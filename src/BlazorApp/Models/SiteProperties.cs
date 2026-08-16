@@ -12,4 +12,5 @@ public class SiteProperties
     public string Medium { get; set; } = string.Empty;
     public string Twitter { get; set; } = string.Empty;
     public string YouTube { get; set; } = string.Empty;
+    public string Music { get; set; } = string.Empty;
 }

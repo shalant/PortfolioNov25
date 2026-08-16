@@ -1,0 +1,92 @@
+// Nav bar behavior (scroll state, active-link highlighting, mobile toggle, hash scrolling).
+// Loaded once in index.html and driven from Header.razor via JS interop — Blazor tells us
+// when it actually rendered instead of us guessing with setTimeout.
+window.DrNav = (function () {
+    let initialized = false;
+    let hashSettleObserver = null;
+
+    function scrollToHash() {
+        const hash = window.location.hash;
+        if (!hash) return;
+        const el = document.querySelector(hash);
+        if (!el) return;
+        const navbar = document.getElementById('navbar');
+        const offset = (navbar ? navbar.offsetHeight : 80) + 20;
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+    }
+
+    // Async sections can still grow/shrink after the first scroll (their JSON hasn't
+    // arrived yet), which would land short. Instead of guessing a delay, re-snap once
+    // the DOM actually stops changing, with a ceiling so this can't run forever.
+    function scrollToHashAndSettle() {
+        scrollToHash();
+        if (!window.location.hash) return;
+
+        hashSettleObserver?.disconnect();
+        let debounce;
+        hashSettleObserver = new MutationObserver(() => {
+            clearTimeout(debounce);
+            debounce = setTimeout(() => {
+                scrollToHash();
+                hashSettleObserver?.disconnect();
+                hashSettleObserver = null;
+            }, 150);
+        });
+        hashSettleObserver.observe(document.body, { childList: true, subtree: true });
+        setTimeout(() => { hashSettleObserver?.disconnect(); hashSettleObserver = null; }, 3000);
+    }
+
+    function highlightActive() {
+        const navbar = document.getElementById('navbar');
+        const sections = Array.from(document.querySelectorAll('section[id]'));
+        const threshold = (navbar ? navbar.offsetHeight : 80) + 40;
+        let currentSection = sections.length ? sections[0].id : null;
+        for (const s of sections) {
+            if (s.getBoundingClientRect().top <= threshold) currentSection = s.id;
+        }
+
+        const path = window.location.pathname.replace(/\/$/, '') || '/';
+
+        document.querySelectorAll('.nav-link[href]').forEach(link => {
+            const href = link.getAttribute('href') ?? '';
+            if (href.startsWith('/#') || href.startsWith('#')) {
+                const hashId = href.split('#')[1];
+                link.classList.toggle('active', currentSection !== null && hashId === currentSection);
+            } else {
+                const linkPath = href.replace(/\/$/, '') || '/';
+                const isActive = linkPath !== '/' && (path === linkPath || path.startsWith(linkPath + '/'));
+                link.classList.toggle('active', isActive);
+            }
+        });
+    }
+
+    function init() {
+        if (initialized) return;
+        initialized = true;
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        window.addEventListener('scroll', highlightActive, { passive: true });
+
+        // Delegated on document so this keeps working across Blazor SPA navigation,
+        // which swaps in brand-new #navToggle/#navItems/.nav-link elements each time.
+        document.addEventListener('click', (e) => {
+            const toggle = e.target.closest('#navToggle');
+            if (toggle) {
+                const navItems = document.getElementById('navItems');
+                const open = navItems?.classList.toggle('active');
+                toggle.classList.toggle('open', !!open);
+                return;
+            }
+            const link = e.target.closest('.nav-link, .nav-link--page, .nav-link--archive, .nav-cta');
+            if (link) {
+                document.getElementById('navItems')?.classList.remove('active');
+                document.getElementById('navToggle')?.classList.remove('open');
+            }
+        });
+    }
+
+    return { init, highlightActive, scrollToHash: scrollToHashAndSettle };
+})();
