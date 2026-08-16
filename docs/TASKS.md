@@ -276,7 +276,7 @@ Set up clear services offering, booking, blog preview.
 - [ ] Create 1-2 first blog posts (technical deep-dives)
 - [ ] Add testimonials section (2-3 quotes from past colleagues)
 - [ ] Add newsletter signup (email capture + freebie: "10 Blazor Tips")
-- [ ] Create PRIVACY.md (GDPR/privacy policy snippet)
+- [x] Create PRIVACY.md (2026-08-16, done overnight — see below)
 
 **Branches:**
 - `feature/services-page` (this session)
@@ -322,6 +322,14 @@ could make (no fabricated blog posts, no invented testimonials, no Calendly sign
       sections: about/experience/skills, then a divider, then destinations: web
       design/services/consulting/blog) and applied the existing class. No items removed, fully
       reversible, verified live in Chrome including active-state highlighting on the new order.
+- [x] Drafted `docs/PRIVACY.md` (Phase 3 item #7 from the original plan). Kept it honest and
+      narrow rather than generic boilerplate — verified what the site actually does first
+      (grepped for cookies/localStorage/analytics, checked every third-party domain
+      `index.html` loads: jsDelivr for Bootstrap, Google Fonts, nothing else active). No forms,
+      no tracking, no data collection — contact is a `mailto:` link, so nothing is ever
+      transmitted to or stored by the site itself. **Not wired up as a site page/footer link
+      yet** — just the doc, since adding a new route is more site-structure surface than
+      "documentation" and felt like it deserved a look before shipping live.
 
 **Branch:** `feature/perf-and-nav-cleanup`
 
