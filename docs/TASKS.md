@@ -6,6 +6,80 @@
 
 ---
 
+## Phase 0: Image Optimization (This Week — before lead demo)
+**Status:** ✅ Complete (2026-08-15)
+**Effort:** ~1.5 hours
+**ROI:** High — direct fix for a measured problem, no infrastructure risk, reversible
+
+**Why now:** Site felt fast on mobile but slow on desktop to a warm lead. Measured live on
+dougrosenbergdev.com (2026-08-15) with Chrome DevTools Protocol (`performance.getEntriesByType`)
+on a fast connection: **total page weight ~10.5MB across 73 requests.** Broke it down by category:
+
+| Category | Size | Share |
+|---|---|---|
+| Images | 7.5 MB | 71% |
+| .NET runtime + assemblies | 2.9 MB | 27% |
+| CSS/JS/other | 0.26 MB | 2% |
+
+Three PNGs account for 7.4MB (70% of the whole page):
+
+| File | Size | Natural | Displayed | Notes |
+|---|---|---|---|---|
+| `DrCorporateHacker.png` | 3.17 MB | 1024×1536 | 420×630 | Hero portrait — ~5.8x more pixels than rendered |
+| `artDecoBackground2.png` | 2.40 MB | — | footer strip, 1509×172 @ `background-size: auto 260%` | Bauhaus/art-deco tiling texture — [[design-bauhaus-background]], keep the pattern, just re-encode |
+| `artDecoBackground1.png` | 1.90 MB | — | hero/tools decoration | Same tiling motif |
+
+**This supersedes the earlier Cloudflare Pages / Brotli theory (see git history on
+`feature/cloudflare-pages-migration`):** confirmed via `content-encoding` headers that GH Pages
+serves the `.wasm` gzipped (not Brotli), but the images return `content-encoding: none` because
+PNG is already compressed — Brotli at the edge would save ~270KB (2.5% of total) and do nothing
+for the 7.5MB of images. Not worth a DNS cutover the same week as the demo. That branch's
+migration tasks stay de-prioritized; this phase is the actual fix.
+
+### Tasks
+- [x] Resize `DrCorporateHacker.png` to 840×1260 (2x its 420×630 display size — confirmed via
+      `.hero-portrait` CSS, capped at `min(420px, 38vw)` on all breakpoints) and convert to WebP —
+      installed ImageMagick (`winget install ImageMagick.ImageMagick`) to do the conversion.
+      Result: 3.24MB → 180KB
+- [x] Re-encode `artDecoBackground1.png` and `artDecoBackground2.png` as WebP at native resolution
+      (left dimensions untouched — they're referenced by ~20 different `background-size` rules
+      across `app.css`, too risky to also resize in this pass). Viewed both outputs directly
+      (Bauhaus geometric shapes) — clean edges, no banding. Results: 1.95MB → 25KB,
+      2.46MB → 90KB
+- [x] Updated references in `heroimages.json` (hero portrait + the unused "experience" entry),
+      `app.css` (19 rules), `BlogArchive.razor`, `BlogPosts.razor` — not `Index.razor`, the actual
+      hero `<img>` lives in `Home.razor`, driven by `heroimages.json` via `HeroImageService`.
+      Deleted the three old PNGs from `wwwroot/images/`.
+- [x] Verified: `dotnet build` and `dotnet publish -c Release` both succeed; published
+      `wwwroot/images/` contains the new `.webp` files. Ran the dev server and loaded the live
+      page in Chrome — hero portrait and both Bauhaus overlays (navbar strip + footer deco)
+      render correctly, no visual artifacts. Re-measured via `performance.getEntriesByType`:
+      the three swapped files now total **295KB, down from 7.4MB (96% reduction)**
+- [~] Breakpoint spot-check: confirmed the sizing rule (`min(420px, 38vw)` desktop /
+      `min(260px, 55vw)` mobile, single CSS source of truth) covers all breakpoints, and visually
+      checked the default desktop viewport. Did **not** take actual screenshots at 300/420/768px —
+      worth a quick manual check on a real phone before the demo, same as the original mobile
+      load-time test
+
+**Also noted, not in scope here:** all assets serve `cache-control: max-age=600` (10 minutes) —
+a repeat visitor re-downloads the full page every 10 minutes. Worth revisiting cache headers in
+GitHub Pages config separately.
+
+**Bonus fix (found while testing the above in the browser):** the hero section flashed through
+3 visible states on load — the native `.app-loading` splash, then Blazor's *first* synchronous
+render of `Home.razor` with `property`/`hero` still `null` (an empty `<h1>&nbsp;</h1>`, no
+portrait), then a jarring pop once `siteproperties.json`/`heroimages.json` finished fetching and
+the component re-rendered. The name/title/portrait are effectively static content, so gated the
+first paint on a network round-trip for no reason. Fixed by rendering `property?.Name ??
+FallbackName` (etc.) directly in `Home.razor` — the fallback constants match the current JSON
+verbatim, so visible output is unchanged, but real content is now present on the very first
+render and the existing `fadeInDown`/`fadeInUp` entrance animations play against real content
+instead of empty markup.
+
+**Branch:** `feature/image-optimization`
+
+---
+
 ## Phase 1: SEO Foundation (Week 1)
 **Status:** ✅ Complete (2026-08-09)  
 **Effort:** ~2 hours  
