@@ -181,6 +181,22 @@ site accurate as of 2026
 - [x] Verified: `dotnet build` and `dotnet publish -c Release` succeed; loaded both sections live
       in Chrome — resume button renders correctly, all chips render correctly (icon + text-only
       both look right against the existing style)
+- [x] Follow-up: user asked to add icons to the remaining text-only chips (`macOS`, `.NET MAUI`)
+      plus more tools — clarified "the skills section" meant `webdesign.json`'s `tools` array
+      (the /webdesign "custom web dev" page's stack list: Figma, Squarespace, Blazor, Angular,
+      Bootstrap, CSS/Animations, MudBlazor, Syncfusion, DevExpress), cross-referenced against
+      `TechnicalSkills.razor` — everything was already present except **Squarespace**, added as
+      a new chip under Tooling & Design
+- [x] `macOS` icon: Simple Icons' Apple logo (CC0), recolored to the site's light-text token
+      since the official hex is black
+- [x] While fixing Squarespace's icon, found the same latent case bug as Claude's:
+      `wwwroot/icons/tech/Squarespace_Logo_2019.png` vs. the lowercase key in `IconMap`. Also,
+      that file turned out to be a large opaque-white-background wordmark PNG sourced from
+      Wikimedia — would've rendered as a jarring white block on this dark UI even with the case
+      fixed. Replaced it entirely with Simple Icons' transparent icon-only mark (CC0), recolored
+      to match the rest of the icon set
+- [x] `.NET MAUI` still has no icon after also checking the official `dotnet/brand` GitHub repo
+      (logo/, extension-icons/, language-icons/ — no MAUI asset anywhere in it); stays text-only
 
 **Branch:** `feature/resume-and-skills`
 
