@@ -6,6 +6,55 @@
 
 ---
 
+## Phase 0: Image Optimization (This Week — before lead demo)
+**Status:** ⏳ Not started
+**Effort:** 2-3 hours
+**ROI:** High — direct fix for a measured problem, no infrastructure risk, reversible
+
+**Why now:** Site felt fast on mobile but slow on desktop to a warm lead. Measured live on
+dougrosenbergdev.com (2026-08-15) with Chrome DevTools Protocol (`performance.getEntriesByType`)
+on a fast connection: **total page weight ~10.5MB across 73 requests.** Broke it down by category:
+
+| Category | Size | Share |
+|---|---|---|
+| Images | 7.5 MB | 71% |
+| .NET runtime + assemblies | 2.9 MB | 27% |
+| CSS/JS/other | 0.26 MB | 2% |
+
+Three PNGs account for 7.4MB (70% of the whole page):
+
+| File | Size | Natural | Displayed | Notes |
+|---|---|---|---|---|
+| `DrCorporateHacker.png` | 3.17 MB | 1024×1536 | 420×630 | Hero portrait — ~5.8x more pixels than rendered |
+| `artDecoBackground2.png` | 2.40 MB | — | footer strip, 1509×172 @ `background-size: auto 260%` | Bauhaus/art-deco tiling texture — [[design-bauhaus-background]], keep the pattern, just re-encode |
+| `artDecoBackground1.png` | 1.90 MB | — | hero/tools decoration | Same tiling motif |
+
+**This supersedes the earlier Cloudflare Pages / Brotli theory (see git history on
+`feature/cloudflare-pages-migration`):** confirmed via `content-encoding` headers that GH Pages
+serves the `.wasm` gzipped (not Brotli), but the images return `content-encoding: none` because
+PNG is already compressed — Brotli at the edge would save ~270KB (2.5% of total) and do nothing
+for the 7.5MB of images. Not worth a DNS cutover the same week as the demo. That branch's
+migration tasks stay de-prioritized; this phase is the actual fix.
+
+### Tasks
+- [ ] Resize `DrCorporateHacker.png` to ~840×1260 (2x its 420×630 display size, for retina) and
+      convert to WebP
+- [ ] Re-encode `artDecoBackground1.png` and `artDecoBackground2.png` as WebP — check visually for
+      banding/seams at tile boundaries before merging, since these are tiling textures
+- [ ] Update image references in `Index.razor`/`app.css` to the new files
+- [ ] Re-measure total page weight with the same method, confirm it drops from ~10.5MB toward
+      ~3.5MB
+- [ ] Spot-check the footer/hero decoration still looks right at a few breakpoints (300px, 420px,
+      768px, 1024px)
+
+**Also noted, not in scope here:** all assets serve `cache-control: max-age=600` (10 minutes) —
+a repeat visitor re-downloads the full page every 10 minutes. Worth revisiting cache headers in
+GitHub Pages config separately.
+
+**Branch:** `feature/image-optimization`
+
+---
+
 ## Phase 1: SEO Foundation (Week 1)
 **Status:** ✅ Complete (2026-08-09)  
 **Effort:** ~2 hours  
