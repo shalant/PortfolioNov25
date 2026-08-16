@@ -145,6 +145,36 @@ Make the flagship case study visually stunning and interactive.
 
 ---
 
+## Phase 2C: Resume Download + Skills Expansion
+**Status:** ✅ Complete (2026-08-15)
+**Effort:** ~1 hour
+**ROI:** Medium — resume is table stakes for recruiter/HR screens; skills expansion keeps the
+site accurate as of 2026
+
+### Tasks
+- [x] Added a "Download Resume ↓" button in `About.razor`, styled with the existing
+      `.hero-btn--ghost` treatment, linking to `resume/Douglas-Rosenberg-Resume.pdf`
+- [x] Scaffolded `wwwroot/resume/` with a `README.md` placeholder explaining the expected
+      filename — **the actual PDF still needs to be dropped in by hand** (not something Claude
+      generates); until then the download link 404s
+- [x] Added new `TechChip`s to `TechnicalSkills.razor`: `.NET MAUI (Blazor Hybrid)` and `Astro`
+      under Frameworks & UI, `macOS` under Cloud & Infrastructure, and a new **AI Tools**
+      category (`Claude`, `Gemini`, `Copilot`)
+- [x] Fixed a latent bug found while wiring up the Claude chip: `TechChip.razor`'s icon map keys
+      `claude-logo.png` (lowercase), but the file on disk was `Claude-logo.png`. Windows'
+      case-insensitive filesystem hid this locally; GitHub Pages (Linux) would have 404'd the
+      icon in production. Renamed the file to match.
+- [x] Gemini/Copilot/Astro/MAUI have no local brand icon yet, so they render as text-only chips
+      (already a supported fallback in `TechChip.razor` — no icon, just the label). Didn't fetch
+      new logo assets from the internet for this pass since that needs a separate go-ahead.
+- [x] Verified: `dotnet build` and `dotnet publish -c Release` succeed; loaded both sections live
+      in Chrome — resume button renders correctly, all 5 new/changed chips render correctly
+      (icon + text-only both look right against the existing style)
+
+**Branch:** `feature/resume-and-skills`
+
+---
+
 ## Phase 3: Lead Generation (Week 3)
 **Status:** ⏳ Not started  
 **Effort:** 8-12 hours  
