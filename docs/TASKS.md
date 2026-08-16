@@ -227,15 +227,39 @@ site accurate as of 2026
 ---
 
 ## Phase 3: Lead Generation (Week 3)
-**Status:** ⏳ Not started  
+**Status:** 🟡 In progress — Services page done, rest not started
 **Effort:** 8-12 hours  
 **ROI:** High (converts leads to clients)
 
 Set up clear services offering, booking, blog preview.
 
 ### Tasks
-- [ ] Create Services page (3-4 service definitions + pricing/engagement model)
-- [ ] Add Calendly booking integration (30-min discovery call widget)
+- [x] Create Services page (2026-08-15) — new `/services` route (`ServicesPage.razor` +
+      `ServicesModel.cs` + `services.json`), mirrors the existing `/consulting` page's
+      `subpage-hero` pattern for visual consistency. 4 offerings: Custom Web & App Development,
+      ERP & Business Systems Consulting, AI-Assisted Development & Modernization, Ongoing Support
+      & Maintenance — each with a description, an "includes" bullet list, and an **engagement
+      model** (hourly/project/retainer). **Deliberately left out specific dollar pricing** — that's
+      a real business decision only you should make, not something to fabricate; each card
+      currently just states the engagement type. Add real rates before this goes live if you want
+      pricing shown.
+    - Added a nav link (`/services`, briefcase icon) between "blog" and "consulting"
+    - Reused an orphaned hero image (`DrPortraitV5.png`, listed in `heroimages.json` under
+      "technical skills" but never actually fetched by any component) — resized to its 2x display
+      size (760×1140) and converted to WebP: 2.57MB → 74KB, same treatment as Phase 0
+    - Content is derived from existing site data (`aboutme.json`'s ERP/full-stack description,
+      `webdesign.json`'s stack, `consulting.json`'s "Ongoing Maintenance") — not fabricated from
+      nothing, but **worth a read-through before publishing** since I drafted the copy
+    - Noted, not addressed: `/consulting` already has its own 4-service grid with a different
+      framing ("neighborhood IT partner" for small business) — there's some conceptual overlap
+      between the two pages worth thinking about, but consolidating them is a content decision,
+      not something to do unilaterally
+    - User flagged after seeing it live: nav is genuinely tight now (7 links + CTA — a
+      compression breakpoint at 1200px already exists just to keep everything on one line,
+      which means it was designed with headroom for fewer items). Discussed grouping options
+      (visual divider, "more" dropdown) but no changes made — pending a decision
+- [ ] Add Calendly booking integration (30-min discovery call widget) — **on hold, user doesn't
+      have a Calendly account yet**
 - [ ] Add blog preview section on homepage (3 latest posts)
 - [ ] Create 1-2 first blog posts (technical deep-dives)
 - [ ] Add testimonials section (2-3 quotes from past colleagues)
@@ -243,7 +267,7 @@ Set up clear services offering, booking, blog preview.
 - [ ] Create PRIVACY.md (GDPR/privacy policy snippet)
 
 **Branches:**
-- `feature/services-page`
+- `feature/services-page` (this session)
 - `feature/blog-preview`
 - `feature/testimonials`
 - `feature/newsletter`

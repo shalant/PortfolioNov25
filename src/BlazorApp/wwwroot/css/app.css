@@ -2818,6 +2818,38 @@ img.social-icon {
   margin: 0;
 }
 
+.service-card__includes {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.service-card__includes li {
+  font-size: 0.82rem;
+  color: rgba(238, 242, 247, 0.55);
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.service-card__includes li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: #1abc9c;
+}
+
+.service-card__engagement {
+  font-size: 0.78rem !important;
+  color: #1abc9c !important;
+  letter-spacing: 0.03em;
+  margin: 1.25rem 0 0 0 !important;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(26, 188, 156, 0.15);
+}
+
 /* Consulting CTA bar */
 .consulting-cta {
   background: rgba(26, 188, 156, 0.06);
