@@ -1,4 +1,4 @@
-@inject HttpClient Http
+@inject SitePropertiesService SitePropertiesService
 
 <section class="contact-section reveal-on-scroll" id="contact">
     <div class="contact-container">
@@ -55,7 +55,7 @@
     {
         try
         {
-            props = await Http.GetFromJsonAsync<SiteProperties>("sample-data/siteproperties.json");
+            props = await SitePropertiesService.GetAsync();
         }
         catch (Exception)
         {

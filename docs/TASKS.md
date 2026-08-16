@@ -276,13 +276,222 @@ Set up clear services offering, booking, blog preview.
 - [ ] Create 1-2 first blog posts (technical deep-dives)
 - [ ] Add testimonials section (2-3 quotes from past colleagues)
 - [ ] Add newsletter signup (email capture + freebie: "10 Blazor Tips")
-- [ ] Create PRIVACY.md (GDPR/privacy policy snippet)
+- [x] Create PRIVACY.md (2026-08-16, done overnight — see below)
 
 **Branches:**
 - `feature/services-page` (this session)
 - `feature/blog-preview`
 - `feature/testimonials`
 - `feature/newsletter`
+
+---
+
+## Overnight housekeeping (2026-08-16)
+**Status:** ✅ Complete
+**Effort:** ~1 hour
+**Context:** user asked "anything you can work on overnight" after merging the Services page PR.
+Picked safe, well-scoped items from the backlog that didn't need content decisions only they
+could make (no fabricated blog posts, no invented testimonials, no Calendly signup).
+
+### Tasks
+- [x] Audited every image over 300KB still in `wwwroot/images/` for actual usage. Found the
+      **only** other live oversized image left after Phase 0/2C: `DrComputerConsultant2.png`
+      (2.72MB, `/consulting` page's `subpage-hero__img`). Resized to its 2x display size
+      (760×1140) and converted to WebP → 101KB, same treatment as before. Updated
+      `ConsultingPage.razor`, `heroimages.json`, and (for correctness, even though it's dead code)
+      `Components/Consulting.razor`'s hardcoded reference.
+    - Everything else large (`Douglas_Rosenberg_Rev.png` 4.7MB, `DougCartoon4.png` 2.3MB,
+      `DrCyberPunk.png` 1.6MB, `tealRectangle.png`) is **orphaned** — referenced only by dead
+      components (`Consulting.razor`/`3`/`4`, never routed or embedded anywhere) or unused
+      `heroimages.json` entries nothing fetches. Left alone per the "don't remove components
+      without asking" rule — noted here for a future cleanup pass, not acted on.
+    - Skipped resume PDF compression (still 4.1MB) — would've required installing Ghostscript,
+      new system software, which felt like the wrong call to make unattended without asking first.
+- [x] Closed out Phase 0's partial mobile-breakpoint item — but not the way originally planned.
+      `resize_window` in the Chrome tool reports success without actually changing
+      `window.innerWidth` (same limitation noted in an earlier session) — burned two attempts
+      confirming this before falling back to a code-level audit instead of a live screenshot:
+      verified `.subpage-hero__img` (now used by both `/consulting` and `/services`) has a sane
+      `≤820px` override (`min(240px, 60vw)`), well within both images' 760px source resolution,
+      and confirmed `.consulting-services__grid` collapses to one column on mobile so the new
+      Services page cards stack correctly.
+- [x] Addressed the nav crowding/grouping concern flagged after the Services page shipped.
+      Discovered `.nav-link--page` already existed in `app.css` (dimmer default color, distinct
+      active-state glow/outline) but was **never actually applied to any nav link** — built for
+      exactly this grouping and left unused. Reordered the nav into two visual clusters (page
+      sections: about/experience/skills, then a divider, then destinations: web
+      design/services/consulting/blog) and applied the existing class. No items removed, fully
+      reversible, verified live in Chrome including active-state highlighting on the new order.
+- [x] Drafted `docs/PRIVACY.md` (Phase 3 item #7 from the original plan). Kept it honest and
+      narrow rather than generic boilerplate — verified what the site actually does first
+      (grepped for cookies/localStorage/analytics, checked every third-party domain
+      `index.html` loads: jsDelivr for Bootstrap, Google Fonts, nothing else active). No forms,
+      no tracking, no data collection — contact is a `mailto:` link, so nothing is ever
+      transmitted to or stored by the site itself. **Not wired up as a site page/footer link
+      yet** — just the doc, since adding a new route is more site-structure surface than
+      "documentation" and felt like it deserved a look before shipping live.
+
+**Branch:** `feature/perf-and-nav-cleanup`
+
+---
+
+## Phase 3B: Nav active-state bug + homepage load twitchiness
+**Status:** ✅ Complete (2026-08-16)
+**Effort:** ~2 hours
+**ROI:** Medium — polish/correctness fix, not lead-gen, but a warm lead bouncing off a jittery
+first impression on mobile is a real cost
+
+**Why:** User reported the blog nav link sometimes isn't marked active, and the homepage load
+still feels "twitchy." Root-caused both, plus a follow-up question ("will a warm lead on mobile
+get an equally good experience?") surfaced two mobile-specific issues on top.
+
+**Root causes found:**
+- **Nav not-active bug:** `Header.razor`'s `highlightPageLink()` does an exact path match
+  (`href === path`), which breaks on sub-routes like `/blog/archive` (and would equally break on
+  `/webdesign/{slug}`). Compounding this, the highlighting logic lives in a raw `<script>` block
+  embedded in Razor markup (`suppress-error="BL9992"` — the Blazor analyzer's own warning against
+  this pattern). Since this is a pure client-side WASM SPA with no full page reloads between
+  routes, inline `<script>` tags re-inserted by Blazor's renderer on navigation don't reliably
+  re-execute the way they do on a hard page load — the likely source of the "sometimes" flakiness.
+- **Homepage twitchiness:** Seven components (`Home`, `About`, `Experience`, `Casual`, `Music`,
+  `Contact`, `Footer`) each independently fire their own `Http.GetFromJsonAsync` in
+  `OnInitializedAsync`, resolving at slightly different times, so sections pop from "loading…" to
+  real content non-atomically. `siteproperties.json` alone is fetched **three separate times**
+  (Home, Contact, Footer). Both `Header.razor` and `Index.razor` also paper over Blazor's async
+  render timing with blind `setTimeout(fn, 300/800/1200)` guesses instead of being told when
+  rendering actually finished.
+- **Mobile-specific (won't show up on desktop testing):**
+  - Hero section (and 3 other spots) uses `100vh`, not `100dvh` — on mobile Safari/Chrome this is
+    measured before the URL bar collapses, so full-height sections visibly resize as a lead
+    scrolls. Invisible on desktop.
+  - `.nav-toggle` (hamburger button, `app.css:676`) is 32×32px with no real touch padding, below
+    the ~44×44px comfortable tap-target minimum.
+  - Minor: blog pages use `background-attachment: fixed`, historically janky on iOS Safari repaint
+    — low priority since it's not the homepage a lead lands on first.
+
+### Tasks
+- [x] Added `SitePropertiesService` (`Services/SitePropertiesService.cs`, same cached-`Task`
+      pattern as `HeroImageService`), registered in `Program.cs`, wired into `Home.razor`,
+      `Contact.razor`, `Footer.razor` in place of each one's own `Http.GetFromJsonAsync` call.
+      `Home.razor`'s now-unused `Http` parameter was dropped (only remaining use was this fetch);
+      `Footer.razor`'s too, which meant updating its 3 call sites (`Index.razor`, `BlogPosts.razor`,
+      `BlogArchive.razor`) to stop passing `Http`. Verified live: `siteproperties.json` now fetched
+      **once** per app load instead of 3x (`performance.getEntriesByType('resource')`), and Home
+      hero name, Contact email link, and Footer name all still render correctly from the shared data
+- [x] Fixed nav active-link matching to be prefix-aware (`path === href || path.startsWith(href +
+      '/')`), now living in `DrNav.highlightActive()` (see below) instead of inline in Header.
+      Verified live: `/blog/archive` (both via direct load and via clicking "View Archive →" from
+      `/blog`, i.e. Blazor's client-side SPA nav) now keeps the "blog" nav link `.active`
+- [x] Moved the Header/Index inline `<script>` logic into `wwwroot/js/nav.js` and
+      `wwwroot/js/scrollReveal.js` (loaded once in `index.html`), driven from `OnAfterRenderAsync` /
+      `NavigationManager.LocationChanged` in `Header.razor` and `Index.razor` via `IJSRuntime`
+      instead of blind `setTimeout` guessing. `nav.js` uses a document-level delegated click
+      listener (survives Blazor replacing `#navToggle`/`#navItems` on every SPA navigation) and a
+      `MutationObserver`-based settle-then-rescroll for `scrollToHash` instead of a fixed delay.
+      `scrollReveal.js` similarly re-scans for newly-rendered `.reveal-on-scroll` targets via
+      `MutationObserver` instead of two guessed timeouts. Verified live: clicking nav links via
+      Blazor's SPA router (not just hard page loads) correctly re-runs the active-link highlighting
+      every time; no console errors from either script
+- [x] Swapped `100vh` → `100vh` + `100dvh` (progressive-enhancement fallback, `dvh` wins in
+      browsers that support it) on `.hero-section`, `section.dark`, `.archive-container`, and
+      `.archive-frame iframe`'s height calc. Verified the cascade resolves to `100dvh` in Chrome
+      via `getComputedStyle`
+- [x] Increased `.nav-toggle` touch target from 32×32px to 44×44px; gave `.nav-toggle span` an
+      explicit 24px width (was `100%` of the button) so the hamburger icon's visual size is
+      unchanged — only the tappable area grew. Verified via computed styles in Chrome
+- [x] Added a `≤768px` override dropping `background-attachment: fixed` → `scroll` on
+      `.blog-posts-section` and `.archive-section` (iOS Safari repaint jank), desktop keeps the
+      parallax attachment unchanged
+- [x] Verified: `dotnet build` succeeds (2 pre-existing warnings in `Experience.razor`, unrelated).
+      Live-tested in Chrome: nav highlighting on `/blog/archive` (direct load + SPA nav), the
+      `siteproperties.json` request count, hero `100dvh`/nav-toggle computed styles, and confirmed
+      `.reveal-on-scroll` elements get bound (`data-reveal-bound`) correctly — could not visually
+      confirm the fade-in itself fires, because the automated tab runs `visibilityState: "hidden"`
+      and Chrome throttles `IntersectionObserver` callbacks for hidden tabs; this is an automation
+      artifact (same `resize_window` limitation noted in the 2026-08-15 session), not a code issue —
+      the binding logic itself is confirmed working and is structurally identical to the original,
+      already-shipped implementation
+- **Found but not fixed (pre-existing, unrelated to this branch):** `blog-posts.json` fails to
+      parse — console shows `InvalidCharacterWithinString, 0x0D` at `$[0].content` — a stray
+      carriage-return character embedded in a content string breaks `System.Text.Json`, so the blog
+      post list silently fails to load on `/blog`. Not caused by anything in this pass (confirmed via
+      `git status`, the file is untouched); worth a follow-up to clean the JSON
+
+**Branch:** `feature/perf-and-nav-cleanup` (continues the current branch)
+
+---
+
+## Phase 3C: Visual bug fixes (hero clip glitch, dark webdesign hero, dead GitHub embed) + footer expansion
+**Status:** ✅ Complete (2026-08-16)
+**Effort:** ~1.5 hours
+
+**Why:** User reported three visual bugs while reviewing Phase 3B live: (1) the hero name
+sometimes shows a blue rectangle instead of text, (2) `/webdesign` reads noticeably darker than
+the homepage hero, (3) the GitHub activity cards in Skills look broken. Also requested the footer
+appear on the standalone-URL pages, and two new footer icons (music site, Haxbyte).
+
+**Root causes found:**
+- **Hero blue-rectangle glitch:** the global `h1` rule in `app.css` sets a silver gradient
+  text-clip effect (`background-image` + `background-clip: text` + `-webkit-background-clip: text`
+  + `color: transparent`). `.hero-section h1` resets `background`/`background-image` and sets
+  `color`/`-webkit-text-fill-color` back to solid, but never resets the vendor-prefixed
+  `-webkit-background-clip: text` itself (not covered by the `background: none` shorthand). Under
+  certain GPU-compositing conditions (the entrance animation promotes the element to its own
+  layer), Chromium intermittently paints the un-clipped text bounding box as a solid block instead
+  of correctly having nothing left to clip against — the "blue rectangle" (the hero's own navy
+  background showing through). Same latent bug existed in `.subpage-hero__title` (used on
+  `/consulting`, `/services`, `/blog`, and the webdesign case-study detail pages) and
+  `.wd2-hero__title` (`/webdesign`'s own headline) — neither had been reported yet but shared the
+  identical root cause, so fixed all three while in this code.
+- **`/webdesign` darker than the homepage hero:** two compounding causes. First, `.wd2-hero__title`
+  never overrode the global `h1` rule *at all* for `background-image`/`-webkit-text-fill-color`, so
+  the page's biggest, most prominent text (the H1 headline) was rendering as a dim gray gradient
+  instead of the intended solid `#eef2f7` — same bug class as above, now fixed. Second, genuinely
+  by design: `.wd2-hero__scrim`'s radial gradient went up to 88% dark opacity at the edges, and the
+  marquee images were dimmed to `brightness(0.68)`/`brightness(0.95)`, on top of a near-black
+  `#05111f` base — all deliberate (a scrim is needed for text legibility over a busy image
+  marquee, unlike the homepage's flat gradient hero), but stacked on top of the broken headline it
+  read as too dark overall. Moderated the scrim (0.88→0.72 edge opacity, 0.45→0.35 center) and
+  marquee brightness (0.68→0.78, 0.95→1.0) to bring it closer while keeping the glass panel legible.
+- **GitHub activity cards "busted":** confirmed via `curl` — both
+  `github-readme-stats.vercel.app` endpoints this section embeds are currently returning `503`.
+  This is the public shared instance of a well-known third-party service with a documented history
+  of rate-limiting/outages (already flagged as a known risk in `PORTFOLIO_TODO.md` item #22); not
+  a bug in this repo, and the iframe can't be feature-detected for this kind of failure (the HTTP
+  request itself succeeds, it just renders an error page inside the iframe, so no `onerror` fires).
+  Added a "Cards not loading? View the profile directly on GitHub ↗" fallback link so the section
+  isn't a dead end during the next outage; left the embed itself in place since removing/replacing
+  it outright is the bigger content decision item #22 already describes.
+
+### Tasks
+- [x] Reset `background-clip`/`-webkit-background-clip` in `.hero-section h1`, `.subpage-hero__title`,
+      and `.wd2-hero__title` (the latter also needed the full `background`/`-webkit-text-fill-color`
+      reset it was missing entirely). Verified live via `getComputedStyle` — all three now resolve
+      to `background-clip: border-box` instead of the leaked `text` value
+- [x] Softened `.wd2-hero__scrim` and `.wd2-hero__marquee` image `brightness()` filters
+- [x] Added a GitHub-profile fallback link in `TechnicalSkills.razor` + matching
+      `.skills-github__link` style (dim by default, teal on hover, matches the site's link language)
+- [x] Added `<Footer />` to `ConsultingPage.razor`, `ServicesPage.razor`, `WebDesignPage.razor`, and
+      `WebDesignDetailPage.razor` (the `/webdesign/{slug}` case-study pages — same page family as
+      the listing page, kept for consistency even though not explicitly named). `/blog` and
+      `/blog/archive` already had it
+- [x] Added `Music` field to `SiteProperties`/`siteproperties.json` (user supplied
+      `https://www.dougrosenberg.com`) and a footer icon+link for it, plus an unconditional Haxbyte
+      icon+link (`https://haxbyte.com`, already referenced elsewhere on the site as Doug's web
+      design studio brand)
+- [x] New icon assets: `wwwroot/images/socials/haxbyte.svg` (hand-built hexagon + "H" monogram —
+      simple enough geometry to construct precisely without visual iteration) and
+      `wwwroot/images/socials/music-note.svg` (simple eighth-note glyph). **Note:** the first ask
+      was specifically a treble-clef icon — two hand-drawn attempts at the actual clef spiral
+      didn't read clearly as one even after rendering both for visual QA (screenshot-verified via a
+      temporary preview page), so per user's choice swapped to a plain music-note glyph instead of
+      continuing to iterate blind on the clef
+- [x] Verified: `dotnet build` succeeds (same 2 pre-existing warnings). Live-tested in Chrome:
+      hero-name background-clip fix confirmed via computed styles, `/webdesign` headline no longer
+      gradient-dim (screenshot comparison before/after), footer confirmed present + both new links
+      correctly wired (`href`s verified) on `/`, `/consulting`, `/services`, `/webdesign`
+
+**Branch:** `feature/perf-and-nav-cleanup` (continues the current branch)
 
 ---
 

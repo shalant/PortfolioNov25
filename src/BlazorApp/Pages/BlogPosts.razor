@@ -213,7 +213,7 @@
     </div>
 </section>
 
-<Footer Http="Http" />
+<Footer />
 
 @code {
     private List<BlogPost>? Posts;
@@ -1009,6 +1009,12 @@
     }
 
     @@media (max-width: 768px) {
+        /* fixed backgrounds force a repaint on every scroll frame on iOS Safari — drop
+           the parallax attachment on mobile, keep it on desktop */
+        .blog-posts-section {
+            background-attachment: scroll;
+        }
+
         .blog-grid {
             grid-template-columns: 1fr;
         }

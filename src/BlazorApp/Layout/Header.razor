@@ -1,3 +1,7 @@
+@implements IDisposable
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+
 <header class="navbar-wrapper" id="navbar">
     <div class="navbar-content">
 
@@ -36,18 +40,6 @@
                 </li>
 
                 <li>
-                    <a class="nav-link" href="/webdesign">
-                        <!-- split branch: craft/build, now the featured offering -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                            <line x1="7" y1="13" x2="7" y2="7"/>
-                            <line x1="7" y1="7" x2="3" y2="3"/>
-                            <line x1="7" y1="7" x2="11" y2="3"/>
-                        </svg>
-                        web design
-                    </a>
-                </li>
-
-                <li>
                     <a class="nav-link" href="/#technicalskills">
                         <!-- 2×2 grid of squares -->
                         <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
@@ -60,18 +52,23 @@
                     </a>
                 </li>
 
+                <!-- divider: sections of this page (above) vs. separate destinations (below) -->
+                <li class="nav-divider" role="separator" aria-hidden="true"></li>
+
                 <li>
-                    <a class="nav-link" href="/blog">
-                        <!-- book/blog: open book pages -->
+                    <a class="nav-link nav-link--page" href="/webdesign">
+                        <!-- split branch: craft/build, now the featured offering -->
                         <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                            <path d="M7 1 L7 13 M1 3 L7 3 M7 3 L13 3 M1 8 L7 8 M7 8 L13 8"/>
+                            <line x1="7" y1="13" x2="7" y2="7"/>
+                            <line x1="7" y1="7" x2="3" y2="3"/>
+                            <line x1="7" y1="7" x2="11" y2="3"/>
                         </svg>
-                        blog
+                        web design
                     </a>
                 </li>
 
                 <li>
-                    <a class="nav-link" href="/services">
+                    <a class="nav-link nav-link--page" href="/services">
                         <!-- briefcase: services offering -->
                         <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <rect x="1.5" y="4.5" width="11" height="7.5" rx="1"/>
@@ -83,12 +80,22 @@
                 </li>
 
                 <li>
-                    <a class="nav-link" href="/consulting">
+                    <a class="nav-link nav-link--page" href="/consulting">
                         <!-- speech bubble: consulting conversation -->
                         <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M1.5 2.5 H12.5 V9 H5.5 L3 11.5 V9 H1.5 Z"/>
                         </svg>
                         consulting
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link nav-link--page" href="/blog">
+                        <!-- book/blog: open book pages -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                            <path d="M7 1 L7 13 M1 3 L7 3 M7 3 L13 3 M1 8 L7 8 M7 8 L13 8"/>
+                        </svg>
+                        blog
                     </a>
                 </li>
 
@@ -108,83 +115,29 @@
 </header>
 
 @code {
-    protected override void OnAfterRender(bool firstRender)
+    protected override void OnInitialized()
     {
-        if (firstRender) InitializeNavbar();
+        Navigation.LocationChanged += OnLocationChanged;
     }
 
-    private void InitializeNavbar() { }
-}
-
-<script suppress-error="BL9992">
-    (function () {
-        const navbar    = document.getElementById('navbar');
-        const navItems  = document.getElementById('navItems');
-        const navToggle = document.getElementById('navToggle');
-
-        window.addEventListener('scroll', () => {
-            navbar?.classList.toggle('scrolled', window.scrollY > 50);
-        }, { passive: true });
-
-        if (navToggle) {
-            navToggle.addEventListener('click', () => {
-                const open = navItems?.classList.toggle('active');
-                navToggle.classList.toggle('open', open);
-            });
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("DrNav.init");
         }
+        await JS.InvokeVoidAsync("DrNav.highlightActive");
+        await JS.InvokeVoidAsync("DrNav.scrollToHash");
+    }
 
-        document.querySelectorAll('.nav-link, .nav-link--page, .nav-link--archive, .nav-cta').forEach(link => {
-            link.addEventListener('click', () => {
-                navItems?.classList.remove('active');
-                navToggle?.classList.remove('open');
-            });
-        });
+    private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        await JS.InvokeVoidAsync("DrNav.highlightActive");
+        await JS.InvokeVoidAsync("DrNav.scrollToHash");
+    }
 
-        const trackActive = () => {
-            // query lazily — Blazor renders sections after this script fires
-            const sections = Array.from(document.querySelectorAll('section[id]'));
-            if (!sections.length) return;
-            const threshold = (navbar ? navbar.offsetHeight : 80) + 40;
-            let current = sections[0].id;
-            for (const s of sections) {
-                if (s.getBoundingClientRect().top <= threshold) current = s.id;
-            }
-            document.querySelectorAll('.nav-link').forEach(link => {
-                const href = link.getAttribute('href') ?? '';
-                link.classList.toggle('active', href === '#' + current || href === '/#' + current);
-            });
-        };
-
-        // highlight consulting / web design / blog links when on their own page
-        // (anything not a "/#section" hash link, which trackActive already handles)
-        const highlightPageLink = () => {
-            const path = window.location.pathname.replace(/\/$/, '');
-            document.querySelectorAll('.nav-link[href]').forEach(link => {
-                const href = link.getAttribute('href') ?? '';
-                if (href.startsWith('/#')) return;
-                link.classList.toggle('active', href.replace(/\/$/, '') === path);
-            });
-        };
-        highlightPageLink();
-
-        // re-scroll to hash after async sections finish rendering
-        const scrollToHash = () => {
-            const hash = window.location.hash;
-            if (!hash) return;
-            const el = document.querySelector(hash);
-            if (!el) return;
-            const offset = (navbar ? navbar.offsetHeight : 80) + 20;
-            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
-        };
-
-        window.addEventListener('scroll', trackActive, { passive: true });
-        // fire after Blazor finishes rendering its async components
-        setTimeout(trackActive, 300);
-        // highlight page links (consulting/web design) after Blazor renders
-        setTimeout(highlightPageLink, 300);
-        setTimeout(highlightPageLink, 800);
-        // two-pass scroll: first pass for fast sections, second for slower async ones
-        setTimeout(scrollToHash, 400);
-        setTimeout(scrollToHash, 1200);
-    })();
-</script>
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+}

@@ -25,10 +25,10 @@
 
 @code {
     [Parameter, EditorRequired]
-    public required HttpClient Http { get; set; }
+    public required HeroImageService HeroImageService { get; set; }
 
     [Parameter, EditorRequired]
-    public required HeroImageService HeroImageService { get; set; }
+    public required SitePropertiesService SitePropertiesService { get; set; }
 
     private const string FallbackName = "douglas rosenberg";
     private const string FallbackTitle = "software engineer focused on blazor, erp systems, and ux-forward design";
@@ -42,7 +42,7 @@
     {
         try
         {
-            property = await Http.GetFromJsonAsync<SiteProperties>("sample-data/siteproperties.json");
+            property = await SitePropertiesService.GetAsync();
             hero = await HeroImageService.GetHeroAsync(img => img.Name is "home");
         }
         catch (Exception)
