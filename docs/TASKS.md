@@ -197,6 +197,23 @@ site accurate as of 2026
       to match the rest of the icon set
 - [x] `.NET MAUI` still has no icon after also checking the official `dotnet/brand` GitHub repo
       (logo/, extension-icons/, language-icons/ — no MAUI asset anywhere in it); stays text-only
+- [x] Follow-up: user pointed out `/webdesign`'s toolkit row was still text-only chips —
+      `WebDesignPage.razor` rendered `webDesign.Tools` through plain `<span class="about-skill-chip">`,
+      a completely different code path from `TechnicalSkills.razor`'s `<TechChip>`, so it never
+      picked up any of the icon work above. Switched it to `<TechChip Name="@tool" />` (same
+      `webdesign.json` → `.Tools` data, just a different render). `.wd2-tools__chips` is a plain
+      flex-wrap container so the swap needed no CSS changes.
+- [x] Added `Canva`, `Astro`, `Claude`, `DALL-E`, `Gemini`, `Copilot` to `webdesign.json`'s
+      `tools` array per user request (all already had icons from earlier work except DALL-E)
+- [x] Sourced a DALL-E icon: no match in devicon, Simple Icons, or Font Awesome's free tier —
+      Simple Icons doesn't carry it at all (OpenAI's marks are a known gap in most open icon
+      sets over trademark caution). Found `dalle-color.svg` in `lobehub/lobe-icons`
+      (`packages/static-svg/icons/`, MIT) — DALL-E's actual mark (a 5-color striped bar), already
+      had its official colors baked in, used as-is with no recoloring needed
+- [x] Verified: `dotnet build` and `dotnet publish -c Release` succeed; loaded `/webdesign` live
+      in Chrome — all 15 toolkit chips render correctly (icon or graceful text-only fallback for
+      `CSS / Animations`, which isn't an exact `IconMap` key match — pre-existing gap, not
+      addressed this pass)
 
 **Branch:** `feature/resume-and-skills`
 
