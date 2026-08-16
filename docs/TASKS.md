@@ -214,6 +214,13 @@ site accurate as of 2026
       in Chrome — all 15 toolkit chips render correctly (icon or graceful text-only fallback for
       `CSS / Animations`, which isn't an exact `IconMap` key match — pre-existing gap, not
       addressed this pass)
+- [x] Follow-up: asked whether the toolkit row needed more chips or fewer — flagged that
+      `Syncfusion`/`DevExpress` (enterprise grid/reporting suites) sit oddly next to a page
+      pitched as client-facing "UI/UX Design & Web Development" for small-business/creative
+      leads (Hardware Etc, a musician landing site), and recommended trimming rather than
+      growing the list. User agreed — dropped both from `webdesign.json`'s `tools` array. Still
+      listed in the main `TechnicalSkills.razor` grid, just not on this page. 13 chips now
+      (down from 15), verified live in Chrome and via `dotnet publish -c Release`
 
 **Branch:** `feature/resume-and-skills`
 
