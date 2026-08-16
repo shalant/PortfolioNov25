@@ -145,6 +145,87 @@ Make the flagship case study visually stunning and interactive.
 
 ---
 
+## Phase 2C: Resume Download + Skills Expansion
+**Status:** ✅ Complete (2026-08-15)
+**Effort:** ~1 hour
+**ROI:** Medium — resume is table stakes for recruiter/HR screens; skills expansion keeps the
+site accurate as of 2026
+
+### Tasks
+- [x] Added a "Download Resume ↓" button in `About.razor`, styled with the existing
+      `.hero-btn--ghost` treatment
+- [x] Scaffolded `wwwroot/resume/` with a `README.md` placeholder explaining the expected
+      filename — **user then dropped in the real PDF** as `DouglasRosenbergResumeAugust26.pdf`
+      (not something Claude generates); updated the button's `href` to match the actual filename
+      and deleted the now-obsolete README. Verified via `curl` that it 200s with
+      `content-type: application/pdf` at the right size (4.1MB, 6 pages — a bit heavy for a
+      resume but it's an on-demand download, not part of page load, so out of scope for the
+      Phase 0 weight work)
+- [x] Added new `TechChip`s to `TechnicalSkills.razor`: `.NET MAUI (Blazor Hybrid)` and `Astro`
+      under Frameworks & UI, `macOS` under Cloud & Infrastructure, and a new **AI Tools**
+      category (`Claude`, `Gemini`, `Copilot`)
+- [x] Fixed a latent bug found while wiring up the Claude chip: `TechChip.razor`'s icon map keys
+      `claude-logo.png` (lowercase), but the file on disk was `Claude-logo.png`. Windows'
+      case-insensitive filesystem hid this locally; GitHub Pages (Linux) would have 404'd the
+      icon in production. Renamed the file to match.
+- [x] Fetched real brand icons for Astro, Gemini, and Copilot (user requested this explicitly in
+      a follow-up) — Astro from devicon (`astro-plain.svg`, MIT), Copilot/Gemini from Simple
+      Icons (CC0). None of the three source SVGs had a fill color baked in (path-only, meant to
+      inherit `currentColor`/black), so injected each one's official brand hex directly into the
+      path: Astro `#BC52EE`, Gemini `#8E75B2`. Copilot's official hex is `#000000`, which would
+      be invisible on this site's dark background, so used the site's existing light-text token
+      (`#eef2f7`) instead of the literal brand black. Rendered each on a navy background via
+      ImageMagick and viewed them before wiring in. `.NET MAUI` still has no icon — checked
+      devicon, Simple Icons, and the `dotnet/maui`/`dotnet/docs-maui` GitHub repos directly, no
+      standalone logo asset found; stays a text-only chip
+- [x] Verified: `dotnet build` and `dotnet publish -c Release` succeed; loaded both sections live
+      in Chrome — resume button renders correctly, all chips render correctly (icon + text-only
+      both look right against the existing style)
+- [x] Follow-up: user asked to add icons to the remaining text-only chips (`macOS`, `.NET MAUI`)
+      plus more tools — clarified "the skills section" meant `webdesign.json`'s `tools` array
+      (the /webdesign "custom web dev" page's stack list: Figma, Squarespace, Blazor, Angular,
+      Bootstrap, CSS/Animations, MudBlazor, Syncfusion, DevExpress), cross-referenced against
+      `TechnicalSkills.razor` — everything was already present except **Squarespace**, added as
+      a new chip under Tooling & Design
+- [x] `macOS` icon: Simple Icons' Apple logo (CC0), recolored to the site's light-text token
+      since the official hex is black
+- [x] While fixing Squarespace's icon, found the same latent case bug as Claude's:
+      `wwwroot/icons/tech/Squarespace_Logo_2019.png` vs. the lowercase key in `IconMap`. Also,
+      that file turned out to be a large opaque-white-background wordmark PNG sourced from
+      Wikimedia — would've rendered as a jarring white block on this dark UI even with the case
+      fixed. Replaced it entirely with Simple Icons' transparent icon-only mark (CC0), recolored
+      to match the rest of the icon set
+- [x] `.NET MAUI` still has no icon after also checking the official `dotnet/brand` GitHub repo
+      (logo/, extension-icons/, language-icons/ — no MAUI asset anywhere in it); stays text-only
+- [x] Follow-up: user pointed out `/webdesign`'s toolkit row was still text-only chips —
+      `WebDesignPage.razor` rendered `webDesign.Tools` through plain `<span class="about-skill-chip">`,
+      a completely different code path from `TechnicalSkills.razor`'s `<TechChip>`, so it never
+      picked up any of the icon work above. Switched it to `<TechChip Name="@tool" />` (same
+      `webdesign.json` → `.Tools` data, just a different render). `.wd2-tools__chips` is a plain
+      flex-wrap container so the swap needed no CSS changes.
+- [x] Added `Canva`, `Astro`, `Claude`, `DALL-E`, `Gemini`, `Copilot` to `webdesign.json`'s
+      `tools` array per user request (all already had icons from earlier work except DALL-E)
+- [x] Sourced a DALL-E icon: no match in devicon, Simple Icons, or Font Awesome's free tier —
+      Simple Icons doesn't carry it at all (OpenAI's marks are a known gap in most open icon
+      sets over trademark caution). Found `dalle-color.svg` in `lobehub/lobe-icons`
+      (`packages/static-svg/icons/`, MIT) — DALL-E's actual mark (a 5-color striped bar), already
+      had its official colors baked in, used as-is with no recoloring needed
+- [x] Verified: `dotnet build` and `dotnet publish -c Release` succeed; loaded `/webdesign` live
+      in Chrome — all 15 toolkit chips render correctly (icon or graceful text-only fallback for
+      `CSS / Animations`, which isn't an exact `IconMap` key match — pre-existing gap, not
+      addressed this pass)
+- [x] Follow-up: asked whether the toolkit row needed more chips or fewer — flagged that
+      `Syncfusion`/`DevExpress` (enterprise grid/reporting suites) sit oddly next to a page
+      pitched as client-facing "UI/UX Design & Web Development" for small-business/creative
+      leads (Hardware Etc, a musician landing site), and recommended trimming rather than
+      growing the list. User agreed — dropped both from `webdesign.json`'s `tools` array. Still
+      listed in the main `TechnicalSkills.razor` grid, just not on this page. 13 chips now
+      (down from 15), verified live in Chrome and via `dotnet publish -c Release`
+
+**Branch:** `feature/resume-and-skills`
+
+---
+
 ## Phase 3: Lead Generation (Week 3)
 **Status:** ⏳ Not started  
 **Effort:** 8-12 hours  

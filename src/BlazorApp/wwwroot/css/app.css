@@ -1979,6 +1979,11 @@ img.social-icon {
   margin: 0 !important;
 }
 
+.about-resume-btn {
+  display: inline-block;
+  margin-top: 1.75rem;
+}
+
 .about-skills__label {
   font-family: 'Montserrat', sans-serif;
   font-size: 0.7rem;
