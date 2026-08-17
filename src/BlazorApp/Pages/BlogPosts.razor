@@ -5,6 +5,7 @@
 
 <PageTitle>Blog — Doug Rosenberg Dev</PageTitle>
 
+<div class="dr-theme-scope">
 <Header />
 
 <section class="subpage-hero" id="blog-hero">
@@ -214,6 +215,7 @@
 </section>
 
 <Footer />
+</div>
 
 @code {
     private List<BlogPost>? Posts;
@@ -417,36 +419,36 @@
         align-items: center;
         margin-bottom: 2rem;
         padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(26, 188, 156, 0.1);
+        border-bottom: 1px solid rgba(var(--accent-rgb), 0.1);
     }
 
     .blog-header h2 {
         margin: 0;
         font-size: 1.5rem;
-        color: #eef2f7;
+        color: var(--text);
     }
 
     .blog-archive-link {
-        color: #1abc9c;
+        color: var(--accent);
         text-decoration: none;
         font-weight: 500;
         transition: all 0.3s ease;
     }
 
     .blog-archive-link:hover {
-        color: #eef2f7;
+        color: var(--text);
         transform: translateX(4px);
     }
 
     .featured-posts-section {
         margin-bottom: 3rem;
         padding-bottom: 2rem;
-        border-bottom: 1px solid rgba(26, 188, 156, 0.1);
+        border-bottom: 1px solid rgba(var(--accent-rgb), 0.1);
     }
 
     .featured-posts-header {
         font-size: 0.9rem;
-        color: #1abc9c;
+        color: var(--accent);
         text-transform: uppercase;
         letter-spacing: 1px;
         font-weight: 600;
@@ -462,26 +464,26 @@
     .featured-post-card {
         position: relative;
         padding: 2rem;
-        background: linear-gradient(135deg, rgba(26, 188, 156, 0.15) 0%, rgba(26, 188, 156, 0.05) 100%);
-        border: 2px solid rgba(26, 188, 156, 0.3);
+        background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.15) 0%, rgba(var(--accent-rgb), 0.05) 100%);
+        border: 2px solid rgba(var(--accent-rgb), 0.3);
         border-radius: 12px;
         cursor: pointer;
         transition: all 0.3s ease;
     }
 
     .featured-post-card:hover {
-        background: linear-gradient(135deg, rgba(26, 188, 156, 0.25) 0%, rgba(26, 188, 156, 0.1) 100%);
-        border-color: #1abc9c;
+        background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.25) 0%, rgba(var(--accent-rgb), 0.1) 100%);
+        border-color: var(--accent);
         transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(26, 188, 156, 0.2);
+        box-shadow: 0 12px 24px rgba(var(--accent-rgb), 0.2);
     }
 
     .featured-post-badge {
         position: absolute;
         top: 1rem;
         right: 1rem;
-        background: #1abc9c;
-        color: #060e1a;
+        background: var(--accent);
+        color: var(--bg);
         padding: 0.35rem 0.75rem;
         border-radius: 4px;
         font-size: 0.75rem;
@@ -493,7 +495,7 @@
     .featured-post-title {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #eef2f7;
+        color: var(--text);
         margin: 0 0 0.75rem 0;
         line-height: 1.3;
     }
@@ -502,13 +504,13 @@
         display: flex;
         gap: 1rem;
         font-size: 0.85rem;
-        color: rgba(238, 242, 247, 0.6);
+        color: rgba(var(--text-rgb), 0.6);
         margin-bottom: 1rem;
     }
 
     .featured-post-excerpt {
         font-size: 0.9rem;
-        color: rgba(238, 242, 247, 0.7);
+        color: rgba(var(--text-rgb), 0.7);
         line-height: 1.5;
         margin: 0;
     }
@@ -523,23 +525,23 @@
     .blog-search-input {
         width: 100%;
         padding: 0.75rem 1rem;
-        background: rgba(238, 242, 247, 0.05);
-        border: 1px solid rgba(26, 188, 156, 0.2);
+        background: rgba(var(--text-rgb), 0.05);
+        border: 1px solid rgba(var(--accent-rgb), 0.2);
         border-radius: 8px;
-        color: #eef2f7;
+        color: var(--text);
         font-size: 0.95rem;
         transition: all 0.3s ease;
     }
 
     .blog-search-input:focus {
         outline: none;
-        background: rgba(238, 242, 247, 0.08);
-        border-color: rgba(26, 188, 156, 0.5);
-        box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.1);
+        background: rgba(var(--text-rgb), 0.08);
+        border-color: rgba(var(--accent-rgb), 0.5);
+        box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
     }
 
     .blog-search-input::placeholder {
-        color: rgba(238, 242, 247, 0.4);
+        color: rgba(var(--text-rgb), 0.4);
     }
 
     .blog-tags-filter {
@@ -550,10 +552,10 @@
 
     .blog-tag {
         padding: 0.5rem 1rem;
-        background: rgba(26, 188, 156, 0.1);
-        border: 1px solid rgba(26, 188, 156, 0.3);
+        background: rgba(var(--accent-rgb), 0.1);
+        border: 1px solid rgba(var(--accent-rgb), 0.3);
         border-radius: 20px;
-        color: #1abc9c;
+        color: var(--accent);
         font-size: 0.85rem;
         font-weight: 500;
         cursor: pointer;
@@ -562,14 +564,14 @@
     }
 
     .blog-tag:hover {
-        background: rgba(26, 188, 156, 0.2);
-        border-color: rgba(26, 188, 156, 0.5);
+        background: rgba(var(--accent-rgb), 0.2);
+        border-color: rgba(var(--accent-rgb), 0.5);
     }
 
     .blog-tag.active {
-        background: #1abc9c;
-        color: #060e1a;
-        border-color: #1abc9c;
+        background: var(--accent);
+        color: var(--bg);
+        border-color: var(--accent);
     }
 
     .blog-post-card__tags {
@@ -582,8 +584,8 @@
     .blog-post-card__tag {
         display: inline-block;
         padding: 0.25rem 0.75rem;
-        background: rgba(26, 188, 156, 0.15);
-        color: #1abc9c;
+        background: rgba(var(--accent-rgb), 0.15);
+        color: var(--accent);
         border-radius: 12px;
         font-size: 0.75rem;
         font-weight: 500;
@@ -599,9 +601,9 @@
     .blog-post-detail__tag {
         display: inline-block;
         padding: 0.5rem 1rem;
-        background: rgba(26, 188, 156, 0.1);
-        color: #1abc9c;
-        border: 1px solid rgba(26, 188, 156, 0.3);
+        background: rgba(var(--accent-rgb), 0.1);
+        color: var(--accent);
+        border: 1px solid rgba(var(--accent-rgb), 0.3);
         border-radius: 20px;
         font-size: 0.9rem;
         font-weight: 500;
@@ -610,8 +612,8 @@
     }
 
     .blog-post-detail__tag:hover {
-        background: rgba(26, 188, 156, 0.2);
-        border-color: rgba(26, 188, 156, 0.5);
+        background: rgba(var(--accent-rgb), 0.2);
+        border-color: rgba(var(--accent-rgb), 0.5);
     }
 
     .blog-grid {
@@ -625,21 +627,21 @@
         flex-direction: column;
         justify-content: space-between;
         padding: 2rem;
-        background: rgba(238, 242, 247, 0.05);
+        background: rgba(var(--text-rgb), 0.05);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         border-radius: 12px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(26, 188, 156, 0.25);
+        border: 1px solid rgba(var(--accent-rgb), 0.25);
     }
 
     .blog-post-card:hover {
         transform: translateY(-4px);
-        background: rgba(238, 242, 247, 0.08);
-        box-shadow: 0 12px 40px rgba(26, 188, 156, 0.15);
-        border-color: #1abc9c;
+        background: rgba(var(--text-rgb), 0.08);
+        box-shadow: 0 12px 40px rgba(var(--accent-rgb), 0.15);
+        border-color: var(--accent);
     }
 
     .blog-post-card__content {
@@ -649,7 +651,7 @@
     .blog-post-card__title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #eef2f7;
+        color: var(--text);
         margin: 0 0 0.5rem 0;
         line-height: 1.4;
     }
@@ -663,21 +665,21 @@
 
     .blog-post-card__date {
         font-size: 0.8rem;
-        color: rgba(238, 242, 247, 0.5);
+        color: rgba(var(--text-rgb), 0.5);
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
     .blog-post-card__reading-time {
         font-size: 0.8rem;
-        color: rgba(26, 188, 156, 0.8);
+        color: rgba(var(--accent-rgb), 0.8);
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
     .blog-post-card__excerpt {
         font-size: 0.95rem;
-        color: rgba(238, 242, 247, 0.7);
+        color: rgba(var(--text-rgb), 0.7);
         line-height: 1.6;
         margin: 0;
     }
@@ -685,7 +687,7 @@
     .blog-post-card__arrow {
         margin-top: 1.5rem;
         font-size: 1.5rem;
-        color: #1abc9c;
+        color: var(--accent);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
@@ -1031,5 +1033,16 @@
             top: 1rem;
             right: 1rem;
         }
+    }
+
+    /* Excerpts are real body copy (not captions/labels), so match the
+       Phase A homepage pattern: 0.7 alpha reads fine dimmed on a
+       near-black hero but fails to feel comfortable once inverted onto
+       cream. Bumped to 0.85 for light mode only; .modal-dialog and
+       everything inside it is intentionally left untouched — it's
+       already a fixed white reading card in both themes. */
+    html[data-theme="light"] .dr-theme-scope .featured-post-excerpt,
+    html[data-theme="light"] .dr-theme-scope .blog-post-card__excerpt {
+        color: rgba(var(--text-rgb), 0.85);
     }
 </style>
