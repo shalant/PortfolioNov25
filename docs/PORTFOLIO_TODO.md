@@ -317,14 +317,13 @@
   - Metrics: # of reports built, performance gains, user adoption
 - **Effort:** 6-8 hours (write-up + screenshots + layout)
 
-### 22. **GitHub Stats Optimization** 
-- **Why:** Embedded GitHub Cards are slow; consider caching or static snapshot
-- **Options:**
-  - [ ] Remove GitHub stats entirely (you have code examples in case study)
-  - [ ] Replace with link: "See my GitHub contributions →"
-  - [ ] Cache GitHub card as static image (GitHub stats screenshot updated weekly)
-- **Effort:** 1-2 hours
-- **Priority:** Low; only if speed is an issue
+### 22. ~~GitHub Stats Optimization~~ — ✅ Resolved (2026-08-16, via removal)
+- **Why:** Embedded GitHub Cards (`github-readme-stats.vercel.app`) were unreliable — the shared
+  public instance was intermittently 503ing (surfaced during Phase 3C, see `TASKS.md`), a known
+  risk with that service.
+- **Resolution:** Removed the section entirely from `TechnicalSkills.razor` (both stat/top-langs
+  `iframe`s, the "view on GitHub" fallback link, and the `.skills-github*` CSS in `app.css`) rather
+  than continuing to patch around third-party flakiness. No replacement added.
 
 ### 23. **"Hire Me" / Availability Status** 
 - **Why:** Clarify whether you're available for consulting (builds urgency)
@@ -374,6 +373,22 @@ There is no Azure App Service. HTTPS is already enforced automatically by GitHub
 
 ---
 
+## 🌗 Theming
+
+### 29. **Light Mode: Planning & Implementation**
+- **Why:** Site currently ships dark-only (navy background); no light theme exists at all. Note #25 ("Dark Mode Refinement") assumes a toggle already exists — it doesn't; today there is exactly one theme.
+- **Current:** No CSS variable theming layer — colors are largely hardcoded per-component (many components have embedded `<style>` blocks), so there's no single place to flip a palette yet.
+- **Scope:**
+  - [ ] Decide approach: OS-level auto (`prefers-color-scheme`), manual toggle, or both
+  - [ ] Define light-mode tokens for navy/teal palette (background, text, borders, card surfaces) that keep the brand recognizable, not just inverted contrast
+  - [ ] Keep the existing tiled Bauhaus/art-deco background pattern — adapt its colors for light mode rather than dropping it
+  - [ ] Audit every section/component for hardcoded dark-only colors and migrate to CSS custom properties
+  - [ ] Add toggle UI (e.g., icon in `Header.razor`) + persist choice (localStorage)
+  - [ ] Verify contrast (WCAG AA) across both themes, all breakpoints
+- **Effort:** TBD — needs a planning/audit pass first; no central theming system exists yet, so scope depends heavily on how many components need touching
+
+---
+
 ## 📋 Recommended Priority (Next Month)
 
 ### **Week 1-2 (Do Now)**
@@ -410,8 +425,9 @@ There is no Azure App Service. HTTPS is already enforced automatically by GitHub
 
 ### **Month 2+ (Scale & Refinements)**
 - #21 (More case studies: Friars ERP)
-- #22-25 (GitHub stats, availability badge, speaking, dark mode refinement)
+- #23-25 (availability badge, speaking, dark mode refinement) — #22 (GitHub stats) resolved via removal
 - #26-28 (Security hardening: form validation, CSP, Azure config)
+- #29 (Light mode: planning & implementation)
 
 ---
 
@@ -473,5 +489,5 @@ There is no Azure App Service. HTTPS is already enforced automatically by GitHub
 
 ---
 
-**Last Updated:** 2026-08-09  
+**Last Updated:** 2026-08-16  
 **Maintained by:** Douglas Rosenberg

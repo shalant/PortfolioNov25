@@ -495,6 +495,42 @@ appear on the standalone-URL pages, and two new footer icons (music site, Haxbyt
 
 ---
 
+## Phase 3D: Hero copy, GitHub activity removal, blog JSON fix
+**Status:** ✅ Complete (2026-08-16)
+**Effort:** ~1 hour
+
+**Why:** User's girlfriend looked at the site and asked "what the hell is Blazor?" — the hero
+subtitle led with the implementation framework instead of what Doug actually does. Same session,
+picked off two more small, self-contained items: the GitHub activity embed had already been
+flagged as unreliable (Phase 3C), and the `blog-posts.json` parse bug noted above (Phase 3B,
+"found but not fixed") turned out to still be live.
+
+### Tasks
+- [x] Reworded the hero subtitle in `Home.razor`'s `FallbackTitle` constant and
+      `siteproperties.json`'s `title` field: `"software engineer focused on blazor, erp systems,
+      and ux-forward design"` → `"software engineer building custom web apps and business systems
+      with an eye for design"`. Left `Blazor` in place in `index.html`'s `<title>`/meta
+      description and `TechnicalSkills.razor`'s chips — those are read by search engines and
+      technical recruiters, not a first-time visitor's eyeball.
+- [x] Removed the `// github activity` section from `TechnicalSkills.razor` entirely (both
+      `github-readme-stats.vercel.app` `iframe`s and the "view on GitHub" fallback link added in
+      Phase 3C) plus the associated `.skills-github*` rules in `app.css`, rather than continuing
+      to patch around a third-party service that intermittently 503s. `docs/PORTFOLIO_TODO.md`
+      item #22 marked resolved-via-removal.
+- [x] Fixed the `blog-posts.json` parse bug: 10 raw control characters (`\r`/`\n`) embedded
+      unescaped inside one post's `content` string (a `<pre><code>` code block) were breaking
+      `System.Text.Json`. Wrote a small script that walks the file tracking JSON string
+      boundaries/escape state and escapes only control characters found *inside* string values
+      (leaving the file's own CRLF formatting outside strings untouched) — safer than a blanket
+      find/replace, which would've also mangled legitimate structural whitespace. Verified: valid
+      JSON, all 3 posts parse, content byte-identical apart from the escaping.
+- [x] Verified: `dotnet build` succeeds after each change (the 2 pre-existing `Experience.razor`
+      warnings, unrelated to this branch, still show up on a clean build).
+
+**Branch:** `fix/hero-tagline-jargon`
+
+---
+
 ## Phase 4: Port /webdesign + /webdesign2 to Astro (separate session/repo)
 **Status:** ⏳ Not started — deliberately deferred, not a quick add-on
 **Effort:** Unscoped (new repo, likely several sessions)
