@@ -9,6 +9,13 @@
     <meta name="keywords" content="full-stack .NET developer, Blazor consultant, ERP systems, ASP.NET, C#, software engineer" />
     <meta name="author" content="Douglas Rosenberg" />
 
+    <!-- Sets data-theme on <html> before first paint (avoids a flash of the wrong theme).
+         Must be a blocking script here in <head> — this has to run before Blazor boots and
+         before CSS-driven paint, so unlike the rest of this app's JS interop it can't wait
+         for OnAfterRenderAsync. -->
+    <script src="js/theme.js"></script>
+    <script>DrTheme.apply(DrTheme.resolve());</script>
+
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dougrosenbergdev.com/" />
