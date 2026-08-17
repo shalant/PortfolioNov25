@@ -531,6 +531,97 @@ flagged as unreliable (Phase 3C), and the `blog-posts.json` parse bug noted abov
 
 ---
 
+## Phase 3E: Light Mode — Phase A (homepage)
+**Status:** ✅ Complete (2026-08-16)
+**Effort:** ~3 hours (planning session + implementation pass, same evening)
+
+**Why:** Followed up on `docs/PORTFOLIO_TODO.md` item #29 — the site had exactly one theme
+(dark navy/teal) with no CSS-variable layer to build a second one on top of; the `:root`
+block in `app.css` declared `--navy`/`--teal`/etc. but nothing in the file actually
+referenced them (`var(--` had zero hits before this pass). Planned the palette and
+architecture with the user first (warm cream/parchment background, recolored art-deco
+assets, OS-preference + manual toggle), then implemented Phase A — the homepage only —
+in an isolated git worktree/branch per the user's "do this safely, overnight" request.
+
+**Architecture:**
+- Real CSS custom-property tokens (`--bg`, `--bg-hero`, `--text`, `--text-rgb`, `--accent`,
+  `--accent-rgb`, `--surface-rgb`, `--surface-nav-rgb`, `--art-deco-1/2`) replace the old
+  decorative `:root` block. Mechanically swapped every matching hardcoded
+  `#1abc9c`/`#eef2f7`/`rgba(26,188,156,…)`/`rgba(238,242,247,…)`/`rgba(6,14,26|36,…)` in
+  `app.css` (152 hex + ~230 rgba occurrences) to reference the new tokens, verified by
+  before/after grep counts at each step rather than trusting the `sed` passes blindly.
+- Light-mode values are defined under `html[data-theme="light"] .dr-theme-scope` — scoped to
+  a new `.dr-theme-scope` wrapper div around `Index.razor`'s composed content (Header through
+  Footer), **not** on bare `:root`. This means the toggle sets `data-theme` globally but only
+  the homepage's descendants actually re-theme; every other page (`/webdesign`, `/services`,
+  `/consulting`, `/blog`, and the orphaned `Consulting3/4/5/6`/`WebDesignPageOLD`/`/archive`
+  pages) keeps resolving the same var()s to the dark `:root` defaults regardless of toggle
+  state. Verified live: toggling to light mode on `/consulting` left it fully unchanged.
+- Manually re-pointed the ~15 remaining hardcoded colors the mechanical passes couldn't
+  safely touch (per-selector triage, not blanket sed): `.hero-section`/`.about-section`/
+  `.experience-section`/`.skills-section`/`.casual-section`/`.music-section`/
+  `.contact-section` background gradients now use `var(--bg)`/`var(--bg-hero)`;
+  `.hero-btn--primary` deliberately kept on the *static* `--teal`/`--teal-dark` tokens
+  (not the theme-adjusted `--accent`) since it's a solid filled button that needs its own
+  fixed bg/text contrast pair, independent of page theme; nav text-shadows (tuned for
+  legibility over a dark/photo backdrop) and two remaining `#ffffff`/`#2fffda` hardcoded
+  hover colors got light-mode-only overrides instead of being changed globally, to leave
+  dark mode's look untouched.
+
+**Art-deco texture recolor:** the two Bauhaus/art-deco WebP backgrounds turned out to be
+photographic blue gradients (hundreds of unique blues forming soft rays), not flat 2-color
+shapes as assumed during planning — confirmed via `magick identify -unique-colors`. Exact
+color-key substitution would've looked patchy, so used a duotone/gradient-map instead:
+grayscale the source for its luminance/shape, then `-clut` against a 256×1 cream→navy
+gradient (`#f5f1e8` → `#2c3e50`). Result keeps the original geometry and soft edges exactly,
+just recolored. Rendered and viewed both outputs before wiring them in (`artDecoBackground1
+/2-light.webp`, comparable file size to the originals: 25KB→23KB, 92KB→84KB). Also swapped
+`mix-blend-mode: screen` (lightens a dark backdrop) to `multiply` (darkens a light one) for
+light mode via the same `--art-deco-blend` token — screen would've washed the recolored
+texture out to near-invisible on cream.
+
+**Toggle:** `wwwroot/js/theme.js` (new, same small-module pattern as `nav.js`/
+`scrollReveal.js`) reads `localStorage['dr-theme']`, falls back to
+`prefers-color-scheme`, and sets `data-theme` on `<html>`. Loaded as a **blocking** `<script>`
+in `index.html`'s `<head>` — has to run before Blazor boots and before first paint, so unlike
+the rest of this app's JS interop it can't wait for `OnAfterRenderAsync`. Icon-only sun/moon
+toggle added to `Header.razor` next to `.nav-cta`, matching the existing 14×14 thin-stroke
+nav-icon style and the 44×44 `.nav-toggle` tap target; icon swap is pure CSS off `[data-theme]`,
+no Blazor re-render needed. Kept icon-only (no label) since the nav is already flagged tight
+(7 links + CTA, Phase 3 note).
+
+**Contrast verification:** computed actual rendered contrast ratios in Chrome (accounting for
+alpha blending against the cream background, not just nominal color) rather than eyeballing.
+Found and fixed: `.hero-eyebrow`/`.nav-cta` teal text needed a darker `--accent` in light mode
+specifically (`#0f7a63`, ~4.68:1 — plain `#1abc9c` on cream measured ~2.1:1, failing even the
+3:1 UI-component floor). Several muted body-copy elements (`.hero-subtitle`,
+`.experience-detail__bullets`, `.experience-list__title`, `.casual-description`,
+`.music-paragraph`, `.contact-sub`, `.site-footer__title`) were tuned at low alpha (0.35–0.55)
+against the dark background for a "muted" look, which read fine there but measured
+2.9–4.0:1 once inverted onto cream — bumped to 0.75–0.78 alpha in light mode only (dark mode
+unchanged), verified 4.5:1+. **Not exhaustively audited:** ~15 smaller decorative
+labels/badges/captions at similarly low alpha (category labels, the footer copyright line,
+etc.) were left as-is — common "fine print" convention, but a real gap if a full AA pass is
+ever wanted.
+
+**Verification:** `dotnet build` and `dotnet publish -c Release` both succeed (0 new warnings
+beyond the 2 pre-existing, unrelated `Experience.razor` ones). Live-tested in Chrome: toggle
+flips `data-theme` and persists across reload; dark mode (still the default in this browser's
+`prefers-color-scheme`) renders pixel-identical to before this change; light mode confirmed
+readable and cohesive scrolling through every homepage section (Home/About/Experience/
+Skills/Casual/Music/Contact/Footer); `/consulting` confirmed unaffected by the toggle, proving
+the `.dr-theme-scope` isolation works. **Not verified:** mobile breakpoints — this session's
+`resize_window` tool exhibited the same limitation noted in earlier sessions (reports success
+without actually changing `window.innerWidth`); worth a manual phone check before Phase B.
+
+**Deferred to Phase B (future session):** extend the same token system to `/webdesign`,
+`/webdesign/{slug}`, `/services`, `/consulting`, `/blog`, `/blog/archive`.
+
+**Branch:** `feature/light-mode-phase-a` (new branch, isolated worktree — not pushed, not
+merged; left for review)
+
+---
+
 ## Phase 4: Port /webdesign + /webdesign2 to Astro (separate session/repo)
 **Status:** ⏳ Not started — deliberately deferred, not a quick add-on
 **Effort:** Unscoped (new repo, likely several sessions)
