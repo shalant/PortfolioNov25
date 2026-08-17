@@ -1,5 +1,5 @@
 <div class="wd-project__frame" @onmouseenter="HandleMouseEnter" @onmouseleave="HandleMouseLeave">
-    <div class="wd-project__frame-stage @(_active ? "is-active" : "")" style="--wd-frame-cycle:@(Images.Count * 1.8)s">
+    <div class="wd-project__frame-stage @(_active ? "is-active" : "")" style="--wd-frame-cycle:@(Images.Count * 1.4)s">
         @if (!string.IsNullOrEmpty(VideoUrl))
         {
             <video class="wd-project__frame-video" src="@VideoUrl" poster="@Images.FirstOrDefault()" muted loop playsinline preload="metadata"></video>

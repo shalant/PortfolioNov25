@@ -108,6 +108,7 @@ html {
    inline blocking <script> in index.html's <head> sets the data-theme
    attribute before first paint, so it's already correct by the time any
    of this renders. */
+html[data-theme="light"],
 html[data-theme="light"] body {
   background-color: #f5f1e8;
 }
@@ -471,12 +472,6 @@ a:hover {
   height: 80px;
   width: auto;
   object-fit: contain;
-  transition: height 0.3s ease;
-}
-
-.navbar-wrapper.scrolled .logo-section img,
-.navbar-wrapper.scrolled .logo-section svg {
-  height: 64px;
 }
 
 /* Nav items */
@@ -523,7 +518,7 @@ a:hover {
   height: 13px;
   flex-shrink: 0;
   color: rgba(var(--accent-rgb), 0.7);
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color 0.2s ease, filter 0.2s ease;
 }
 
 .nav-link:hover {
@@ -531,23 +526,33 @@ a:hover {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
 }
 
-/* Active: pill bg + teal bar + glow */
+/* Active: pill bg + teal bar + glow.
+   The reveal is a plain opacity fade, not a width or scale transition.
+   Width forces a synchronous layout recalculation on every frame (this is
+   scroll-spy driven, so it can fire mid-scroll, competing with the
+   browser's own scroll work); scale (even scaleX on a simple bar) was
+   dropped project-wide after it read as twitchy elsewhere in the nav, most
+   likely from combining transform with filter: drop-shadow on the icons,
+   forcing a re-rasterize every frame rather than a cheap composite. Width
+   is fixed at all times here; visibility is purely opacity, which never
+   touches layout or paint beyond the element itself. */
 .nav-items li::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 0;
+  width: calc(100% - 0.5rem);
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--accent), transparent);
   border-radius: 1px;
-  transition: width 0.35s ease;
+  opacity: 0;
+  transition: opacity 0.35s ease;
   box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9), 0 0 20px rgba(var(--accent-rgb), 0.4);
 }
 
 .nav-items li:has(.nav-link.active)::after {
-  width: calc(100% - 0.5rem);
+  opacity: 1;
 }
 
 .nav-link.active {
@@ -562,7 +567,6 @@ a:hover {
 .nav-link:hover .nav-icon,
 .nav-link.active .nav-icon {
   color: var(--accent);
-  transform: scale(1.2);
   filter: drop-shadow(0 0 4px rgba(var(--accent-rgb), 0.7));
 }
 
@@ -576,7 +580,6 @@ a:hover {
 
 .nav-link--page:hover .nav-icon {
   color: var(--accent);
-  transform: scale(1.15);
 }
 
 .nav-link--page.active {
@@ -590,12 +593,11 @@ a:hover {
 
 .nav-link--page.active .nav-icon {
   color: var(--accent);
-  transform: scale(1.2);
   filter: drop-shadow(0 0 4px rgba(var(--accent-rgb), 0.7));
 }
 
 .nav-items li:has(.nav-link--page.active)::after {
-  width: calc(100% - 0.5rem);
+  opacity: 1;
 }
 
 .nav-link--archive {
@@ -614,7 +616,6 @@ a:hover {
 
 .nav-link--archive:hover .nav-icon {
   color: var(--accent);
-  transform: scale(1.15);
 }
 
 /* Services dropdown */
@@ -791,12 +792,11 @@ a:hover {
   width: 16px;
   height: 16px;
   color: rgba(var(--accent-rgb), 0.75);
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .theme-toggle:hover .theme-toggle__icon {
   color: var(--accent);
-  transform: scale(1.12);
 }
 
 .theme-toggle__icon--moon {
@@ -3565,7 +3565,14 @@ html[data-theme="light"] .dr-theme-scope .webdesign-link:hover {
 
 .wd-project__frame-stage {
   position: relative;
-  aspect-ratio: 16 / 10;
+  /* Matches the ~1522x784 viewport this session's screenshot captures were
+     taken at (was 16/10 = 1.6, noticeably narrower than the ~1.94 real
+     screenshots) - object-fit: cover was center-cropping the width down to
+     fit, which chewed into whatever sits at the far left/right edges of a
+     site header (the logo and the CTA button, on every marketing-site
+     screenshot redone this session). Matching the ratio here means cover
+     has effectively nothing left to crop. */
+  aspect-ratio: 1.94 / 1;
   background: #0a1220;
   overflow: hidden;
 }
@@ -5163,24 +5170,11 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
 }
 
 /* ============================================================================
-   Haxbyte cross-promo — styled as a normal card inside each page's existing
-   grid (Live Sites / services), not a separate banner section.
+   Haxbyte cross-promo — styled as a normal card inside the services grid.
+   Used to also have a /webdesign twin (.wd-project--haxbyte), removed once
+   the real Haxbyte project card (webdesign.json) made it a duplicate of
+   itself sitting right below the real thing.
    ============================================================================ */
-
-.wd-project--haxbyte {
-  background-color: rgba(var(--accent-rgb), 0.05);
-  border-style: dashed;
-}
-
-.wd-project__haxbyte-text {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 300;
-  line-height: 1.7;
-  color: rgba(var(--text-rgb), 0.55);
-  margin: 0;
-  flex: 1;
-}
 
 .consulting-service-card--haxbyte {
   display: block;

@@ -13,7 +13,20 @@
       "siteLabel": "hardwareetc.net",
       "externalUrl": "https://www.hardwareetc.net/",
       "gitHubUrl": null,
-      "images": [ "images/webdesign/hardwareetc-hero.jpg", "images/webdesign/hardwareetc-2.jpg" ],
+      "images": [
+        "images/webdesign/hardwareetc-hero.jpg",
+        "images/webdesign/hardwareetc-2.jpg",
+        "images/webdesign/hardwareetc-3.jpg",
+        "images/webdesign/hardwareetc-4.jpg",
+        "images/webdesign/hardwareetc-5.jpg"
+      ],
+      "imageCaptions": [
+        "Homepage hero — real interior photography over the split dark/product layout",
+        "Mission statement paired with an in-unit kitchen photo, establishing the multi-family audience immediately",
+        "Value props (source direct, bulk purchasing, quick-ship, private label) laid over supporting photography",
+        "Products page intro — sets up the full materials catalog",
+        "Product category grid, including the private-label cabinet line as its own standalone catalog section"
+      ],
       "bullets": [
         "Clean, professional layout communicating product quality and quick-ship availability to developer clients",
         "Organized services and private-label cabinet catalog for high-volume procurement audiences",
@@ -46,7 +59,20 @@
       "siteLabel": "sonusconstruction.com",
       "externalUrl": "https://www.sonusconstruction.com/",
       "gitHubUrl": null,
-      "images": [ "images/webdesign/sonusconstruction-hero.jpg", "images/webdesign/sonusconstruction-2.jpg" ],
+      "images": [
+        "images/webdesign/sonusconstruction-hero.jpg",
+        "images/webdesign/sonusconstruction-2.jpg",
+        "images/webdesign/sonusconstruction-3.jpg",
+        "images/webdesign/sonusconstruction-4.jpg",
+        "images/webdesign/sonusconstruction-5.jpg"
+      ],
+      "imageCaptions": [
+        "Homepage hero — full-bleed project photography with the editorial one-pager framing",
+        "\"We think like owners\" — the brand positioning stated directly, paired with a renovated unit photo",
+        "\"We source high quality materials at the source\" — glass-panel text treatment over photography",
+        "\"International Procurement / Bulk Purchasing / Made to Order\" — italic overlay on a furnished unit shot",
+        "\"Our Process Drives Success\" — the process section given the same visual weight as the portfolio, per the case study's core positioning"
+      ],
       "bullets": [
         "Minimalist editorial aesthetic with high-quality project photography driving the narrative",
         "Structured around the \"we think like owners\" brand positioning, built for investor and developer audiences",
@@ -79,7 +105,20 @@
       "siteLabel": "dougrosenberg.com",
       "externalUrl": "https://www.dougrosenberg.com",
       "gitHubUrl": "https://github.com/shalant/newMusicWebsiteJan26",
-      "images": [ "images/webdesign/dougrosenberg-hero.jpg", "images/webdesign/dougrosenberg-2.jpg" ],
+      "images": [
+        "images/webdesign/dougrosenberg-hero.jpg",
+        "images/webdesign/dougrosenberg-2.jpg",
+        "images/webdesign/dougrosenberg-3.jpg",
+        "images/webdesign/dougrosenberg-4.jpg",
+        "images/webdesign/dougrosenberg-5.jpg"
+      ],
+      "imageCaptions": [
+        "Homepage hero — full-bleed portrait with grain texture and glow accents",
+        "About section — Chicago Tribune quote in a glass panel over the hero photo",
+        "Performance Experience — animated counters (6 Chicago venues, 14 national/international, 34 artists) with venue lists",
+        "Albums section — cover art, description, and purchase links for both releases",
+        "The six-theme switcher panel (Dark, Night, Warm, Clean, Ocean, Forest) — live, persisted to localStorage"
+      ],
       "bullets": [
         "Custom Blazor WebAssembly build — same stack as this portfolio — replacing the previous site",
         "Searchable sheet music library, album showcase with purchase links, and responsive photo gallery with lightbox",
@@ -113,12 +152,14 @@
       "externalUrl": null,
       "gitHubUrl": "https://github.com/shalant/FamilyTree",
       "images": [
+        "images/arborkin/arborkin-login.webp",
         "images/arborkin/familytree-hero.png",
         "images/arborkin/familytree-detaildrawer.png",
         "images/arborkin/familytree-hero__dark.png",
         "images/arborkin/familytree-edit.png"
       ],
       "imageCaptions": [
+        "Sign-in — Google SSO or email/password, invite-only",
         "The tree canvas. Focus person is centered; ancestors flow upward, descendants downward. The Y-axis is a real birth-year timeline — generation gaps render proportionally.",
         "Detail drawer — vitals, bio & photos without leaving the canvas",
         "Dark mode — single CSS variable swap, persisted to localStorage",
@@ -147,6 +188,52 @@
         { "label": "xUnit tests", "value": "11" },
         { "label": "Azure services", "value": "3" },
         { "label": "full-stack build", "value": "solo" }
+      ]
+    },
+    {
+      "slug": "haxbyte",
+      "number": "05",
+      "name": "Haxbyte",
+      "industry": "Personal build-in-public engineering blog",
+      "platform": "Astro",
+      "status": null,
+      "siteLabel": "haxbyte.com",
+      "externalUrl": "https://www.haxbyte.com",
+      "gitHubUrl": null,
+      "images": [
+        "images/webdesign/haxbyte-hero.jpg",
+        "images/webdesign/haxbyte-2.jpg",
+        "images/webdesign/haxbyte-3.jpg",
+        "images/webdesign/haxbyte-4.jpg",
+        "images/webdesign/haxbyte-5.jpg"
+      ],
+      "imageCaptions": [
+        "Homepage hero — hand-drawn wave dividers instead of stock UI chrome",
+        "Recent build logs, and the four-step build methodology laid out on the homepage",
+        "About page — the case for enterprise discipline at small-project scale",
+        "The Haxbyte Approach — clean code, mobile-first, performance, accessibility, scalable architecture, security",
+        "Blog index — build logs and technical notes"
+      ],
+      "bullets": [
+        "A build-in-public dev journal — lightweight Astro build with a working light/dark theme toggle",
+        "Makes the case for enterprise-grade discipline (WCAG 2.1 AA, sub-2-second loads, no bloat) on small, fast-moving projects",
+        "Documents a four-step build methodology — scope it in writing, build the thin slice, load it like it's real, ship then write it up"
+      ],
+      "tagline": "A personal build-log site making the case that enterprise engineering discipline — clean code, real performance budgets, accessibility as a baseline — belongs on small, fast-moving projects too, not just Fortune 10 platforms.",
+      "approach": [
+        "Haxbyte exists because of a gap noticed after years building enterprise ERPs and platforms for Fortune 10 companies, then building two Squarespace sites for small businesses on the side: small business owners don't need enterprise complexity, but they shouldn't have to settle for generic, slow, or fragile sites either. Haxbyte is the write-up of applying that same engineering discipline at a smaller, faster-moving scale.",
+        "The site itself doubles as the case study — a fast, mobile-first Astro build with a hand-drawn accent motif, a working light/dark theme toggle, and the build methodology documented right on the homepage instead of buried in an About page.",
+        "Each build log walks through a real project decision — performance work chasing sub-2-second loads, accessibility built in at a WCAG 2.1 AA baseline, architecture that scales without forcing a rewrite — rather than abstract advice."
+      ],
+      "highlights": [
+        { "title": "Enterprise Discipline, Small-Project Scale", "description": "The core thesis of the site: clean code, mobile-first design, sub-2-second performance budgets, and WCAG 2.1 AA accessibility, applied to sites that don't have an enterprise budget or timeline." },
+        { "title": "A Documented Build Methodology", "description": "A four-step process laid out on the homepage — scope it in writing, build the thin slice, load it like it's real, ship then write it up — that the build logs themselves follow." },
+        { "title": "Fast, Accessible Astro Build", "description": "The site itself is the proof: a lightweight Astro build with a working light/dark theme toggle and a hand-drawn wave-line accent motif instead of stock UI chrome." }
+      ],
+      "facts": [
+        { "label": "Platform", "value": "Astro" },
+        { "label": "Role", "value": "Design & build" },
+        { "label": "Focus", "value": "Build-in-public dev journal" }
       ]
     }
   ]
