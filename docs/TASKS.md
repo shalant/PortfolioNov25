@@ -706,6 +706,45 @@ unverified mobile breakpoints.
 
 ---
 
+## Phase 3G: Light mode follow-ups — webdesign hero, 404 page, loading splash
+**Status:** ✅ Complete (2026-08-17)
+
+**Why:** User asked to revisit three spots Phase B left dark: the `/webdesign` marquee hero
+(pinned dark on the assumption a light version needed regenerated assets), the 404 page (never
+wrapped in `.dr-theme-scope` at all), and the pre-boot loading splash (can't use
+`.dr-theme-scope` since it renders before any Razor content exists).
+
+### Tasks
+- [x] `.wd2-hero`: the "no clean light equivalent" assumption didn't hold up — the scrim is a flat
+      radial-gradient overlay independent of the actual screenshot images, so it can reuse
+      `--surface-rgb` (already near-white in light mode) the same way every other glass panel on
+      the site does. Lightened `.wd2-hero`'s base background and `.wd2-hero__scrim` to
+      theme-aware values, brightened the marquee image filters a step further in light mode (the
+      dark-cinema dimming read as muddy against a light scrim), and **removed** the three
+      hardcoded-dark pins on `.wd2-hero__title`/`__sub`/eyebrow entirely — they already read
+      `var(--text)`/`var(--accent)` in their base rules, so once the backdrop is genuinely light
+      those variables just work.
+- [x] `NotFound.razor`: wrapped its root markup in `.dr-theme-scope` (same pattern as
+      `Index.razor`) and converted its previously self-contained hardcoded-hex `<style>` block to
+      the shared CSS custom properties. Dark-mode output is pixel-identical (every hardcoded value
+      converted matched the dark `:root` default exactly). Added light-mode alpha bumps for
+      `.notfound-subtitle` and `.notfound-suggestions p` (0.7/0.8 → 0.85) — same "real sentences
+      need more than bare AA" lesson from the homepage pass. Left the decorative hexagon SVG's
+      literal teal fill alone (low-opacity art, not text).
+- [x] Loading splash (`.app-loading`, static markup in `index.html`, styled in `app.css`): added
+      `html[data-theme="light"]` overrides gated directly on the attribute (not `.dr-theme-scope`,
+      which doesn't exist in the DOM yet at this point in the boot sequence) for `body`'s base
+      background, the progress-ring track/fill colors, the percentage text, and the pulsing
+      eyebrow label. The inline blocking `<script>` in `index.html`'s `<head>` (from Phase A)
+      already sets `data-theme` before first paint, so no flash-of-wrong-theme risk here.
+- [x] Verified: `dotnet build` succeeds (same 2 pre-existing `Experience.razor` warnings).
+      **Not verified live** — same reasoning as Phase B: avoided starting a competing `dotnet run`
+      against Visual Studio's active debug session. Worth a visual pass on all three before merging.
+
+**Branch:** `feature/light-mode-phase-b` (continues the same branch/worktree)
+
+---
+
 ## Phase 4: Port /webdesign + /webdesign2 to Astro (separate session/repo)
 **Status:** ⏳ Not started — deliberately deferred, not a quick add-on
 **Effort:** Unscoped (new repo, likely several sessions)
