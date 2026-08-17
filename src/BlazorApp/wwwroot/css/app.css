@@ -3164,6 +3164,15 @@ html[data-theme="light"] .dr-theme-scope .wd2-hero__glass .section-eyebrow {
   color: #1abc9c;
 }
 
+/* .webdesign-link:hover hardcodes #16a085 (the static --teal-dark brand
+   var) as a "darken on hover" step for dark mode's bright #1abc9c accent.
+   In light mode --accent is already #0f7a63 (calibrated for AA on cream) -
+   #16a085 is actually lighter than that, so hovering would move *toward*
+   worse contrast instead of away from it. Darkened further instead. */
+html[data-theme="light"] .dr-theme-scope .webdesign-link:hover {
+  color: #0d6854 !important;
+}
+
 /* Web Design tools section */
 .webdesign-tools {
   background: #07111f;

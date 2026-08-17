@@ -622,6 +622,90 @@ merged; left for review)
 
 ---
 
+## Phase 3F: Light Mode — Phase B (subpages)
+**Status:** ✅ Complete (2026-08-17)
+**Effort:** ~1.5 hours
+
+**Why:** User asked directly ("please also add the light mode to the links such as /web-design
+and the others") after trying Phase A live and approving it, plus several rounds of follow-up
+readability fixes made directly on the homepage. This extends the same token system Phase A
+built to the rest of the site, per the "Deferred to Phase B" note above.
+
+**Scope:** wrapped `.dr-theme-scope` around `/webdesign` (`WebDesignPage.razor`),
+`/webdesign/{Slug}` (`WebDesignDetailPage.razor`), `/services` (`ServicesPage.razor`),
+`/consulting` (`ConsultingPage.razor`), `/blog` (`BlogPosts.razor`), and `/blog/archive`
+(`BlogArchive.razor`) — same wrapper pattern as `Index.razor` (Header through Footer, inside
+the div). Confirmed `Header`/`Footer` sit inside the wrapper on every page, matching the
+homepage, so the toggle button behaves identically everywhere.
+
+**Color migration:** most of `app.css`'s subpage-specific sections (`.subpage-hero__title/sub`,
+`.consulting-service-card h3`, `.wd-project__name`, `.tech-chip`, `.about-skill-chip`, etc.)
+turned out to already reference `var(--text)`/`var(--accent)`/etc. from earlier, unrelated work
+— less migration needed than expected. Filled the remaining gaps:
+- Panel backgrounds (`.subpage-hero`, `.wd-case`, `.consulting-services`, `.webdesign-tools`,
+  `.webdesign-projects`) — hardcoded dark gradients/solids → `var(--bg-hero)`/`var(--bg)`
+- "Glass card" tints (`.consulting-service-card`, `.wd-case__highlight-card`) — flipped
+  direction: a lightening white wash reads as "raised" on a dark bg, but the same treatment is
+  invisible on an already-light bg, so light mode uses a subtle *darkening* navy wash instead
+  (`rgba(var(--text-rgb), 0.03)`), same idea, opposite direction
+- Image caption strips (`.wd-case__*__figcaption`) and dark scrim overlays over the art-deco
+  texture (`.blog-posts-section::before`, `.archive-section::before`) — swapped to
+  `rgba(var(--surface-rgb), …)`, an existing token that's already `255,255,255` in light mode /
+  `6,14,26` in dark, so the same rule produces a dark scrim in dark mode and a light wash in
+  light mode instead of always being a near-black smear over what's now a light-recolored
+  texture
+- `BlogPosts.razor` and `BlogArchive.razor`'s own embedded `<style>` blocks (not `app.css`) got
+  the same hardcoded-hex → token substitution, since they're page-scoped CSS Phase A never
+  touched. The reading-modal content (`.modal-dialog` and everything inside it) was
+  deliberately left alone — it's already a fixed white card in both themes and reads fine as-is
+- Real body-copy alpha (card descriptions, case-study approach paragraphs, highlight text,
+  blog excerpts, taglines) bumped from their original 0.5–0.7 to 0.85, matching the value the
+  homepage settled on after live feedback that the original Phase A pass (0.75–0.78) still
+  read as faint — didn't repeat that under-shoot here
+
+**Two deliberate non-migrations, not oversights:**
+1. `/webdesign`'s `.wd2-hero` (the scrolling-screenshot marquee hero) darkens real photo
+   assets with a scrim, not a flat color — there's no clean light equivalent without
+   regenerating brightness-adjusted screenshot images, out of scope here. Rather than let
+   `.wd2-hero__title`/`__sub` inherit `var(--text)` and turn navy against a backdrop that's
+   still effectively dark (bad contrast), pinned them to the same near-white they use in dark
+   mode, and pinned `.section-eyebrow` inside that specific glass panel to the bright
+   `#1abc9c` too (the light-mode `--accent` is a *darker* teal calibrated for cream, which is
+   worse contrast against this still-dark panel, not better). This hero stays dark-styled in
+   both themes by design — a common pattern for a photo hero on an otherwise light site.
+2. `NotFound.razor` (rendered both as `App.razor`'s global catch-all for unmatched routes, and
+   inline on `/webdesign/{slug}` for a bad slug) still uses fully hardcoded dark colors. Left
+   untouched: it's not one of the six routed pages in scope, and the global catch-all case
+   renders *outside* any page's `.dr-theme-scope` wrapper entirely (it's mounted at the
+   `App.razor` root), so a scoped CSS override wouldn't reach it anyway — fixing this properly
+   means deciding whether to wrap the app-level fallback too, a call worth making deliberately
+   rather than as a drive-by inside this pass.
+
+**Also found and fixed while auditing:** `.webdesign-link:hover` hardcoded `#16a085` (the
+static `--teal-dark` brand token) as a "darken on hover" step tuned for dark mode's bright
+`#1abc9c` base. In light mode `--accent` is already `#0f7a63` (darker, AA-calibrated) —
+`#16a085` is actually *lighter* than that, so hovering would have moved toward worse contrast
+instead of away from it. Added a light-mode-specific hover color (`#0d6854`, darker still)
+instead.
+
+**Verification:** `dotnet build` and `dotnet publish -c Release` both succeed (0 errors, same 2
+pre-existing unrelated `Experience.razor` warnings) after every commit. Confirmed via targeted
+`grep`/script sweeps of the migrated selector groups that no unaddressed hardcoded colors
+remained in-scope (excluding the two deliberate exceptions above and dead CSS for unrouted
+`.arborkin-*`/`.archive-header` classes, already confirmed unused in Phase A's research).
+**Not verified live in a browser** — this pass ran in an isolated worktree per instructions not
+to start a competing `dotnet run` against the shared `bin`/`obj` output (a previous session hit
+hours of confusing failures from exactly that: a separate `dotnet run` racing Visual Studio's
+own debug session for file locks). Contrast/font-weight values were computed by direct
+calculation and pattern-matched against Phase A's already-verified-live values, not measured
+against a running render this time — worth a visual pass before merging, same as Phase A's
+unverified mobile breakpoints.
+
+**Branch:** `feature/light-mode-phase-b` (new branch, isolated worktree, based on
+`feature/light-mode-phase-a` — not pushed, not merged; left for review)
+
+---
+
 ## Phase 4: Port /webdesign + /webdesign2 to Astro (separate session/repo)
 **Status:** ⏳ Not started — deliberately deferred, not a quick add-on
 **Effort:** Unscoped (new repo, likely several sessions)
