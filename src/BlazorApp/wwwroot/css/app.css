@@ -3138,6 +3138,32 @@ html[data-theme="light"] .dr-theme-scope .wd-case__shot figcaption {
   background: rgba(var(--surface-rgb), 0.6);
 }
 
+/* /webdesign's marquee hero (.wd2-hero) is a deliberately dark, moody
+   full-bleed photo treatment - the scrim darkens real screenshot images,
+   not a flat color, so there's no clean "light" equivalent without
+   regenerating brightness-adjusted marquee assets (out of scope here).
+   Rather than let the title/sub inherit var(--text) and turn navy against
+   a backdrop that's still effectively dark, pin them to the same
+   near-white they already use in dark mode - this hero stays dark in both
+   themes by design, same as a photo hero on an otherwise-light site
+   commonly does elsewhere on the web. */
+html[data-theme="light"] .dr-theme-scope .wd2-hero__title {
+  -webkit-text-fill-color: #eef2f7 !important;
+  color: #eef2f7 !important;
+}
+
+html[data-theme="light"] .dr-theme-scope .wd2-hero__sub {
+  color: rgba(238, 242, 247, 0.75);
+}
+
+/* var(--accent) becomes a darker teal in light mode (calibrated for
+   contrast against cream) - inside this still-dark glass panel that's a
+   contrast regression, not an improvement, so pin the eyebrow label here
+   to the same bright teal it uses in dark mode. */
+html[data-theme="light"] .dr-theme-scope .wd2-hero__glass .section-eyebrow {
+  color: #1abc9c;
+}
+
 /* Web Design tools section */
 .webdesign-tools {
   background: #07111f;
