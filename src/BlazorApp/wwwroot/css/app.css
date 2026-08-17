@@ -428,14 +428,16 @@ a:hover {
   opacity: 0.85;
 }
 
-.logo-section img {
+.logo-section img,
+.logo-section svg {
   height: 80px;
   width: auto;
   object-fit: contain;
   transition: height 0.3s ease;
 }
 
-.navbar-wrapper.scrolled .logo-section img {
+.navbar-wrapper.scrolled .logo-section img,
+.navbar-wrapper.scrolled .logo-section svg {
   height: 64px;
 }
 
@@ -824,6 +826,15 @@ html[data-theme="light"] .dr-theme-scope .nav-dropdown-item:hover {
   text-shadow: none;
 }
 
+/* .nav-link--page's base 0.6 alpha (line ~530) measures ~7.6:1 in dark mode
+   (light text dimmed against near-black) but only ~3.5:1 once inverted onto
+   cream — missed in the first light-mode contrast pass since every other nav
+   link either got its own override or was already opaque enough. Verified
+   ~5.9:1 at 0.85. */
+html[data-theme="light"] .dr-theme-scope .nav-link--page {
+  color: rgba(var(--text-rgb), 0.85) !important;
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
   .nav-link,
@@ -848,7 +859,8 @@ html[data-theme="light"] .dr-theme-scope .nav-dropdown-item:hover {
     padding: 0 1.25rem;
   }
 
-  .logo-section img {
+  .logo-section img,
+  .logo-section svg {
     height: 60px;
   }
 
@@ -1926,22 +1938,97 @@ img.social-icon {
    AA body-text contrast (4.5:1) on the much lighter cream background.
    Bumped to 0.75 alpha for light mode only — verified ~4.9:1. */
 html[data-theme="light"] .dr-theme-scope .hero-subtitle {
-  color: rgba(var(--text-rgb), 0.75);
+  color: rgba(var(--text-rgb), 0.85);
+}
+
+/* User feedback after viewing live: body copy still read as too faint even
+   at the ~4.5-5:1 AA-minimum this pass originally targeted — a thin 300
+   font-weight (see the global `p` rule) reads noticeably weaker against a
+   textured Bauhaus background than the same weight/contrast does on a flat
+   dark hero. Bumping paragraph weight up one step in light mode only (dark
+   mode already looks intentional and untouched). */
+html[data-theme="light"] .dr-theme-scope p {
+  font-weight: 400;
+}
+
+/* Two spots the blanket `p` rule above doesn't reach: .about-description
+   sets font-weight: 300 !important on itself (the plain rule can't win
+   against that without matching !important), and .music-press__quote is a
+   <blockquote>, not a <p>, so the element selector never matched it at all. */
+html[data-theme="light"] .dr-theme-scope .about-description {
+  font-weight: 400 !important;
+}
+
+html[data-theme="light"] .dr-theme-scope .music-press__quote {
+  font-weight: 400;
+}
+
+/* .about-quote (the "currently doing" blockquote) is a <blockquote>, so
+   the blanket `p` rule above never reached it either — same gap as
+   .music-press__quote. It's also set unusually small (0.9rem) for two full
+   sentences of real content, which compounds with the thin weight; nudged
+   the size up slightly alongside the weight fix rather than leaving it
+   technically-legible-but-still-straining. */
+html[data-theme="light"] .dr-theme-scope .about-quote {
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+/* Same combination as .about-quote above: small (0.865rem) + thin (300) for
+   the "where I've worked" bullet lists — real content people are meant to
+   actually read, not captions. */
+html[data-theme="light"] .dr-theme-scope .experience-detail__bullets li {
+  font-weight: 400;
+  font-size: 0.95rem;
 }
 
 /* Same fix as .hero-subtitle above, for the other spots where real body
-   copy (not a small decorative label/caption) was muted low enough on the
-   dark background to fail AA once inverted onto cream. Verified >=4.5:1 at
-   0.78 alpha the same way. Left alone: tiny uppercase category labels,
-   badges, and the footer copyright line — established low-contrast "fine
-   print" conventions, not something this pass tries to fully AA-audit. */
+   copy or quoted text (not a small decorative label/caption) was muted low
+   enough on the dark background to fail AA once inverted onto cream.
+   Originally landed at 0.78 (~4.5-5:1, bare AA); bumped to 0.85 after
+   live feedback that AA-minimum still read as faint against the textured
+   background, not just "technically passes." */
 html[data-theme="light"] .dr-theme-scope .experience-list__title,
 html[data-theme="light"] .dr-theme-scope .experience-detail__bullets li,
 html[data-theme="light"] .dr-theme-scope .casual-description,
 html[data-theme="light"] .dr-theme-scope .music-paragraph,
 html[data-theme="light"] .dr-theme-scope .contact-sub,
-html[data-theme="light"] .dr-theme-scope .site-footer__title {
-  color: rgba(var(--text-rgb), 0.78);
+html[data-theme="light"] .dr-theme-scope .site-footer__title,
+html[data-theme="light"] .dr-theme-scope .about-quote,
+html[data-theme="light"] .dr-theme-scope .casual-quote,
+html[data-theme="light"] .dr-theme-scope .music-album__artist,
+html[data-theme="light"] .dr-theme-scope .music-collab-chip {
+  color: rgba(var(--text-rgb), 0.85);
+}
+
+/* Found via a live contrast audit (2026-08-17), a second pattern the first
+   light-mode pass missed: several elements dim the *accent* color itself
+   (rgba(var(--accent-rgb), 0.45-0.6)) for a muted look. That's fine in dark
+   mode (bright teal dimmed against near-black still reads), but --accent is
+   already the darker, AA-adjusted shade in light mode (#0f7a63, ~4.68:1 on
+   cream at full strength) — dimming it further pushes it back under 3:1.
+   Real links get full-strength accent (no dimming at all, same treatment as
+   .nav-link--page.active already uses); small uppercase labels/captions
+   keep looking deliberately subtle at 0.85, which still clears ~3:1. */
+html[data-theme="light"] .dr-theme-scope .experience-detail__link {
+  color: var(--accent) !important;
+}
+
+html[data-theme="light"] .dr-theme-scope .skills-category__label,
+html[data-theme="light"] .dr-theme-scope .casual-hobby__detail,
+html[data-theme="light"] .dr-theme-scope .music-press__attribution,
+html[data-theme="light"] .dr-theme-scope .music-section-label,
+html[data-theme="light"] .dr-theme-scope .music-album__role,
+html[data-theme="light"] .dr-theme-scope .music-photo__caption {
+  color: rgba(var(--accent-rgb), 0.85);
+}
+
+/* Footer copyright line is meant to stay the dimmest element on the page,
+   but 0.3 alpha measured ~1.7:1 on cream — nearly invisible rather than
+   just subtle. Bumped enough to clear ~3:1 while staying clearly de-
+   emphasized relative to everything else above. */
+html[data-theme="light"] .dr-theme-scope .site-footer__copy {
+  color: rgba(var(--text-rgb), 0.6);
 }
 
 .hero-cta {
@@ -4482,6 +4569,16 @@ a.music-album__title--link:hover {
 .site-footer__social:hover img {
   filter: sepia(1) saturate(4) hue-rotate(132deg) brightness(1.1)
           drop-shadow(0 0 5px rgba(var(--accent-rgb), 0.8));
+}
+
+/* Each icon is a separate SVG file (not inline), hardcoded fill="white" for
+   the dark background — same root cause as the logo wordmark bug, just ten
+   files instead of one. Inverting is a simpler fix than inlining all ten:
+   white -> black reads as a dark icon on the cream background, close enough
+   to the theme's navy without needing per-file edits. Hover keeps the
+   existing teal filter in both themes, unchanged. */
+html[data-theme="light"] .dr-theme-scope .site-footer__social img {
+  filter: invert(1);
 }
 
 /* Actions row — CTA + back-to-top */
