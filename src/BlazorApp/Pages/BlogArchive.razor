@@ -6,6 +6,7 @@
 
 <PageTitle>Blog Archive — Doug Rosenberg Dev</PageTitle>
 
+<div class="dr-theme-scope">
 <Header />
 
 <section class="subpage-hero" id="archive-hero">
@@ -75,6 +76,7 @@
 </section>
 
 <Footer />
+</div>
 
 @code {
     private List<YearGroup>? GroupedPosts;
@@ -178,7 +180,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: rgba(6, 14, 26, 0.65);
+        background: rgba(var(--surface-rgb), 0.65);
         pointer-events: none;
         z-index: 1;
     }
@@ -198,7 +200,7 @@
     }
 
     .archive-year {
-        border-left: 3px solid #1abc9c;
+        border-left: 3px solid var(--accent);
         padding-left: 2rem;
         position: relative;
     }
@@ -210,15 +212,15 @@
         top: 0;
         width: 12px;
         height: 12px;
-        background: #1abc9c;
+        background: var(--accent);
         border-radius: 50%;
-        border: 3px solid #060e1a;
+        border: 3px solid var(--bg);
     }
 
     .archive-year__title {
         font-size: 2rem;
         font-weight: 700;
-        color: #1abc9c;
+        color: var(--accent);
         margin: 0 0 2rem 0;
     }
 
@@ -229,24 +231,24 @@
     }
 
     .archive-month {
-        background: rgba(238, 242, 247, 0.05);
+        background: rgba(var(--text-rgb), 0.05);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(26, 188, 156, 0.25);
+        border: 1px solid rgba(var(--accent-rgb), 0.25);
         border-radius: 8px;
         padding: 1.5rem;
         transition: all 0.3s ease;
     }
 
     .archive-month:hover {
-        background: rgba(238, 242, 247, 0.08);
-        border-color: rgba(26, 188, 156, 0.4);
+        background: rgba(var(--text-rgb), 0.08);
+        border-color: rgba(var(--accent-rgb), 0.4);
     }
 
     .archive-month__title {
         font-size: 1.1rem;
         font-weight: 600;
-        color: #eef2f7;
+        color: var(--text);
         margin: 0 0 1rem 0;
         display: flex;
         justify-content: space-between;
@@ -255,7 +257,7 @@
 
     .archive-month__count {
         font-size: 0.85rem;
-        color: rgba(238, 242, 247, 0.5);
+        color: rgba(var(--text-rgb), 0.5);
         font-weight: 400;
     }
 
@@ -276,14 +278,14 @@
     }
 
     .archive-post__date {
-        color: rgba(238, 242, 247, 0.5);
+        color: rgba(var(--text-rgb), 0.5);
         font-size: 0.8rem;
         min-width: 60px;
         text-align: right;
     }
 
     .archive-post__link {
-        color: #1abc9c;
+        color: var(--accent);
         text-decoration: none;
         flex: 1;
         transition: all 0.3s ease;
@@ -293,12 +295,12 @@
     }
 
     .archive-post__link:hover {
-        color: #eef2f7;
+        color: var(--text);
         text-decoration: underline;
     }
 
     .archive-post__reading-time {
-        color: rgba(238, 242, 247, 0.4);
+        color: rgba(var(--text-rgb), 0.4);
         font-size: 0.8rem;
         white-space: nowrap;
     }
@@ -306,11 +308,11 @@
     .archive-footer {
         margin-top: 3rem;
         padding-top: 2rem;
-        border-top: 1px solid rgba(26, 188, 156, 0.1);
+        border-top: 1px solid rgba(var(--accent-rgb), 0.1);
     }
 
     .archive-back-link {
-        color: #1abc9c;
+        color: var(--accent);
         text-decoration: none;
         font-weight: 500;
         transition: all 0.3s ease;
@@ -318,7 +320,7 @@
     }
 
     .archive-back-link:hover {
-        color: #eef2f7;
+        color: var(--text);
         transform: translateX(-4px);
     }
 </style>
