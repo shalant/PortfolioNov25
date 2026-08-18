@@ -900,16 +900,19 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
   /* The <nav> wrapping .nav-items is a normal block element - even when
      .nav-items itself is display:none (collapsed to nothing), <nav> as a
      whole still counts as one of .navbar-content's flex children under
-     justify-content: space-between. With .nav-cta also hidden below, that
-     left only 4 flex items (logo, empty nav, theme-toggle, nav-toggle),
-     and space-between spread equal gaps across all of them - stranding
-     the theme toggle in a phantom "middle" position instead of sitting
-     next to the hamburger. display: contents removes <nav> from the box
-     model entirely (its children take its place in the flex context), so
-     the still-display:none .nav-items is correctly excluded from the
-     space-between math altogether, same as .nav-cta already is. */
-  nav {
-    display: contents;
+     justify-content: space-between, stranding the theme toggle in a
+     phantom "middle" position instead of next to the hamburger. Tried
+     `nav { display: contents }` first to remove the wrapper from the box
+     model entirely, but that didn't resolve it live - rather than keep
+     debugging a property with known cross-browser inconsistency history,
+     pin the toggle group to the right edge directly instead: margin-left:
+     auto on the first item that should hug the right side absorbs all
+     leftover space up to that point, which makes the item's position
+     independent of however many empty/hidden siblings precede it. This
+     doesn't depend on <nav>'s box being removed at all - it works
+     regardless. */
+  .theme-toggle {
+    margin-left: auto;
   }
 
   .logo-section img,
