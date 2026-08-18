@@ -618,9 +618,29 @@ a:hover {
   color: var(--accent);
 }
 
-/* Services dropdown */
+/* "More" dropdown — groups the destination pages (web design/services/
+   consulting/blog) behind one trigger so the nav doesn't read as "busy" at
+   tablet widths (roomy desktop row above 1200px, clean hamburger below
+   820px, but that in-between range used to show the full 7-link row
+   cramped). The trigger is a <button>, not an <a> — it has nothing of its
+   own to navigate to, it just reveals the items below it. */
 .nav-has-dropdown {
   position: relative;
+}
+
+.nav-has-dropdown > button.nav-link {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nav-has-dropdown:focus-within .nav-dropdown {
+  display: flex;
+}
+
+.nav-has-dropdown:focus-within .nav-caret {
+  transform: rotate(180deg);
 }
 
 .nav-caret {
@@ -895,6 +915,24 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
 @media (max-width: 820px) {
   .navbar-content {
     padding: 0 1.25rem;
+  }
+
+  /* The <nav> wrapping .nav-items is a normal block element - even when
+     .nav-items itself is display:none (collapsed to nothing), <nav> as a
+     whole still counts as one of .navbar-content's flex children under
+     justify-content: space-between, stranding the theme toggle in a
+     phantom "middle" position instead of next to the hamburger. Tried
+     `nav { display: contents }` first to remove the wrapper from the box
+     model entirely, but that didn't resolve it live - rather than keep
+     debugging a property with known cross-browser inconsistency history,
+     pin the toggle group to the right edge directly instead: margin-left:
+     auto on the first item that should hug the right side absorbs all
+     leftover space up to that point, which makes the item's position
+     independent of however many empty/hidden siblings precede it. This
+     doesn't depend on <nav>'s box being removed at all - it works
+     regardless. */
+  .theme-toggle {
+    margin-left: auto;
   }
 
   .logo-section img,
@@ -1362,12 +1400,17 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
     min-height: unset;
   }
 
+  /* Was flex-wrap with a 120px flex-basis per item - with 4 experience
+     entries, 3 fit per row before the content-width-dependent wrap kicked
+     in, leaving the 4th stranded alone on its own row (3-then-1). Grid
+     with a fixed 2-column track gives a guaranteed, content-independent
+     2x2 regardless of how many entries there are. */
   .experience-list {
     border-right: none;
     border-bottom: 1px solid rgba(var(--accent-rgb), 0.1);
     margin-bottom: 2.5rem;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
     padding-bottom: 2rem;
   }
@@ -1380,7 +1423,6 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
     border-radius: 4px;
     padding: 0.75rem;
     width: auto;
-    flex: 1 1 120px;
   }
 
   .experience-list__item.active {
@@ -1481,11 +1523,6 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
   animation: moveGradient 30s ease-in-out infinite;
   mix-blend-mode: overlay;
   backdrop-filter: blur(2px);
-}
-
-img.social-icon {
-  width: 30px;
-  height: 30px;
 }
 
 /* Scroll-triggered reveal animations */
@@ -3600,10 +3637,38 @@ html[data-theme="light"] .dr-theme-scope .webdesign-link:hover {
   object-fit: cover;
 }
 
-.wd-project__frame-stage.is-active .wd-project__frame-img {
+/* animation-name is always present once Images.Count > 1 (see
+   ProjectMediaFrame.razor) - duration/iteration-count/timing-function live
+   here on the base rule rather than gated behind .is-active, so nothing
+   about the animation's identity or timing ever changes after first
+   render. The only thing that toggles is play-state (paused <-> running),
+   which is the standard, glitch-free way to start/stop a CSS animation -
+   unlike swapping animation-name in and out, which is what used to happen
+   here and is a real source of first-frame restart glitches in some
+   browsers. */
+.wd-project__frame-img {
   animation-duration: var(--wd-frame-cycle, 8s);
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
+  animation-play-state: paused;
+}
+
+.wd-project__frame-stage.is-active .wd-project__frame-img {
+  animation-play-state: running;
+}
+
+/* Touch devices have no hover to wait for - .is-active only ever becomes
+   true from a mouseenter event in ProjectMediaFrame.razor, which touch
+   input doesn't reliably fire. Without this, every multi-image crossfade
+   added this session (Hardware Etc, Sonus, dougrosenberg.com, Haxbyte)
+   would just never play on a phone - visitors would only ever see the
+   first image. (hover: none) is the standard media feature for "no real
+   pointer capable of hovering", so just auto-play there instead of waiting
+   for an interaction that will never come. */
+@media (hover: none) {
+  .wd-project__frame-img {
+    animation-play-state: running;
+  }
 }
 
 @media (max-width: 820px) {
@@ -4701,22 +4766,30 @@ a.music-album__title--link:hover {
 .site-footer__socials {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
+/* Same pattern as .nav-toggle's tap-target fix: the icon's visual size
+   (set explicitly on img below) is unchanged, only the invisible hit area
+   around it grows. ~10 icons in this row now (was closer to 6 when 1.6rem
+   was originally sized) - 44px per icon would push the row noticeably
+   wider, so this lands at a real improvement (25.6px -> 36px, +40%
+   tap-target area) without ballooning the footer. flex-wrap above is a
+   safety net in case that's still too wide on a narrow phone. */
 .site-footer__social {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.6rem;
-  height: 1.6rem;
+  width: 2.25rem;
+  height: 2.25rem;
   opacity: 0.8;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .site-footer__social img {
-  width: 100%;
-  height: 100%;
+  width: 1.6rem;
+  height: 1.6rem;
   object-fit: contain;
   transition: filter 0.2s ease;
 }
@@ -4791,12 +4864,16 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
 }
 
 /* Back-to-top button */
+/* 2rem (32px) was under the ~44px touch-target guideline - unlike the
+   footer social row, this is a single isolated icon button (one sibling
+   in .site-footer__actions), so there's no row-width tradeoff to weigh
+   like there was for .site-footer__social - just grow it. */
 .site-footer__top {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border: 1px solid rgba(var(--accent-rgb), 0.3);
   border-radius: 3px;
   background: rgba(var(--accent-rgb), 0.05);

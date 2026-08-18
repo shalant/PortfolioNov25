@@ -910,6 +910,22 @@
         color: #333;
     }
 
+    /* Defensive: this content is raw HTML from blog-posts.json, not
+       something authored directly in this markup — code blocks already
+       handle overflow (overflow-x: auto above), but an inline image or
+       table in a future post's content would otherwise have nothing
+       stopping it from overflowing the page width on mobile. */
+    .blog-post-detail__content img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .blog-post-detail__content table {
+        display: block;
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
     .blog-post-detail__content strong {
         font-weight: 600;
         color: #2c3e50;

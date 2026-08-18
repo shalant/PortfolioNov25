@@ -90,48 +90,57 @@
                 <!-- divider: sections of this page (above) vs. separate destinations (below) -->
                 <li class="nav-divider" role="separator" aria-hidden="true"></li>
 
-                <li>
-                    <a class="nav-link nav-link--page" href="/webdesign">
-                        <!-- split branch: craft/build, now the featured offering -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                            <line x1="7" y1="13" x2="7" y2="7"/>
-                            <line x1="7" y1="7" x2="3" y2="3"/>
-                            <line x1="7" y1="7" x2="11" y2="3"/>
+                <!-- Destination pages grouped under a "more" dropdown: at tablet widths
+                     (~820-1200px) the full 7-link row was cramped-but-not-yet-collapsed
+                     to the hamburger, reading as a "busy" nav. Reuses the .nav-has-dropdown/
+                     .nav-dropdown/.nav-caret CSS system that already existed in app.css
+                     (built at some point, never wired to any markup) rather than adding a
+                     new mechanism. -->
+                <li class="nav-has-dropdown">
+                    <button class="nav-link nav-link--page" type="button">
+                        <!-- three dots: "more" -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+                            <circle cx="3" cy="7" r="1.3"/>
+                            <circle cx="7" cy="7" r="1.3"/>
+                            <circle cx="11" cy="7" r="1.3"/>
                         </svg>
-                        web design
-                    </a>
-                </li>
-
-                <li>
-                    <a class="nav-link nav-link--page" href="/services">
-                        <!-- briefcase: services offering -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <rect x="1.5" y="4.5" width="11" height="7.5" rx="1"/>
-                            <path d="M5 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5"/>
-                            <line x1="1.5" y1="7.5" x2="12.5" y2="7.5"/>
-                        </svg>
-                        services
-                    </a>
-                </li>
-
-                <li>
-                    <a class="nav-link nav-link--page" href="/consulting">
-                        <!-- speech bubble: consulting conversation -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M1.5 2.5 H12.5 V9 H5.5 L3 11.5 V9 H1.5 Z"/>
-                        </svg>
-                        consulting
-                    </a>
-                </li>
-
-                <li>
-                    <a class="nav-link nav-link--page" href="/blog">
-                        <!-- book/blog: open book pages -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                            <path d="M7 1 L7 13 M1 3 L7 3 M7 3 L13 3 M1 8 L7 8 M7 8 L13 8"/>
-                        </svg>
-                        blog
-                    </a>
+                        more
+                        <span class="nav-caret">▾</span>
+                    </button>
+                    <div class="nav-dropdown">
+                        <a class="nav-link nav-link--page nav-dropdown-item" href="/webdesign">
+                            <!-- split branch: craft/build, now the featured offering -->
+                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                                <line x1="7" y1="13" x2="7" y2="7"/>
+                                <line x1="7" y1="7" x2="3" y2="3"/>
+                                <line x1="7" y1="7" x2="11" y2="3"/>
+                            </svg>
+                            web design
+                        </a>
+                        <a class="nav-link nav-link--page nav-dropdown-item" href="/services">
+                            <!-- briefcase: services offering -->
+                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="1.5" y="4.5" width="11" height="7.5" rx="1"/>
+                                <path d="M5 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5"/>
+                                <line x1="1.5" y1="7.5" x2="12.5" y2="7.5"/>
+                            </svg>
+                            services
+                        </a>
+                        <a class="nav-link nav-link--page nav-dropdown-item" href="/consulting">
+                            <!-- speech bubble: consulting conversation -->
+                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M1.5 2.5 H12.5 V9 H5.5 L3 11.5 V9 H1.5 Z"/>
+                            </svg>
+                            consulting
+                        </a>
+                        <a class="nav-link nav-link--page nav-dropdown-item" href="/blog">
+                            <!-- book/blog: open book pages -->
+                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                                <path d="M7 1 L7 13 M1 3 L7 3 M7 3 L13 3 M1 8 L7 8 M7 8 L13 8"/>
+                            </svg>
+                            blog
+                        </a>
+                    </div>
                 </li>
 
             </ul>

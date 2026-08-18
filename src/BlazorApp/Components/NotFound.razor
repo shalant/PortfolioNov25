@@ -170,35 +170,10 @@
         animation: notfound-float 6s ease-in-out infinite;
     }
 
-    .notfound-mobile {
-        display: none;
-    }
-
-    .notfound-mobile-active .notfound-container {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 2rem 1rem;
-    }
-
-    .notfound-mobile-active .notfound-code {
-        font-size: 4rem;
-    }
-
-    .notfound-mobile-active .notfound-content h1 {
-        font-size: 1.8rem;
-    }
-
-    .notfound-mobile-active .notfound-hexagon {
-        width: 200px;
-        height: 200px;
-    }
-
-    .notfound-mobile-active .notfound-nav ul {
-        gap: 0.5rem;
-    }
-
-    .notfound-mobile-active .notfound-nav a,
-    .notfound-mobile-active .notfound-nav :deep(.nav-link) {
-        font-size: 0.9rem;
-    }
+    /* Mobile responsiveness for .notfound-* lives in app.css (search
+       "NotFound (404) Page Animations & Responsive") via a real
+       @@media query that was already there and already working. This
+       component used to also have its own dead copy, gated behind a
+       .notfound-mobile-active class nothing ever applied - removed
+       rather than fixed, since app.css's version already covers it. */
 </style>
