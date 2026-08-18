@@ -897,6 +897,21 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
     padding: 0 1.25rem;
   }
 
+  /* The <nav> wrapping .nav-items is a normal block element - even when
+     .nav-items itself is display:none (collapsed to nothing), <nav> as a
+     whole still counts as one of .navbar-content's flex children under
+     justify-content: space-between. With .nav-cta also hidden below, that
+     left only 4 flex items (logo, empty nav, theme-toggle, nav-toggle),
+     and space-between spread equal gaps across all of them - stranding
+     the theme toggle in a phantom "middle" position instead of sitting
+     next to the hamburger. display: contents removes <nav> from the box
+     model entirely (its children take its place in the flex context), so
+     the still-display:none .nav-items is correctly excluded from the
+     space-between math altogether, same as .nav-cta already is. */
+  nav {
+    display: contents;
+  }
+
   .logo-section img,
   .logo-section svg {
     height: 60px;
@@ -1362,12 +1377,17 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
     min-height: unset;
   }
 
+  /* Was flex-wrap with a 120px flex-basis per item - with 4 experience
+     entries, 3 fit per row before the content-width-dependent wrap kicked
+     in, leaving the 4th stranded alone on its own row (3-then-1). Grid
+     with a fixed 2-column track gives a guaranteed, content-independent
+     2x2 regardless of how many entries there are. */
   .experience-list {
     border-right: none;
     border-bottom: 1px solid rgba(var(--accent-rgb), 0.1);
     margin-bottom: 2.5rem;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
     padding-bottom: 2rem;
   }
@@ -1380,7 +1400,6 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
     border-radius: 4px;
     padding: 0.75rem;
     width: auto;
-    flex: 1 1 120px;
   }
 
   .experience-list__item.active {
