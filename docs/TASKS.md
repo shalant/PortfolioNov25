@@ -745,6 +745,72 @@ wrapped in `.dr-theme-scope` at all), and the pre-boot loading splash (can't use
 
 ---
 
+## Phase 3H: Mobile improvements
+**Status:** 🔄 PR'd EOD 2026-08-18 — Samsung tablet touch-dropdown check still pending, see Still open
+**Branch:** `feature/mobile-improvements`
+
+**Why:** User confirmed mobile as the next focus after Phase 3G's light-mode follow-ups merged.
+Started with a static-code audit (touch-target sizes, dead/duplicate mobile CSS, overflow risks),
+then moved to fixing real bugs surfaced by screenshots from the user's actual phone/tablet — code
+review alone had already missed two live-only bugs (see below).
+
+### Tasks
+- [x] `NotFound.razor`'s mobile layout was assumed dead (gated behind a `.notfound-mobile-active`
+      class nothing ever applied) — converted to a real `@@media` block, then **discovered
+      `app.css` already had an identical, working `@@media (max-width: 768px)` block for the same
+      selectors** ("NotFound (404) Page Animations & Responsive"). Removed the duplicate rather
+      than keeping two copies; left a comment pointing at the real one.
+- [x] `ProjectMediaFrame.razor`'s hover-triggered crossfade never played on touch devices (no
+      `mouseenter`). Added `@@media (hover: none) { animation-play-state: running }` so touch
+      devices see the same auto-cycling gallery as a desktop hover.
+- [x] Added defensive overflow CSS for raw HTML blog content (`img { max-width: 100% }`, tables
+      wrapped in `overflow-x: auto`) — content the Claude-API blog generator produces isn't
+      guaranteed to be mobile-safe on its own.
+- [x] Grew undersized touch targets: `.site-footer__social` 25.6px → 36px, `.site-footer__top`
+      (back-to-top) 32px → 44px. Left `.contact-social`/blog tag chips/share buttons alone — close
+      enough to the 44px guideline not to chase further.
+- [x] `.experience-list` on mobile split 3-then-1 instead of 2×2 — root cause was `flex-wrap` +
+      pixel `flex-basis` (content-width-dependent row splits). Fixed with fixed 2-column CSS Grid.
+- [x] Real screenshot from the user (400×729 DevTools) caught two bugs static review missed:
+      the theme toggle floating in the middle of the collapsed mobile navbar (a `display:none`
+      `<nav>` wrapper still counts as a flex child under `justify-content: space-between` even
+      though its contents are hidden — the "phantom flex item" pattern, audited project-wide
+      afterward, only the navbar had it), and confirmed the 3-then-1 experience grid live. First
+      navbar fix attempt (`nav { display: contents }`) **did not work live** per the user's
+      follow-up screenshot — replaced with `.theme-toggle { margin-left: auto }`, confirmed
+      working via a second screenshot (toggle + hamburger now grouped at the right edge).
+- [x] Tablet-width nav (~820–1200px, between the compression breakpoint and the hamburger
+      collapse) still rendered the full 7-link row, cramped — flagged live by the user via a
+      screenshot at ~1009px width, and previously noted as "pending a decision" back in the
+      Overnight Housekeeping section. Wired up `.nav-has-dropdown`/`.nav-dropdown`/`.nav-caret` —
+      a complete hover-dropdown CSS system that already existed in `app.css` but had never been
+      applied to any markup — to group the four destination links (web design/services/
+      consulting/blog) behind a "more" trigger, cutting the visible top-level link count from 7 to
+      4 at every width above the hamburger breakpoint, not just tablet. Trigger is a `<button>`
+      (nothing of its own to link to); added `:focus-within` as a keyboard-accessible fallback to
+      the hover reveal, and taught `nav.js`'s mobile-menu-auto-close listener to only match real
+      `<a>` nav links so tapping the button doesn't close the whole mobile menu.
+
+- [x] Horizontal overflow at 400px width making the About section read as right-clipped /
+      not centered — user reported it, gave them a console snippet
+      (`[...document.querySelectorAll('*')].filter(el => el.getBoundingClientRect().right >
+      window.innerWidth + 1)`) to identify the overflowing element live, since `resize_window`
+      (Chrome tool) doesn't actually change `window.innerWidth` in this environment. User ran it
+      themselves and the array came back empty — no element overflows at 400px. Resolved (or
+      never real; not chased further since there's nothing to fix).
+
+### Still open
+- [ ] The new "more" tablet-nav dropdown (`.nav-has-dropdown`/`.nav-dropdown`) opens via pure CSS
+      `:hover`/`:focus-within` with no JS toggle — there's no touch fallback. That's untested on a
+      real touchscreen tablet in the 820–1200px band this feature targets (e.g. iPad landscape),
+      where there's no `:hover` and tapping a `<button>` doesn't reliably shift focus on iOS
+      Safari, so `:focus-within` may never fire. Desktop-resized-to-tablet-width testing won't
+      catch this since a mouse can still hover. User is PRing EOD and will verify live on a
+      Samsung tablet themselves; fix (likely a `click`/`touchstart` JS toggle alongside the CSS)
+      to follow if it doesn't open on touch.
+
+---
+
 ## Phase 4: Port /webdesign + /webdesign2 to Astro (separate session/repo)
 **Status:** ⏳ Not started — deliberately deferred, not a quick add-on
 **Effort:** Unscoped (new repo, likely several sessions)

@@ -618,9 +618,29 @@ a:hover {
   color: var(--accent);
 }
 
-/* Services dropdown */
+/* "More" dropdown — groups the destination pages (web design/services/
+   consulting/blog) behind one trigger so the nav doesn't read as "busy" at
+   tablet widths (roomy desktop row above 1200px, clean hamburger below
+   820px, but that in-between range used to show the full 7-link row
+   cramped). The trigger is a <button>, not an <a> — it has nothing of its
+   own to navigate to, it just reveals the items below it. */
 .nav-has-dropdown {
   position: relative;
+}
+
+.nav-has-dropdown > button.nav-link {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nav-has-dropdown:focus-within .nav-dropdown {
+  display: flex;
+}
+
+.nav-has-dropdown:focus-within .nav-caret {
+  transform: rotate(180deg);
 }
 
 .nav-caret {

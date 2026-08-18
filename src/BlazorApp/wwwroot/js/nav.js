@@ -104,7 +104,12 @@ window.DrNav = (function () {
                 toggle.classList.toggle('open', !!open);
                 return;
             }
-            const link = e.target.closest('.nav-link, .nav-link--page, .nav-link--archive, .nav-cta');
+            // Only <a> nav links close the mobile menu on tap. The "more" dropdown
+            // trigger is a <button> (no href — its items are already always-expanded
+            // below it at mobile widths via the @media(max-width:820px) block in
+            // app.css), so it must NOT match here or tapping it would just close the
+            // whole menu instead of doing nothing/toggling.
+            const link = e.target.closest('a.nav-link, a.nav-link--page, a.nav-link--archive, a.nav-cta');
             if (link) {
                 document.getElementById('navItems')?.classList.remove('active');
                 document.getElementById('navToggle')?.classList.remove('open');
