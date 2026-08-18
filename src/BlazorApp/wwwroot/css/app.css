@@ -4729,22 +4729,30 @@ a.music-album__title--link:hover {
 .site-footer__socials {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
+/* Same pattern as .nav-toggle's tap-target fix: the icon's visual size
+   (set explicitly on img below) is unchanged, only the invisible hit area
+   around it grows. ~10 icons in this row now (was closer to 6 when 1.6rem
+   was originally sized) - 44px per icon would push the row noticeably
+   wider, so this lands at a real improvement (25.6px -> 36px, +40%
+   tap-target area) without ballooning the footer. flex-wrap above is a
+   safety net in case that's still too wide on a narrow phone. */
 .site-footer__social {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.6rem;
-  height: 1.6rem;
+  width: 2.25rem;
+  height: 2.25rem;
   opacity: 0.8;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .site-footer__social img {
-  width: 100%;
-  height: 100%;
+  width: 1.6rem;
+  height: 1.6rem;
   object-fit: contain;
   transition: filter 0.2s ease;
 }
