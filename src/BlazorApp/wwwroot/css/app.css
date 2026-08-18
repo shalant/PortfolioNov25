@@ -1483,11 +1483,6 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
   backdrop-filter: blur(2px);
 }
 
-img.social-icon {
-  width: 30px;
-  height: 30px;
-}
-
 /* Scroll-triggered reveal animations */
 [data-scroll="in"] {
   opacity: 0;
@@ -4827,12 +4822,16 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
 }
 
 /* Back-to-top button */
+/* 2rem (32px) was under the ~44px touch-target guideline - unlike the
+   footer social row, this is a single isolated icon button (one sibling
+   in .site-footer__actions), so there's no row-width tradeoff to weigh
+   like there was for .site-footer__social - just grow it. */
 .site-footer__top {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border: 1px solid rgba(var(--accent-rgb), 0.3);
   border-radius: 3px;
   background: rgba(var(--accent-rgb), 0.05);
