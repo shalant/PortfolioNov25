@@ -377,15 +377,44 @@ There is no Azure App Service. HTTPS is already enforced automatically by GitHub
 
 ### 29. **Light Mode: Planning & Implementation**
 - **Why:** Site currently ships dark-only (navy background); no light theme exists at all. Note #25 ("Dark Mode Refinement") assumes a toggle already exists — it doesn't; today there is exactly one theme.
-- **Current:** No CSS variable theming layer — colors are largely hardcoded per-component (many components have embedded `<style>` blocks), so there's no single place to flip a palette yet.
-- **Scope:**
-  - [ ] Decide approach: OS-level auto (`prefers-color-scheme`), manual toggle, or both
-  - [ ] Define light-mode tokens for navy/teal palette (background, text, borders, card surfaces) that keep the brand recognizable, not just inverted contrast
-  - [ ] Keep the existing tiled Bauhaus/art-deco background pattern — adapt its colors for light mode rather than dropping it
-  - [ ] Audit every section/component for hardcoded dark-only colors and migrate to CSS custom properties
-  - [ ] Add toggle UI (e.g., icon in `Header.razor`) + persist choice (localStorage)
-  - [ ] Verify contrast (WCAG AA) across both themes, all breakpoints
-- **Effort:** TBD — needs a planning/audit pass first; no central theming system exists yet, so scope depends heavily on how many components need touching
+- **Current state (confirmed via direct audit, 2026-08-16):** No real CSS-variable theming layer —
+  the `:root` block in `app.css` declares `--navy`/`--teal`/etc. but they're **never referenced**
+  anywhere (`var(--` has zero hits in the file). `app.css` (4,793 lines) has 152 hardcoded hex
+  colors + 292 `rgba()` calls. 9 `.razor` files have their own embedded `<style>` blocks with
+  colors, but most are orphaned/unrouted variant pages (`Consulting3/5/6.razor`,
+  `DougCartoon2.razor`, `DougSvg.razor`) — only `NotFound.razor`, `BlogPosts.razor`, and
+  `BlogArchive.razor` are live and actually in scope. The Bauhaus/art-deco background
+  ([[design-bauhaus-background]]) is a raster WebP image, not CSS shapes, referenced ~15 times
+  across `app.css` via the same two hardcoded URLs.
+- **Decisions made (2026-08-16, via planning session):**
+  1. **Palette:** warm cream/parchment background (e.g. `~#f5f1e8`), not cool gray — fits the
+     art-deco period feel. Navy (`#2c3e50`, already an existing-but-unused token) becomes primary
+     text. Teal (`#1abc9c`) stays the accent for fills/borders/icons in both modes; use
+     `--teal-dark` (`#16a085`) for accent *text* specifically, to hold WCAG AA on a light
+     background.
+  2. **Art-deco texture:** regenerate recolored WebP variants (same geometry, navy-on-cream)
+     rather than a CSS filter hack — keeps the motif fully intact per the "extend, don't replace"
+     preference, at the cost of image-editing effort.
+  3. **Toggle:** OS `prefers-color-scheme` as the default, with a manual icon-only toggle in
+     `Header.razor` (near `.nav-cta`, sized like the existing 44×44px `.nav-toggle`) that
+     overrides and persists to `localStorage`. Theme attribute must be set via an inline blocking
+     `<script>` in `index.html`'s `<head>` (before Blazor boots) to avoid a flash of the wrong
+     theme on load.
+- **Architecture:** Build a real `[data-theme="light"]` CSS custom-property layer (`--bg`,
+  `--bg-hero-gradient`, `--surface-glass`, `--text`, `--text-muted`, `--border-accent`,
+  `--art-deco-1`, `--art-deco-2`, etc.), replacing the currently-decorative `:root` block.
+  Centralizing the two art-deco URLs as variables means the ~15 call sites only need to
+  reference `var(--art-deco-1/2)` once each instead of each needing its own override.
+- **Phasing:**
+  - **Phase A:** token system + `theme.js` (new file, same pattern as `nav.js`/`scrollReveal.js`)
+    + header toggle + re-theme the homepage only (everything `Index.razor` composes: Header,
+    Home/hero, About, Experience, TechnicalSkills, Casual, Music, Contact, Footer).
+  - **Phase B (future):** extend to `/webdesign`, `/webdesign/{slug}`, `/services`, `/consulting`,
+    `/blog`, `/blog/archive`.
+  - **Explicitly out of scope:** orphaned variant pages (`Consulting3/4/5/6.razor`,
+    `WebDesignPageOLD.razor`, `/archive` legacy embed) — not worth theming while unrouted.
+- **Effort:** Phase A is a real implementation pass (new asset generation + CSS token refactor +
+  JS module + Header change), not a quick add-on. Full plan: `feature/light-mode-phase-a` branch.
 
 ---
 

@@ -60,15 +60,39 @@ window.DrNav = (function () {
         });
     }
 
+    // Scroll handling, combined into one rAF-throttled pass. Previously this was two
+    // separate raw `scroll` listeners, each re-running on every event the browser fired
+    // (which can be dozens per second on a trackpad) — doing a full getBoundingClientRect
+    // pass over every section on each one. That was the source of "twitchy" navbar motion:
+    // the .scrolled toggle used a single scrollY > 50 threshold with no hysteresis, so any
+    // momentum/rubber-band micro-scroll right around that one pixel line flipped the class
+    // on and off repeatedly, re-triggering the 0.5s background transition and 0.3s logo
+    // resize transition each time. Fix is two-fold: only do the work once per animation
+    // frame (rAF), and give the threshold a dead zone (enter "scrolled" past 60px, only
+    // leave once back under 40px) so hovering near the line doesn't flicker.
+    let scrolled = false;
+    let scrollTicking = false;
+
+    function handleScroll() {
+        const y = window.scrollY;
+        if (!scrolled && y > 60) scrolled = true;
+        else if (scrolled && y < 40) scrolled = false;
+        document.getElementById('navbar')?.classList.toggle('scrolled', scrolled);
+        highlightActive();
+        scrollTicking = false;
+    }
+
+    function onScroll() {
+        if (scrollTicking) return;
+        scrollTicking = true;
+        requestAnimationFrame(handleScroll);
+    }
+
     function init() {
         if (initialized) return;
         initialized = true;
 
-        window.addEventListener('scroll', () => {
-            document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 50);
-        }, { passive: true });
-
-        window.addEventListener('scroll', highlightActive, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
 
         // Delegated on document so this keeps working across Blazor SPA navigation,
         // which swaps in brand-new #navToggle/#navItems/.nav-link elements each time.

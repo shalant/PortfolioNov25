@@ -7,17 +7,19 @@
 
 <PageTitle>Doug Rosenberg Dev</PageTitle>
 
-<Header />
-<Home HeroImageService=@HeroImageService SitePropertiesService=@SitePropertiesService />
-<About Http=@Http />
-<Experience Http=@Http HeroImageService=@HeroImageService />
-<TechnicalSkills />
-<Casual Http="@Http" HeroImageService="@HeroImageService" />
-<Music Http="@Http" HeroImageService="@HeroImageService" />
+<div class="dr-theme-scope">
+    <Header />
+    <Home HeroImageService=@HeroImageService SitePropertiesService=@SitePropertiesService />
+    <About Http=@Http />
+    <Experience Http=@Http HeroImageService=@HeroImageService />
+    <TechnicalSkills />
+    <Casual Http="@Http" HeroImageService="@HeroImageService" />
+    <Music Http="@Http" HeroImageService="@HeroImageService" />
 
-<Contact />
+    <Contact />
 
-<Footer PrimaryColor="#4E567E" SecondaryColor="#D2F1E4" />
+    <Footer PrimaryColor="#4E567E" SecondaryColor="#D2F1E4" />
+</div>
 
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)

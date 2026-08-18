@@ -1,43 +1,45 @@
 @using Microsoft.AspNetCore.Components.Routing
 
-<section class="notfound-section">
-    <div class="notfound-container">
-        <div class="notfound-content">
-            <div class="notfound-code">404</div>
-            <h1>Page Not Found</h1>
-            <p class="notfound-subtitle">Sorry, there's nothing at this address.</p>
+<div class="dr-theme-scope">
+    <section class="notfound-section">
+        <div class="notfound-container">
+            <div class="notfound-content">
+                <div class="notfound-code">404</div>
+                <h1>Page Not Found</h1>
+                <p class="notfound-subtitle">Sorry, there's nothing at this address.</p>
 
-            <div class="notfound-suggestions">
-                <p>Here are some places to try:</p>
-                <nav class="notfound-nav">
-                    <ul>
-                        <li><NavLink href="/">← Back to Home</NavLink></li>
-                        <li><NavLink href="/#about">About</NavLink></li>
-                        <li><NavLink href="/#experience">Experience</NavLink></li>
-                        <li><NavLink href="/#technicalskills">Skills</NavLink></li>
-                        <li><NavLink href="/blog">Blog</NavLink></li>
-                        <li><a href="mailto:doug.rosenberg@gmail.com">Contact</a></li>
-                    </ul>
-                </nav>
+                <div class="notfound-suggestions">
+                    <p>Here are some places to try:</p>
+                    <nav class="notfound-nav">
+                        <ul>
+                            <li><NavLink href="/">← Back to Home</NavLink></li>
+                            <li><NavLink href="/#about">About</NavLink></li>
+                            <li><NavLink href="/#experience">Experience</NavLink></li>
+                            <li><NavLink href="/#technicalskills">Skills</NavLink></li>
+                            <li><NavLink href="/blog">Blog</NavLink></li>
+                            <li><a href="mailto:doug.rosenberg@gmail.com">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="notfound-art">
+                <svg viewBox="0 0 200 200" class="notfound-hexagon">
+                    <defs>
+                        <linearGradient id="hexGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1abc9c;stop-opacity:0.3" />
+                            <stop offset="100%" style="stop-color:#2c3e50;stop-opacity:0.3" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Hexagon background -->
+                    <polygon points="100,10 190,50 190,150 100,190 10,150 10,50" fill="url(#hexGradient)" stroke="#1abc9c" stroke-width="2" opacity="0.6"/>
+                    <!-- Question mark inside -->
+                    <text x="100" y="140" font-size="80" font-weight="bold" text-anchor="middle" fill="#1abc9c" opacity="0.4">?</text>
+                </svg>
             </div>
         </div>
-
-        <div class="notfound-art">
-            <svg viewBox="0 0 200 200" class="notfound-hexagon">
-                <defs>
-                    <linearGradient id="hexGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#1abc9c;stop-opacity:0.3" />
-                        <stop offset="100%" style="stop-color:#2c3e50;stop-opacity:0.3" />
-                    </linearGradient>
-                </defs>
-                <!-- Hexagon background -->
-                <polygon points="100,10 190,50 190,150 100,190 10,150 10,50" fill="url(#hexGradient)" stroke="#1abc9c" stroke-width="2" opacity="0.6"/>
-                <!-- Question mark inside -->
-                <text x="100" y="140" font-size="80" font-weight="bold" text-anchor="middle" fill="#1abc9c" opacity="0.4">?</text>
-            </svg>
-        </div>
-    </div>
-</section>
+    </section>
+</div>
 
 <style>
     .notfound-section {
@@ -45,7 +47,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #060e1a;
+        background: var(--bg);
         padding: 2rem;
         position: relative;
         overflow: hidden;
@@ -55,7 +57,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background-image: radial-gradient(circle, rgba(26, 188, 156, 0.05) 1px, transparent 1px);
+        background-image: radial-gradient(circle, rgba(var(--accent-rgb), 0.05) 1px, transparent 1px);
         background-size: 40px 40px;
         pointer-events: none;
     }
@@ -78,7 +80,7 @@
     .notfound-code {
         font-size: 6rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #1abc9c 0%, #2c3e50 100%);
+        background: linear-gradient(135deg, var(--accent) 0%, var(--navy) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -88,30 +90,41 @@
 
     .notfound-content h1 {
         font-size: 2.5rem;
-        color: #eef2f7;
+        color: var(--text);
         margin-bottom: 0.5rem;
         font-weight: 600;
     }
 
     .notfound-subtitle {
         font-size: 1.1rem;
-        color: rgba(238, 242, 247, 0.7);
+        color: rgba(var(--text-rgb), 0.7);
         margin-bottom: 2rem;
     }
 
+    /* Light mode: real sentences, not fine print - the dark-mode 0.7/0.8
+       alpha reads fine against near-black but is too faint once inverted
+       onto cream (same lesson as the homepage's body-copy pass). */
+    html[data-theme="light"] .notfound-subtitle {
+        color: rgba(var(--text-rgb), 0.85);
+    }
+
     .notfound-suggestions {
-        background: rgba(238, 242, 247, 0.05);
+        background: rgba(var(--surface-rgb), 0.5);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(26, 188, 156, 0.2);
+        border: 1px solid rgba(var(--accent-rgb), 0.2);
         border-radius: 12px;
         padding: 2rem;
         margin-top: 2rem;
     }
 
     .notfound-suggestions p {
-        color: rgba(238, 242, 247, 0.8);
+        color: rgba(var(--text-rgb), 0.8);
         font-size: 0.95rem;
         margin-bottom: 1rem;
+    }
+
+    html[data-theme="light"] .notfound-suggestions p {
+        color: rgba(var(--text-rgb), 0.85);
     }
 
     .notfound-nav ul {
@@ -129,7 +142,7 @@
 
     .notfound-nav a,
     .notfound-nav :deep(.nav-link) {
-        color: #1abc9c;
+        color: var(--accent);
         text-decoration: none;
         font-weight: 500;
         transition: all 0.3s ease;
@@ -139,7 +152,7 @@
     .notfound-nav a:hover,
     .notfound-nav :deep(.nav-link.active),
     .notfound-nav :deep(.nav-link:hover) {
-        color: #eef2f7;
+        color: var(--text);
         text-decoration: underline;
         transform: translateX(4px);
     }
