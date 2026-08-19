@@ -804,6 +804,13 @@ a:hover {
   transform: translate(2px, -2px);
 }
 
+/* Mobile-only copy of the CTA, rendered inside the hamburger menu itself
+   (see Header.razor) — hidden above the 820px breakpoint where the
+   standalone .nav-cta button already covers it. */
+.nav-cta-mobile-item {
+  display: none;
+}
+
 /* Theme toggle — icon-only by design (nav is already tight at 7 links + CTA;
    see docs/TASKS.md Phase 3). Sized to match .nav-toggle's 44x44 tap target. */
 .theme-toggle {
@@ -1001,6 +1008,21 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
 
   .nav-cta {
     display: none;
+  }
+
+  .nav-cta-mobile-item {
+    display: block;
+    margin-top: 0.4rem;
+    padding: 0.5rem 1.5rem 0.1rem;
+    border-top: 1px solid rgba(var(--accent-rgb), 0.15);
+  }
+
+  .nav-link--cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--accent) !important;
+    font-weight: 700;
   }
 
   .nav-toggle {

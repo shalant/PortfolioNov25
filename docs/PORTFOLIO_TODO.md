@@ -361,6 +361,8 @@ Currently N/A — there's nothing to secure because there's no submission endpoi
 - [ ] Log submissions to catch attacks
 - [ ] Send confirmation email to visitor ("Thanks, I'll reply within 24 hours")
 
+**Parked idea (2026-08-18) — client-triggered, not a scheduled task:** if/when there's an actually-interested prospect (e.g. from the musician network), consider a `/start` route, not linked from main nav, holding: a lightweight client-side password gate (e.g. `AccessGate` component checking `sessionStorage` against a shared code like `YES123` — a soft deterrent against casual/bot traffic, not real security, which is fine since nothing sensitive sits behind it), a short 5-7 field intake form (name, email, business type, sites they like, budget range, timeline, free text), forwarded via a free-tier relay service (Web3Forms/Formspree) to email, and 2-3 starter template pages (musician one-pager, sole-practitioner site, SMB landing page) to point prospects at during the conversation. Explicitly do **not** build this pre-emptively — no real client data yet to design it from, and the actual next step for landing client #1 is a direct conversation, not new tooling. Revisit only once a real prospect exists.
+
 ### 27. **Content Security Policy (CSP)** — deferred, infrastructure decision
 Not achievable via GitHub Pages configuration (no server-side headers support). Requires a reverse proxy in front of the domain:
 - [ ] Decide whether it's worth moving DNS to Cloudflare (free tier) to gain header-injection capability
