@@ -102,6 +102,14 @@ window.DrNav = (function () {
                 const navItems = document.getElementById('navItems');
                 const open = navItems?.classList.toggle('active');
                 toggle.classList.toggle('open', !!open);
+                // Lock background scroll while the mobile menu is open. Without this,
+                // scrolling the page behind the open menu caused visible clipping/
+                // ghosting on real devices: the sticky header and the dropdown both
+                // use backdrop-filter, and the header's blur radius also changes
+                // mid-scroll via .scrolled — recompositing two stacked blur layers,
+                // one of them animating, while the page moves underneath is what a
+                // mobile GPU couldn't keep up with.
+                document.body.classList.toggle('nav-open', !!open);
                 return;
             }
             // Only <a> nav links close the mobile menu on tap. The "more" dropdown
@@ -113,6 +121,7 @@ window.DrNav = (function () {
             if (link) {
                 document.getElementById('navItems')?.classList.remove('active');
                 document.getElementById('navToggle')?.classList.remove('open');
+                document.body.classList.remove('nav-open');
             }
         });
     }

@@ -800,14 +800,78 @@ review alone had already missed two live-only bugs (see below).
       never real; not chased further since there's nothing to fix).
 
 ### Still open
-- [ ] The new "more" tablet-nav dropdown (`.nav-has-dropdown`/`.nav-dropdown`) opens via pure CSS
-      `:hover`/`:focus-within` with no JS toggle — there's no touch fallback. That's untested on a
-      real touchscreen tablet in the 820–1200px band this feature targets (e.g. iPad landscape),
-      where there's no `:hover` and tapping a `<button>` doesn't reliably shift focus on iOS
-      Safari, so `:focus-within` may never fire. Desktop-resized-to-tablet-width testing won't
-      catch this since a mouse can still hover. User is PRing EOD and will verify live on a
-      Samsung tablet themselves; fix (likely a `click`/`touchstart` JS toggle alongside the CSS)
-      to follow if it doesn't open on touch.
+- [x] The new "more" tablet-nav dropdown's touch behavior — turned out to be moot for the
+      narrow/hamburger case: below the 820px breakpoint `.nav-dropdown` is forced always-expanded
+      (no hover/focus needed at all), confirmed live via the user's Samsung tablet screenshot
+      showing "more" pre-expanded inline in the mobile menu. Still genuinely unverified in the
+      820–1200px tablet-landscape band specifically (where it *is* hover/focus-driven with no JS
+      touch fallback) — no device test landed in that exact width range yet. Not blocking; revisit
+      if a tablet-landscape user reports it.
+
+---
+
+## Phase 3I: Tablet testing follow-ups + Blazor load-time work
+**Status:** 🔄 In progress
+**Branch:** `fix/tablet-testing-followups`
+
+**Why:** User tested Phase 3H's merged/deployed changes live — on a Samsung tablet for the mobile
+nav, and on a separate budget Android tablet for load time — and found one real rendering bug plus
+raised load-time/loading-screen concerns the original mobile pass didn't cover.
+
+### Tasks
+- [x] Mobile hamburger menu visibly clipped/ghosted (background page content bleeding through)
+      when the user scrolled the page while the menu was open — reported with two tablet photos.
+      Root cause: `nav.js` never locked background scroll while `#navItems.active`, so the sticky
+      navbar's `backdrop-filter` (which also changes blur radius mid-scroll via the `.scrolled`
+      class) and the dropdown's own separate `backdrop-filter` were both recompositing over moving
+      content on a mobile GPU — a known trigger for this class of glitch. Fixed by locking body
+      scroll (`body.nav-open { overflow: hidden }`, scoped inside the existing `max-width: 820px`
+      block) while the mobile menu is open, matching standard mobile-nav practice — removes the
+      trigger instead of chasing the compositor.
+- [x] The hero `<h1>` showed a visible teal focus-ring box on every page load — traced to
+      `App.razor`'s `<FocusOnNavigate Selector="h1" />` (stock Blazor a11y pattern: focuses the
+      page heading on route change for screen readers) painting a default browser focus ring even
+      though the element is `tabindex="-1"` and never Tab-reachable. Added `h1:focus { outline:
+      none }`.
+- [x] Load-time audit, prompted by a reported ~5s first load on a budget Android tablet on home
+      wifi. Confirmed GitHub Pages/Fastly already compresses `.wasm`/`.js`/`.css` correctly
+      (~40% of decoded size transferred) — that was never the bottleneck. Fixed what was:
+      - Google Fonts moved from a CSS `@import` (serializes the font fetch behind `app.css`
+        finishing download) to a `<link>` in `index.html`'s `<head>` (fetches in parallel from
+        the start of page load, already preconnected).
+      - Removed `bootstrap.bundle.min.js` (CDN, ~80KB decoded) — grepped the whole app for
+        `data-bs-*` attributes and JS Bootstrap component calls, found zero usage anywhere. Pure
+        dead weight (an extra external round-trip) on every single page load.
+      - Found two unoptimized images actually being shipped to users: `DougCartoon4.png` (2.3MB
+        PNG, displayed at 200px wide on `/consulting`) and `DrCyberPunk.png` (1.6MB PNG, the
+        "casual" hero image). Resized and converted both to WebP (25KB and 50KB respectively,
+        ~98% smaller) and updated the two references.
+      - Deleted two images with zero references anywhere in the app (`Douglas_Rosenberg_Rev.png`,
+        4.7MB; `tealRectangle.png`, 343KB) — orphaned dead weight in the deployed bundle.
+- [ ] Tried replacing the stock two-circle Blazor loading spinner with the site's own hex logo
+      mark (reused from the navbar), filling bottom-to-top via the same
+      `--blazor-load-percentage` CSS var the old radial ring already consumed. Built and visually
+      verified working (isolated static preview, hex fills correctly), but the user wasn't sold on
+      it on reflection — **reverted to the original two-circle spinner**, decision deferred. The
+      "avoid a recognizable Blazor spinner" goal is still open; next attempt should probably
+      explore other directions rather than re-proposing the same hex treatment.
+
+### Discussed, not done
+- User asked about avoiding the loading splash entirely; the honest tradeoff is that Blazor WASM
+  has to download and boot a full runtime before it can render anything, so *some* gap is
+  unavoidable without an architecture change (see Phase 4 below). Considered pre-rendering a
+  static copy of the real hero markup directly in `index.html` so the page looks loaded from
+  frame one — set aside as a bigger, riskier change (has to stay pixel-matched with
+  `Home.razor`'s real hero or the Blazor handoff causes a visible flash/jump). Not started.
+- MudBlazor is used in only 4 components (`Consulting3/4`, `DougCartoon/2`) but is a heavy
+  dependency; lazy-loading its assembly or replacing those 4 usages is likely the single biggest
+  remaining payload win. Not attempted — flagged for a separate discussion given CLAUDE.md's "no
+  external package additions without discussion" guidance (this would be a removal, but still a
+  scope decision worth surfacing).
+- A PWA service worker (caches boot assets so repeat visits skip the network almost entirely)
+  would directly address "reload" speed specifically. Bigger, riskier addition (cache
+  invalidation / staleness risk on a site that updates via blog posts) — flagged as a follow-up
+  option, not implemented here.
 
 ---
 

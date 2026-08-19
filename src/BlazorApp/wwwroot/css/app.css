@@ -8,7 +8,10 @@
    1. IMPORTS & DESIGN SYSTEM
    ============================================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Montserrat:wght@200;400;600;800&display=swap");
+/* Google Fonts is loaded as a <link> in index.html <head>, not an @import
+   here - @import serializes the fetch behind this file finishing download
+   first; a <link> lets the browser discover and fetch it in parallel with
+   everything else from the start of the page load. */
 
 /* Static brand colors (unaffected by theme) */
 :root {
@@ -230,6 +233,15 @@ h1 {
   letter-spacing: -2px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   animation: fadeInDown 1s ease-out;
+}
+
+/* App.razor's <FocusOnNavigate Selector="h1" /> gives every page's h1
+   tabindex="-1" and calls .focus() on route change so screen readers
+   announce the new page - it's not Tab-reachable, so the visible ring
+   some browsers still paint for programmatic focus is just a stray box
+   around the hero heading, not a real focus indicator anyone needs. */
+h1:focus {
+  outline: none;
 }
 
 h2 {
@@ -957,6 +969,15 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
 
   .nav-items.active {
     display: flex;
+  }
+
+  /* Scoped to this breakpoint on purpose: nav.js toggles body.nav-open
+     whenever #navToggle fires, but that button only exists (is clickable)
+     below this width, so the lock never applies at desktop/tablet-landscape
+     widths where .nav-items is always visible instead of a scrollable
+     overlay. */
+  body.nav-open {
+    overflow: hidden;
   }
 
   .nav-items li {
