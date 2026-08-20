@@ -1,13 +1,23 @@
 <span class="tech-chip @(_isWordmark ? "tech-chip--wordmark" : "")">
     @if (_iconFile is not null && _isWordmark)
     {
-        <span class="tech-chip__logo-wrap @(_needsLightBacking ? "tech-chip__logo-wrap--light" : "")">
+        <span class="tech-chip__logo-wrap @(_needsLightBacking ? "tech-chip__logo-wrap--light" : "") @(_needsDarkBacking ? "tech-chip__logo-wrap--dark" : "")">
             <img src="icons/tech/@_iconFile" alt="@Name" class="tech-chip__logo" loading="lazy" />
         </span>
     }
     else
     {
-        @if (_iconFile is not null)
+        @if (_iconFile is not null && _needsTint)
+        {
+            <span class="tech-chip__icon tech-chip__icon--tint" style="mask-image:url('icons/tech/@_iconFile');-webkit-mask-image:url('icons/tech/@_iconFile');" aria-hidden="true"></span>
+        }
+        else if (_iconFile is not null && _needsDarkBacking)
+        {
+            <span class="tech-chip__icon-wrap tech-chip__icon-wrap--dark">
+                <img src="icons/tech/@_iconFile" alt="" class="tech-chip__icon" loading="lazy" aria-hidden="true" />
+            </span>
+        }
+        else if (_iconFile is not null)
         {
             <img src="icons/tech/@_iconFile" alt="" class="tech-chip__icon" loading="lazy" aria-hidden="true" />
         }
@@ -22,6 +32,8 @@
     private string? _iconFile;
     private bool _isWordmark;
     private bool _needsLightBacking;
+    private bool _needsDarkBacking;
+    private bool _needsTint;
 
     // Aliases map to a local brand icon in wwwroot/icons/tech/ (mostly Devicon SVGs).
     // Names with no official mark (MudBlazor's glyph aside, Entity Framework, Kendo UI)
@@ -90,6 +102,11 @@
         ["google analytics"] = "googleanalytics.svg",
         ["googleanalytics"] = "googleanalytics.svg",
         ["ga4"] = "googleanalytics.svg",
+        ["meta"] = "meta.svg",
+        ["meta pixel"] = "meta.svg",
+        ["meta conversions api"] = "meta.svg",
+        ["meta capi"] = "meta.svg",
+        ["facebook pixel"] = "meta.svg",
     };
 
     // These vendor marks are full wordmarks (logo + name baked together), so the
@@ -101,11 +118,29 @@
     };
 
     // DevExpress's mark has near-black ink that disappears on this site's dark
-    // background, so it gets a small light backing plate; Syncfusion's white
-    // variant was already chosen to read on dark UI and needs no backing.
+    // background, so it gets a small light backing plate.
     private static readonly HashSet<string> NeedsLightBacking = new(StringComparer.OrdinalIgnoreCase)
     {
         "devexpress.png",
+    };
+
+    // Syncfusion's wordmark is forced fully white via an SVG filter - fine on this site's dark
+    // background, invisible against the light theme's cream background. Needs a dark plate in
+    // BOTH themes, so unlike NeedsLightBacking above this can't reuse var(--text-rgb) (which
+    // flips dark/light with the theme and would make it disappear the other way in light mode).
+    private static readonly HashSet<string> NeedsDarkBacking = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "syncfusion.svg",
+    };
+
+    // Apple and GitHub Copilot ship no official color mark (both are monochrome-only by brand
+    // guidelines), so rather than force them onto a dark plate as flat gray icons, tint them
+    // with the site's own accent color via a CSS mask - var(--accent) already adapts per theme,
+    // so this reads correctly in both without needing a fixed-color backing plate at all.
+    private static readonly HashSet<string> NeedsTint = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "apple.svg",
+        "copilot.svg",
     };
 
     protected override void OnParametersSet()
@@ -113,5 +148,7 @@
         IconMap.TryGetValue(Name.Trim(), out _iconFile);
         _isWordmark = _iconFile is not null && WordmarkIcons.Contains(_iconFile);
         _needsLightBacking = _iconFile is not null && NeedsLightBacking.Contains(_iconFile);
+        _needsDarkBacking = _iconFile is not null && NeedsDarkBacking.Contains(_iconFile);
+        _needsTint = _iconFile is not null && NeedsTint.Contains(_iconFile);
     }
 }

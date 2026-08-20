@@ -863,15 +863,95 @@ raised load-time/loading-screen concerns the original mobile pass didn't cover.
   static copy of the real hero markup directly in `index.html` so the page looks loaded from
   frame one — set aside as a bigger, riskier change (has to stay pixel-matched with
   `Home.razor`'s real hero or the Blazor handoff causes a visible flash/jump). Not started.
-- MudBlazor is used in only 4 components (`Consulting3/4`, `DougCartoon/2`) but is a heavy
-  dependency; lazy-loading its assembly or replacing those 4 usages is likely the single biggest
-  remaining payload win. Not attempted — flagged for a separate discussion given CLAUDE.md's "no
-  external package additions without discussion" guidance (this would be a removal, but still a
-  scope decision worth surfacing).
+- ~~MudBlazor is used in only 4 components...~~ — turned out to be *zero* live components once
+  traced properly; fully removed in Phase 3J below.
 - A PWA service worker (caches boot assets so repeat visits skip the network almost entirely)
   would directly address "reload" speed specifically. Bigger, riskier addition (cache
   invalidation / staleness risk on a site that updates via blog posts) — flagged as a follow-up
   option, not implemented here.
+
+### To do
+- [x] **Cleanup: purge unused pictures.** Done in Phase 3J below — see that section for the
+      full list. `motion-background.jpg` was left alone as planned (lower priority, fine as-is).
+
+---
+
+## Phase 3J: MudBlazor removal, orphaned prototype pages, mobile CTA gap
+**Status:** ✅ Complete — user can't commit until EOD 2026-08-19, so this is sitting staged
+locally on the branch, not yet pushed/PR'd.
+**Branch:** `fix/mudblazor-removal-and-cleanup`
+
+**Why:** Follow-up from the Phase 3I conversation — tracing where `/consulting` actually routes
+to (`Pages/ConsultingPage.razor`, which has its own hand-rolled markup) revealed that all 4
+MudBlazor-using components flagged as "used in only 4 components" weren't actually live at all:
+`Consulting3/4/5/6.razor` each declare their own `@page` route (`/consulting3` etc.) but are
+linked from nowhere in the site, and `DougCartoon`/`DougCartoon2` are only pulled in by those same
+orphaned pages. MudBlazor's entire payload (package + CSS + global providers in `MainLayout`) was
+being shipped to every visitor for prototype pages nobody could find. Separately, the user asked
+whether the mobile-hidden "get in touch" nav CTA counted as a CTA (yes — the class is literally
+`nav-cta`) and flagged it as a gap once confirmed it fully disappears on mobile with no fallback.
+
+### Tasks
+- [x] Full route sweep (every `@page` directive vs. every href in `Header.razor`) to find every
+      orphaned page before touching anything, not just the ones already suspected. Found one more
+      beyond the MudBlazor set: `Pages/WebDesignPageOLD.razor` (`@page "/webdesignOLD"`), also
+      linked from nowhere.
+- [x] Deleted 8 confirmed-orphaned files: `Consulting.razor` (no `@page`, no references at all —
+      not even independently routable), `Consulting3/4/5/6.razor`, `DougCartoon.razor`,
+      `DougCartoon2.razor`, `WebDesignPageOLD.razor`.
+- [x] Fully removed MudBlazor: `PackageReference` from the `.csproj`, `AddMudServices()` +
+      `using MudBlazor.Services;` from `Program.cs`, `@using MudBlazor` from `_Imports.razor`,
+      the `MudBlazor.min.css` `<link>` from `index.html`, and the four global providers
+      (`MudThemeProvider`/`MudPopoverProvider`/`MudDialogProvider`/`MudSnackbarProvider`) from
+      `MainLayout.razor` — those providers wrap every page via the default layout, so they were
+      the one piece that could have caused a real regression if missed; build stayed clean and a
+      full click-through (home, webdesign, services, consulting, blog, plus one deleted route to
+      confirm it 404s cleanly through the site's own `NotFound.razor`) showed no console errors.
+- [x] Fixed the mobile nav CTA gap: `.nav-cta` lives outside `<nav>`/`.nav-items` in the DOM and
+      is `display: none` below 820px, so it wasn't just visually collapsed into the hamburger —
+      it was unreachable from the nav entirely on mobile. Added a second copy of the link as the
+      last `<li>` inside `.nav-items` (`.nav-cta-mobile-item` / `.nav-link--cta`), hidden above
+      820px so it doesn't duplicate the standalone desktop button, shown only inside the expanded
+      mobile menu. True mobile-viewport visual confirmation wasn't possible in this environment
+      (same `resize_window` limitation noted elsewhere in this doc) — DOM/CSS structure verified,
+      but this one's worth a real-device check.
+- [x] Finished the picture purge from Phase 3I's "To do": deleted `woman-with-tablet.jpg` (155KB,
+      confirmed orphaned) and `franciscan-friars-modern.svg` (1.2KB, orphaned — found during the
+      full cross-reference sweep, not previously flagged); resized/converted `design-desk.jpeg`
+      (2400×1610, 487KB) to WebP (57KB, 88% smaller) and updated the `heroimages.json` reference.
+      Also deleted `DougCartoon4.webp` — the WebP created in Phase 3I to replace the oversized
+      PNG became orphaned itself once `Consulting4.razor` (its only referrer) was deleted here.
+      Full cross-reference sweep (every file in `wwwroot/images/` against every `.razor`/`.json`/
+      `.css`/`.html` reference, excluding build artifacts) found no further orphans.
+- [x] Noticed but did not touch: `experience.json` has a dead `titleOLD` field (not bound by any
+      component) on the Friars ERP entry — same "OLD" leftover pattern as the deleted page, but
+      it's data content rather than dead code, and out of scope for tonight's cleanup.
+- [x] Skills-chip polish, prompted by user feedback on the new Marketing & Analytics chips: added
+      a hand-drawn Meta icon (`icons/tech/meta.svg`, a stroked infinity mark in Meta's blue
+      gradient — not a trace of the trademark) for Meta Pixel/Meta Conversions API; confirmed
+      neither Apple nor GitHub Copilot has an official color mark, so both are now tinted with
+      the site's `var(--accent)` via a CSS mask instead of sitting flat gray on a dark plate;
+      resized the Syncfusion/DevExpress wordmark chips to roughly match sibling chip text size,
+      then sized Syncfusion 10% under DevExpress specifically (scoped to the dark-plate class,
+      which only Syncfusion uses among wordmarks) per user follow-up.
+
+---
+
+## Phase 3K: Run Copilot's UI assessment through Claude Code
+**Status:** ⏳ Not started — blocked on Phase 3J being committed/merged first
+**Branch:** TBD (new branch once started)
+
+**Why:** User had GitHub Copilot produce a UI assessment of the entire deployed site
+(`docs/CopilotAssessmentDrDev19Aug26.txt`, appeared in the working tree 2026-08-19 — not authored
+by Claude, from a separate session/tool). Intent is to work through that assessment's findings as
+a fresh task once Phase 3J is out of the way, rather than layering more changes onto an
+already-large branch.
+
+### Tasks
+- [ ] Read `docs/CopilotAssessmentDrDev19Aug26.txt` in full.
+- [ ] Triage its findings against what's already shipped/in-flight in Phases 3H–3J (some may
+      already be resolved or superseded).
+- [ ] Scope and branch the remaining, still-relevant items.
 
 ---
 

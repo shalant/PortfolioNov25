@@ -143,6 +143,19 @@
                     </div>
                 </li>
 
+                <!-- .nav-cta below is a sibling of <nav>, hidden entirely below the 820px
+                     hamburger breakpoint (app.css) to keep the collapsed header bar from
+                     crowding the toggle group - but that left mobile visitors with no nav
+                     path to contact at all, since this <li> is the only copy of it that
+                     lives inside the expanded mobile menu. Desktop/tablet still get the
+                     single .nav-cta button; this one is mobile-only via CSS. -->
+                <li class="nav-cta-mobile-item">
+                    <a href="mailto:doug.rosenberg@gmail.com" class="nav-link nav-link--cta" aria-label="Contact Doug Rosenberg">
+                        get in touch
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                </li>
+
             </ul>
         </nav>
 
