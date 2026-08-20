@@ -877,7 +877,8 @@ raised load-time/loading-screen concerns the original mobile pass didn't cover.
 ---
 
 ## Phase 3J: MudBlazor removal, orphaned prototype pages, mobile CTA gap
-**Status:** ✅ Complete, ready for PR
+**Status:** ✅ Complete — user can't commit until EOD 2026-08-19, so this is sitting staged
+locally on the branch, not yet pushed/PR'd.
 **Branch:** `fix/mudblazor-removal-and-cleanup`
 
 **Why:** Follow-up from the Phase 3I conversation — tracing where `/consulting` actually routes
@@ -925,6 +926,32 @@ whether the mobile-hidden "get in touch" nav CTA counted as a CTA (yes — the c
 - [x] Noticed but did not touch: `experience.json` has a dead `titleOLD` field (not bound by any
       component) on the Friars ERP entry — same "OLD" leftover pattern as the deleted page, but
       it's data content rather than dead code, and out of scope for tonight's cleanup.
+- [x] Skills-chip polish, prompted by user feedback on the new Marketing & Analytics chips: added
+      a hand-drawn Meta icon (`icons/tech/meta.svg`, a stroked infinity mark in Meta's blue
+      gradient — not a trace of the trademark) for Meta Pixel/Meta Conversions API; confirmed
+      neither Apple nor GitHub Copilot has an official color mark, so both are now tinted with
+      the site's `var(--accent)` via a CSS mask instead of sitting flat gray on a dark plate;
+      resized the Syncfusion/DevExpress wordmark chips to roughly match sibling chip text size,
+      then sized Syncfusion 10% under DevExpress specifically (scoped to the dark-plate class,
+      which only Syncfusion uses among wordmarks) per user follow-up.
+
+---
+
+## Phase 3K: Run Copilot's UI assessment through Claude Code
+**Status:** ⏳ Not started — blocked on Phase 3J being committed/merged first
+**Branch:** TBD (new branch once started)
+
+**Why:** User had GitHub Copilot produce a UI assessment of the entire deployed site
+(`docs/CopilotAssessmentDrDev19Aug26.txt`, appeared in the working tree 2026-08-19 — not authored
+by Claude, from a separate session/tool). Intent is to work through that assessment's findings as
+a fresh task once Phase 3J is out of the way, rather than layering more changes onto an
+already-large branch.
+
+### Tasks
+- [ ] Read `docs/CopilotAssessmentDrDev19Aug26.txt` in full.
+- [ ] Triage its findings against what's already shipped/in-flight in Phases 3H–3J (some may
+      already be resolved or superseded).
+- [ ] Scope and branch the remaining, still-relevant items.
 
 ---
 
