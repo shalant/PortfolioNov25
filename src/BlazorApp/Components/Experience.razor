@@ -4,11 +4,12 @@
         <div class="experience-header">
             <span class="section-eyebrow">// experience</span>
             <h2 class="experience-heading">Where I've Worked</h2>
+            <SectionDivider />
         </div>
 
         @if (experiences is null)
         {
-            <p style="color: rgba(238,242,247,0.4); font-family: 'Courier New', monospace; font-size: 0.85rem;">
+            <p style="color: rgba(238,242,247,0.4); font-family: var(--mono); font-size: 0.85rem;">
                 loading...
             </p>
         }
@@ -47,6 +48,9 @@
                     </div>
 
                     <h3 class="experience-detail__title">@active.Title</h3>
+                    <p class="experience-detail__meta">
+                        <span class="experience-detail__company">@active.Company</span>
+                    </p>
                     <div class="experience-detail__divider"></div>
 
                     <ul class="experience-detail__bullets">

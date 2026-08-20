@@ -4,11 +4,12 @@
         <div class="music-header">
             <span class="section-eyebrow">// before the keyboard</span>
             <h2 class="music-heading">From Saxophone to Software</h2>
+            <SectionDivider />
         </div>
 
         @if (music is null)
         {
-            <p style="color: rgba(238,242,247,0.4); font-family: 'Courier New', monospace; font-size: 0.85rem;">loading...</p>
+            <p style="color: rgba(238,242,247,0.4); font-family: var(--mono); font-size: 0.85rem;">loading...</p>
         }
         else
         {
