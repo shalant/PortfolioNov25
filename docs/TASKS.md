@@ -1043,8 +1043,23 @@ specifically called out per CLAUDE.md's "no color scheme changes without discuss
       (previously company was only inferable from the logo image, never shown as text anywhere).
       User explicitly declined adding the two Skillstorm roles the resume also revealed (Jan–Dec
       2022, entirely absent from the site) — do not add them without being asked again.
-- [ ] Section-divider motif (staff-line/waveform) using `--brass`, replacing the plain teal
-      gradient rule between major sections — not yet started.
+- [x] Section-divider motif: new `<SectionDivider />` component (9-bar brass waveform, staggered
+      scaleY entrance on `--ease-swing`, wired to each section's existing `.reveal-on-scroll`
+      trigger so it "plays" like an equalizer waking up) added under the H2 in About, Casual,
+      Contact, Experience, Music, and TechnicalSkills. Before implementing, found that every one of
+      those headings already has an explicit `.xxx-heading::after { display: none !important; }`
+      disabling a generic centered teal-gradient underline baked into the base `h2` style
+      (`app.css:276`) — a prior, deliberate decision to remove exactly this class of decoration.
+      Judged the new version different enough to proceed (subject-specific waveform vs. flat
+      generic bar, alignment follows each heading instead of force-centered, animates in via the
+      existing scroll-reveal system instead of a blanket fadeInDown) but flagged the tension to the
+      user rather than silently reintroducing what a past pass removed. Verified live in both
+      themes — reads left-aligned under About/Casual/Experience/Music/TechnicalSkills and centered
+      under Contact (inherits `text-align` from each container, no per-section overrides needed);
+      landed especially well under Music's "From Saxophone to Software," right before the
+      saxophonist content. Hit an unrelated local snag along the way: Visual Studio had the
+      project's build output locked, blocking `dotnet run`; user paused their VS session so the
+      dev server could run for verification.
 - [ ] Case-study treatment for 2-3 real *Experience* entries specifically (the homepage carousel is
       the thinner of the two project-facing sections now) — not yet started.
 - [ ] User to test-drive the brass accent + font swap on this branch before it's considered final —
