@@ -986,8 +986,7 @@ already-large branch.
 ---
 
 ## Phase 3L: Whole-site "stunning" design pass
-**Status:** 🔄 In progress — token/motion foundation shipped, structural work (dividers, case
-studies) still open
+**Status:** ✅ Complete — closed out, not merged yet
 **Branch:** `feature/stunning-design-pass`
 
 **Why:** User's explicit goal: make the site "extremely stunning." Design-lead take (see chat, not
@@ -1060,6 +1059,13 @@ specifically called out per CLAUDE.md's "no color scheme changes without discuss
       saxophonist content. Hit an unrelated local snag along the way: Visual Studio had the
       project's build output locked, blocking `dotnet run`; user paused their VS session so the
       dev server could run for verification.
+- [x] Case-study treatment for Experience entries — dropped. User's reaction: "case studies seem
+      cheesy." Agreed — a labeled challenge/solution/result section would clash with the
+      developer-authentic tone that's the actual differentiator here (per the original Copilot
+      triage). Offered a lighter alternative (fold 1-2 real stats already in the resume into
+      existing bullet prose, no new section/template) but user chose to close this out as-is
+      rather than pursue either version. Experience section stays exactly as it landed after the
+      Shift/dates fix above.
 - [ ] Case-study treatment for 2-3 real *Experience* entries specifically (the homepage carousel is
       the thinner of the two project-facing sections now) — not yet started.
 - [ ] User to test-drive the brass accent + font swap on this branch before it's considered final —
