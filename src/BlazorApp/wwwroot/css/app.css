@@ -1364,9 +1364,24 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
   font-size: clamp(1.6rem, 3vw, 2.6rem);
   font-weight: 300;
   color: var(--text);
-  margin: 0 0 1.25rem 0;
+  margin: 0 0 0.6rem 0;
   line-height: 1.15;
   letter-spacing: -0.5px;
+}
+
+.experience-detail__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  margin: 0 0 1.25rem 0;
+}
+
+.experience-detail__company {
+  color: var(--accent);
 }
 
 .experience-detail__divider {
@@ -1374,7 +1389,7 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
   height: 1px;
   background: linear-gradient(90deg, var(--accent), transparent);
   margin-bottom: 2rem;
-  animation: expandWidth 0.6s ease-out 0.1s both;
+  animation: expandWidth 0.6s var(--ease-swing) 0.1s both;
 }
 
 .experience-detail__bullets {

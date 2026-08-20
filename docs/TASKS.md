@@ -1030,6 +1030,19 @@ specifically called out per CLAUDE.md's "no color scheme changes without discuss
       platform tag, description, bullets) that the earlier "no case-study depth" gap note didn't
       account for — that gap is more about the homepage's Experience carousel (logos + bullets
       only) than `/webdesign`, which is already close to what Copilot's assessment asked for.
+- [x] Experience section, per user request to "reflect my professional life": cross-checked
+      `experience.json` against the actual resume PDF (`wwwroot/resume/DouglasRosenbergResumeAugust26.pdf`)
+      and found two real gaps — `ExperienceModel.cs` already had unused `StartDate`/`EndDate`
+      fields never populated or rendered, and the "Bridgestone Marketing" entry's company name was
+      wrong (resume shows the actual employer as Shift; BridgestoneMarketing.com was the client
+      project — the entry was already using Shift's logo, `cropped-SHIFTLogo_4-C.png`, so this was
+      a stale label, not a design choice). User confirmed the Shift relabel and populating real
+      dates from the resume; user then asked to remove the date display from the UI after seeing
+      the plan, so dates were added to `experience.json` (harmless, accurate, may be useful later)
+      but are not rendered — only the corrected company name now shows as text in the detail panel
+      (previously company was only inferable from the logo image, never shown as text anywhere).
+      User explicitly declined adding the two Skillstorm roles the resume also revealed (Jan–Dec
+      2022, entirely absent from the site) — do not add them without being asked again.
 - [ ] Section-divider motif (staff-line/waveform) using `--brass`, replacing the plain teal
       gradient rule between major sections — not yet started.
 - [ ] Case-study treatment for 2-3 real *Experience* entries specifically (the homepage carousel is
