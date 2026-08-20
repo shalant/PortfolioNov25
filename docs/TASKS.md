@@ -1022,11 +1022,18 @@ specifically called out per CLAUDE.md's "no color scheme changes without discuss
       (app.css + BlogPosts.razor + Music/Experience/Casual.razor loading states) with `var(--mono)`.
 - [x] Re-time `.reveal-on-scroll` and the skills-chip stagger with `var(--ease-swing)`.
 - [x] Add the `bauhausRise` hero entrance animation to `.hero-section::before`/`::after`.
+- [x] Applied the same signature to `/webdesign` (`.wd2-hero`) on request, since it's the page most
+      commonly shown to prospective clients: `.wd2-hero::before`'s Bauhaus layer now reuses
+      `bauhausRise`, and `.wd2-hero__glass`'s existing entrance (`wd2-glass-in`) swapped its generic
+      `cubic-bezier(0.16,1,0.3,1)` for `var(--ease-swing)`. While reviewing that page: it already
+      has real per-project write-ups (Hardware Etc LLC, Sonus Construction Group — named clients,
+      platform tag, description, bullets) that the earlier "no case-study depth" gap note didn't
+      account for — that gap is more about the homepage's Experience carousel (logos + bullets
+      only) than `/webdesign`, which is already close to what Copilot's assessment asked for.
 - [ ] Section-divider motif (staff-line/waveform) using `--brass`, replacing the plain teal
       gradient rule between major sections — not yet started.
-- [ ] Case-study treatment for 2-3 real projects (actual screens, outcome, before/after) — the
-      highest-leverage item for the $1-2k freelance-client goal per both Copilot's assessment and
-      Claude's own read; not yet started, likely the largest remaining chunk of this phase.
+- [ ] Case-study treatment for 2-3 real *Experience* entries specifically (the homepage carousel is
+      the thinner of the two project-facing sections now) — not yet started.
 - [ ] User to test-drive the brass accent + font swap on this branch before it's considered final —
       approved conditionally ("as long as this is on a branch, i'm happy to test drive changes").
 

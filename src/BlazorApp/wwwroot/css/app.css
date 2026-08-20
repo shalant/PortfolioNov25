@@ -5173,7 +5173,10 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
 
 /* Site-wide bauhaus motif, kept very subtle here since it sits behind the
    marquee — reads only through the gaps between images and around the
-   glass panel, matching how every other section on the page uses it. */
+   glass panel, matching how every other section on the page uses it.
+   Reuses the home hero's bauhausRise entrance for the same signature
+   settle-into-place moment — this page is the one prospective clients see
+   most, so it gets the same first-paint polish as the homepage. */
 .wd2-hero::before {
   content: '';
   position: absolute;
@@ -5185,6 +5188,7 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
   opacity: 0.07;
   pointer-events: none;
   z-index: 0;
+  animation: bauhausRise 1.1s var(--ease-swing) both;
 }
 
 .wd2-hero__marquee {
@@ -5263,7 +5267,7 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
   border: 1px solid rgba(var(--accent-rgb), 0.22);
   border-radius: 20px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  animation: wd2-glass-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: wd2-glass-in 0.9s var(--ease-swing) both;
 }
 
 .wd2-hero__glass .section-eyebrow {
