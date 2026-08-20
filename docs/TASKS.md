@@ -937,6 +937,25 @@ whether the mobile-hidden "get in touch" nav CTA counted as a CTA (yes — the c
 
 ---
 
+## Phase 3J.1: Force dark theme as the default
+**Status:** ✅ Complete
+**Branch:** `fix/dark-mode-default`
+
+**Why:** User's girlfriend saw the site in light mode on first visit. Root cause: `theme.js`
+fell back to the visitor's OS/browser `prefers-color-scheme` when no saved preference existed.
+Compared both themes live in-browser (dev server + screenshots) — dark reads as the intended
+design: the tiled Bauhaus/art-deco background pattern has real geometric contrast in dark mode
+and washes out to near-invisible in light; the navy+teal palette and portrait's monitor-glow
+bokeh were clearly tuned for dark. Light mode isn't broken, just flatter — kept as an explicit
+opt-in via the header toggle, not the first impression.
+
+### Tasks
+- [x] `theme.js`: `resolve()` now falls back to `'dark'` unconditionally instead of checking
+      `matchMedia('(prefers-color-scheme: light)')`. Saved `localStorage` preference (from the
+      header toggle) still wins for returning visitors on either theme.
+
+---
+
 ## Phase 3K: Run Copilot's UI assessment through Claude Code
 **Status:** ⏳ Not started — blocked on Phase 3J being committed/merged first
 **Branch:** TBD (new branch once started)
