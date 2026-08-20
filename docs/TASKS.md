@@ -957,8 +957,8 @@ opt-in via the header toggle, not the first impression.
 ---
 
 ## Phase 3K: Run Copilot's UI assessment through Claude Code
-**Status:** ⏳ Not started — blocked on Phase 3J being committed/merged first
-**Branch:** TBD (new branch once started)
+**Status:** ✅ Triage complete (in-chat, not written up as a standalone doc) — folded into Phase 3L
+**Branch:** n/a — no code changes of its own
 
 **Why:** User had GitHub Copilot produce a UI assessment of the entire deployed site
 (`docs/CopilotAssessmentDrDev19Aug26.txt`, appeared in the working tree 2026-08-19 — not authored
@@ -967,10 +967,68 @@ a fresh task once Phase 3J is out of the way, rather than layering more changes 
 already-large branch.
 
 ### Tasks
-- [ ] Read `docs/CopilotAssessmentDrDev19Aug26.txt` in full.
-- [ ] Triage its findings against what's already shipped/in-flight in Phases 3H–3J (some may
-      already be resolved or superseded).
-- [ ] Scope and branch the remaining, still-relevant items.
+- [x] Read `docs/CopilotAssessmentDrDev19Aug26.txt` in full.
+- [x] Triage its findings against what's already shipped/in-flight in Phases 3H–3J. Most of
+      Copilot's "high-impact, low-effort" list turned out to already be shipped: sticky header,
+      header CTA, dark/light toggle, tech-stack chips per project, project thumbnails, card CTAs,
+      and a pricing section on `/services` all predate the assessment — Copilot appears to have
+      inferred site structure from a crawl rather than the live rendered nav (its "Projects and
+      Music compete in the navbar" point is wrong — neither is a nav link). Rejected outright:
+      fabricating testimonials/Slack-message social proof (dishonest, don't do it — real ones only
+      if/when actual clients provide them) and the "premium agency" messaging pivot in Copilot's
+      second answer, which directly contradicts its own first answer praising the site for feeling
+      "handcrafted rather than template-generated." Genuine gap identified and carried into Phase
+      3L: no case-study depth on any project (just logos + bullets, no real outcome/before-after).
+- [x] Scope and branch the remaining, still-relevant items — folded into Phase 3L below rather than
+      a separate branch, since user's actual next ask ("make this extremely stunning") is the same
+      whole-site design work at a larger scope.
+
+---
+
+## Phase 3L: Whole-site "stunning" design pass
+**Status:** 🔄 In progress — token/motion foundation shipped, structural work (dividers, case
+studies) still open
+**Branch:** `feature/stunning-design-pass`
+
+**Why:** User's explicit goal: make the site "extremely stunning." Design-lead take (see chat, not
+duplicated here): don't chase generic premium-SaaS-agency tropes — dark-bg-plus-single-accent is
+already one of the three clichéd "AI portfolio" looks, and what currently saves this site from
+reading generic is the Bauhaus texture, the serif/mono type pairing, and real personal content
+(the jazz background), not the hue count. Plan is to push those already-distinctive elements
+further rather than import someone else's premium aesthetic. Full token plan (color/type/layout/
+signature) was proposed and reviewed with the user before any code — color and font changes
+specifically called out per CLAUDE.md's "no color scheme changes without discussion" rule.
+
+### Design plan
+- **Color:** kept navy `#2c3e50`/teal `#1abc9c`/cream `#f5f1e8` exactly as-is. Added one new token,
+  `--brass` (`#c9a15a`) — pulled from the saxophone, not decoration — reserved for the one-time
+  hero entrance and a future divider motif; never a second "regular" accent alongside teal.
+- **Type:** kept Cormorant Garamond (display) + Montserrat (body). Swapped the eyebrow/label/tag
+  monospace from `'Courier New'` (generic OS fallback) to JetBrains Mono (an actual code-editor
+  typeface, loaded from Google Fonts) — more honestly "developer-authentic" than a system fallback.
+- **Signature motion — "swing":** a `--ease-swing` cubic-bezier (quick attack, slight overshoot,
+  settle) replacing the stock Material `cubic-bezier(0.4,0,0.2,1)` on `.reveal-on-scroll` and the
+  skills-chip stagger, plus a one-time hero entrance (`bauhausRise`) where the two Bauhaus/art-deco
+  layers settle into place on first paint, bg2 a beat behind bg1 — a nod to jazz phrasing instead
+  of default motion-library easing. User flagged a fast-load-time concern for this specifically;
+  confirmed it's a pure CSS animation on elements already in the DOM/CSS (no new asset weight,
+  can't run before first paint since it animates already-painted content), and is neutralized by
+  the existing site-wide `prefers-reduced-motion` rule — the real load-time cost is the ~18MB
+  uncompressed Blazor WASM runtime, unrelated and already tracked as the Phase 4 Astro migration.
+
+### Tasks
+- [x] Add `--brass`/`--brass-rgb`, `--mono`, `--ease-swing` tokens to `app.css` `:root`.
+- [x] Load JetBrains Mono in `index.html`; replace all `'Courier New'` font-family declarations
+      (app.css + BlogPosts.razor + Music/Experience/Casual.razor loading states) with `var(--mono)`.
+- [x] Re-time `.reveal-on-scroll` and the skills-chip stagger with `var(--ease-swing)`.
+- [x] Add the `bauhausRise` hero entrance animation to `.hero-section::before`/`::after`.
+- [ ] Section-divider motif (staff-line/waveform) using `--brass`, replacing the plain teal
+      gradient rule between major sections — not yet started.
+- [ ] Case-study treatment for 2-3 real projects (actual screens, outcome, before/after) — the
+      highest-leverage item for the $1-2k freelance-client goal per both Copilot's assessment and
+      Claude's own read; not yet started, likely the largest remaining chunk of this phase.
+- [ ] User to test-drive the brass accent + font swap on this branch before it's considered final —
+      approved conditionally ("as long as this is on a branch, i'm happy to test drive changes").
 
 ---
 
