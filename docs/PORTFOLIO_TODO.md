@@ -60,6 +60,20 @@
 - **Effort:** 12-16 hours (layout + 3 posts × 3-4 hours each)
 - **ROI:** Organic search traffic, email capture, thought leadership
 
+**Future post ideas (backlog, not part of the 3 launch posts above):**
+- **"Angular → Blazor" before/after.** `/archive` and `/previous` (`PreviousPortfolio.razor`) already
+  embed the old Angular-based site live via iframe (`/archive/dist/portfolio/index.html`) — it was
+  built as a quick hack to keep the old site viewable, but it's already the exact asset a
+  before/after post needs: a live, clickable comparison, not just screenshots. Route is live but
+  unlinked from nav (intentionally, per the nav IA discussion — 2026-08-21).
+- **The stack-decision story: Angular → Blazor WebAssembly → MudBlazor → dropping MudBlazor →
+  (on haxbyte.com specifically) dropping Blazor WASM for Astro.** Doug's read: this is genuinely
+  interesting content — a real decision trail with reasons at each step, not a tutorial. Positions
+  well for the recruiter/engineer audience (haxbyte.com per the career-development repo's brand
+  split) since it's about *judgment* (when to use a framework vs. when to leave it) rather than
+  "how to." Pairs naturally with the before/after post above — the Angular→Blazor leg of the story
+  has a live artifact to point to.
+
 ### 4. **"Blog Preview" Section on Homepage**
 - **Why:** Drives visitors from homepage to blog (longer session time, more SEO signals)
 - **Scope:**
