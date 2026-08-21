@@ -2276,6 +2276,24 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   flex-shrink: 0;
   width: min(420px, 38vw);
   animation: fadeInUp 1s ease-out 0.2s both;
+  position: relative;
+}
+
+/* Subtle radial glow bloom — kept deliberately quiet (0.22 peak opacity, a
+   half-degree of tilt) rather than the stronger version demoed earlier.
+   Hover/active target the container, not just the <img>, so the glow's
+   extended radius (inset: -12%) is part of the hit area too. */
+.hero-portrait::before {
+  content: '';
+  position: absolute;
+  inset: -12%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.22), transparent 70%);
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.6s var(--ease-swing), transform 0.6s var(--ease-swing);
+  pointer-events: none;
 }
 
 .hero-portrait__img {
@@ -2283,6 +2301,34 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 24px 64px rgba(var(--accent-rgb), 0.12));
+  position: relative;
+  z-index: 1;
+  transition: transform 0.5s var(--ease-swing), filter 0.5s var(--ease-swing);
+}
+
+/* Hover only on devices that actually have a precise pointer — gated so a
+   touchscreen tap doesn't get stuck in a "sticky hover" state after release. */
+@media (hover: hover) and (pointer: fine) {
+  .hero-portrait:hover::before {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .hero-portrait:hover .hero-portrait__img {
+    transform: scale(1.02) rotate(-0.5deg);
+    filter: drop-shadow(0 28px 60px rgba(var(--accent-rgb), 0.2));
+  }
+}
+
+/* :active covers the press-down moment on both mouse and touch — this is the
+   "something happens on mobile tap" half of the interaction, no JS needed. */
+.hero-portrait:active::before {
+  opacity: 1;
+  transform: scale(0.96);
+}
+
+.hero-portrait:active .hero-portrait__img {
+  transform: scale(0.99) rotate(0.5deg);
+  filter: drop-shadow(0 14px 32px rgba(var(--accent-rgb), 0.24));
 }
 
 .hero-scroll {
@@ -5223,7 +5269,9 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #05111f;
+  background: #081527; /* was #05111f — closer to the homepage hero's gradient
+                           midtone (--bg-hero) so this page doesn't read darker
+                           than the landing page's hero at the base layer */
 }
 
 /* Site-wide bauhaus motif, kept very subtle here since it sits behind the
@@ -5270,18 +5318,25 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
 }
 
-/* Back row: smaller, blurred, dimmer — pushed into depth */
+/* Back row: smaller, blurred, dimmer — pushed into depth. Brightness/saturate
+   bumped up (was 0.78/0.55) — dark mode was dimming harder than light mode's
+   own back-row filter (0.92/0.7) did, backwards from the intent. */
 .wd2-hero__marquee--back .wd2-hero__track img {
   width: 300px;
   height: 190px;
-  filter: blur(2px) brightness(0.78) saturate(0.55);
+  filter: blur(2px) brightness(0.92) saturate(0.78) contrast(1.1);
 }
 
-/* Front row: larger, sharp — reads as foreground */
+/* Front row: larger, sharp — reads as foreground. Screenshotted and compared
+   directly against the homepage hero (2026-08-21): even after the first pass
+   (0.68) the marquee still read as a grey/navy blur instead of real sites —
+   saturation was the actual lever, not brightness or the scrim. Pushed close
+   to full color since these images ARE the proof-of-work; muting them works
+   against the one thing this hero is supposed to communicate. */
 .wd2-hero__marquee--front .wd2-hero__track img {
   width: 380px;
   height: 240px;
-  filter: brightness(1) saturate(0.6);
+  filter: brightness(1.1) saturate(0.95) contrast(1.15);
 }
 
 .wd2-hero__track--slow {
@@ -5305,7 +5360,9 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
 .wd2-hero__scrim {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, rgba(5, 17, 31, 0.35) 0%, rgba(5, 17, 31, 0.72) 75%);
+  /* Was 0.35/0.72 — eased off since it was stacking on top of already-dimmed
+     marquee images and darkening this hero well past the homepage's. */
+  background: radial-gradient(ellipse at center, rgba(5, 17, 31, 0.2) 0%, rgba(5, 17, 31, 0.5) 75%);
   pointer-events: none;
 }
 
@@ -5316,12 +5373,15 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
   margin: 0 2rem;
   padding: 3.25rem 3.5rem;
   text-align: center;
-  background: rgba(var(--surface-rgb), 0.5);
+  /* Bumped from 0.5/0.22/0.06 — at 50% opacity the card was barely lighter
+     than the (already dark) scrimmed backdrop behind it, so it read as part
+     of the background rather than a card sitting on top of it. */
+  background: rgba(var(--surface-rgb), 0.68);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border: 1px solid rgba(var(--accent-rgb), 0.38);
   border-radius: 20px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   animation: wd2-glass-in 0.9s var(--ease-swing) both;
 }
 
@@ -5357,6 +5417,111 @@ html[data-theme="light"] .dr-theme-scope .site-footer__cta:hover {
 @keyframes wd2-glass-in {
   from { opacity: 0; transform: translateY(24px) scale(0.97); }
   to { opacity: 1; transform: none; }
+}
+
+.wd2-hero__cta {
+  margin-top: 1.75rem;
+}
+
+/* Native <dialog> — showModal()/close() handle focus trap, ESC-to-close, and
+   the ::backdrop layer for free; only the visual reset + brand theming below
+   are custom. */
+.contact-dialog {
+  position: relative;
+  max-width: 640px;
+  width: min(90vw, 640px);
+  padding: 2.5rem;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.contact-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.contact-dialog__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: none;
+  color: rgba(var(--text-rgb), 0.55);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.contact-dialog__close:hover {
+  color: var(--text);
+}
+
+.contact-dialog__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: 2rem;
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+
+.contact-dialog__options {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.contact-dialog__option {
+  flex: 1 1 240px;
+  padding: 1.5rem;
+  border: 1px solid rgba(var(--text-rgb), 0.14);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.contact-dialog__option h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.contact-dialog__option p {
+  font-size: 0.85rem;
+  color: rgba(var(--text-rgb), 0.65);
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+}
+
+.contact-dialog__option .hero-btn {
+  padding: 0.65rem 1.5rem;
+  font-size: 0.75rem;
+}
+
+.contact-dialog__fallback {
+  margin: 1.5rem 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(var(--text-rgb), 0.55);
+}
+
+.contact-dialog__copy {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-family: var(--mono);
+  color: rgba(var(--text-rgb), 0.8);
+  text-decoration: underline dotted;
+  cursor: pointer;
+}
+
+.contact-dialog__copy:hover {
+  color: var(--accent);
 }
 
 @media (max-width: 820px) {

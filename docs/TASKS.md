@@ -1073,8 +1073,30 @@ specifically called out per CLAUDE.md's "no color scheme changes without discuss
 
 ---
 
-## Phase 4: Port /webdesign + /webdesign2 to Astro (separate session/repo)
-**Status:** ⏳ Not started — deliberately deferred, not a quick add-on
+## Phase 4: Migrate the whole site to Astro on Cloudflare (separate session/repo)
+**Status:** ⏳ Not started — deliberately deferred, not a quick add-on. **Confirmed (2026-08-21):
+not happening before September 1** — the FB soft-launch/nav-relabel work takes priority; this stays
+parked until after Sept 2 at the earliest.
+
+**Scope — confirmed 2026-08-21, supersedes the webdesign-only plan below:** whole site, not just
+the two lead-facing pages — Home/About/Experience/Skills/Blog/Casual/Music/Contact/Services/
+Consulting/WebDesign, all of it. Host is **Cloudflare Pages**, matching haxbyte.com's stack, not a
+same-domain GitHub Pages merge — that's a real infrastructure change (DNS nameservers move to
+Cloudflare, same process SECURITY.md already describes for the CSP-headers item), not just a build
+tool swap. Side benefit worth knowing about, not the reason to have decided this: moving to
+Cloudflare also resolves the CSP-headers gap SECURITY.md flags as unreachable on plain GitHub
+Pages.
+
+**Effort note:** bigger than the two-page version below, which was already "unscoped, likely
+several sessions." A whole-site rewrite in a new framework on a new host is a materially larger
+lift — worth scoping properly (even just a rough page/component inventory) before starting, rather
+than discovering the size of it mid-migration.
+
+**Original two-page plan, kept below for the deploy-mechanics detail (same-domain GitHub Pages
+merge) even though the confirmed scope above has moved past it — those specifics (Astro build step
+merged into `publish-gh-pages.yml`, static output winning over the Blazor SPA fallback) may still
+be useful reference for how routing/deploy handoff works during a partial migration, if the
+whole-site rewrite ends up happening in stages rather than one cutover:
 **Effort:** Unscoped (new repo, likely several sessions)
 **ROI:** High for the lead-facing pages specifically — Blazor WASM's runtime download is the main
 cost tonight's design work can't fix with CSS alone.
@@ -1104,8 +1126,8 @@ boot.
 - [ ] Port the project data (`webdesign.json` → Astro content collection or direct JSON import),
       the crossfade card component, and the webdesign2 marquee/glass hero
 
-**Not now:** porting the rest of the site (Home/About/Experience/Skills/Blog) — no measured problem
-there yet, and it's a much bigger lift than the two lead-facing pages.
+**Superseded (2026-08-21):** the line that used to be here said "not now" for the rest of the
+site — no longer accurate. Confirmed scope is now the whole site, see the top of this section.
 
 ---
 
