@@ -243,13 +243,10 @@
         A custom `resume_download` event on top of that would double-count the same action; let
         GA4's automatic event cover it. (No custom event added for this — confirmed as the plan,
         nothing further to do here.)
-  - [ ] Custom events — **blocked on the UI branch, but code drafted below so the merge is a
-        copy-paste, not a from-scratch job.** This worktree (`feature/ga4-meta-pixel`) branched
-        cleanly off `main`, so it doesn't have the contact dialog markup from
-        `feature/nav-client-relabel` (still uncommitted there as of 2026-08-21) — nothing to hang
-        an `onclick` off yet. Once that branch's `WebDesignPage.razor` exists here, apply these
-        four changes (each just adds a `gtag('event', ...)` call to markup that already exists —
-        nothing else about the buttons changes):
+  - [x] Custom events — **wired up 2026-08-21**, after `feature/nav-client-relabel` merged to
+        `main` and was merged into this branch, bringing the contact dialog markup in. All four
+        `gtag('event', ...)` calls applied to `WebDesignPage.razor` exactly as drafted below,
+        builds clean. Kept the draft here for reference rather than deleting it:
 
         **1. The CTA that opens the dialog** — add `gtag(...)` before the existing `showModal()`:
         ```html
