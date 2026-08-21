@@ -49,53 +49,52 @@
         <nav>
             <ul class="nav-items" id="navItems">
 
+                <!-- Option A (2026-08-21): client work goes flat/bare, front and center — the
+                     six-month priority. Reuses the same .nav-has-dropdown/.nav-dropdown/.nav-caret
+                     CSS system already in app.css. -->
                 <li>
-                    <a class="nav-link" href="/#about">
-                        <!-- arch — mirrors the arch shapes in the art deco backgrounds -->
+                    <a class="nav-link nav-link--page" href="/webdesign">
+                        <!-- split branch: craft/build, the featured offering -->
                         <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                            <path d="M2 13 L2 7.5 A5 5 0 0 0 12 7.5 L12 13"/>
+                            <line x1="7" y1="13" x2="7" y2="7"/>
+                            <line x1="7" y1="7" x2="3" y2="3"/>
+                            <line x1="7" y1="7" x2="11" y2="3"/>
                         </svg>
-                        about
+                        web design
                     </a>
                 </li>
 
                 <li>
-                    <a class="nav-link" href="/#experience">
-                        <!-- timeline: dots + lines -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-                            <circle cx="3" cy="4"  r="1.3" stroke="none"/>
-                            <line x1="6.5" y1="4"  x2="12" y2="4"/>
-                            <circle cx="3" cy="8"  r="1.3" stroke="none"/>
-                            <line x1="6.5" y1="8"  x2="10" y2="8"/>
-                            <circle cx="3" cy="12" r="1.3" stroke="none"/>
-                            <line x1="6.5" y1="12" x2="11" y2="12"/>
+                    <a class="nav-link nav-link--page" href="/services">
+                        <!-- briefcase: services offering -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="1.5" y="4.5" width="11" height="7.5" rx="1"/>
+                            <path d="M5 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5"/>
+                            <line x1="1.5" y1="7.5" x2="12.5" y2="7.5"/>
                         </svg>
-                        experience
+                        services
                     </a>
                 </li>
 
                 <li>
-                    <a class="nav-link" href="/#technicalskills">
-                        <!-- 2×2 grid of squares -->
-                        <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
-                            <rect x="1.5" y="1.5" width="4.5" height="4.5" rx="0.5"/>
-                            <rect x="8"   y="1.5" width="4.5" height="4.5" rx="0.5"/>
-                            <rect x="1.5" y="8"   width="4.5" height="4.5" rx="0.5"/>
-                            <rect x="8"   y="8"   width="4.5" height="4.5" rx="0.5"/>
+                    <a class="nav-link nav-link--page" href="/consulting">
+                        <!-- speech bubble: consulting conversation -->
+                        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M1.5 2.5 H12.5 V9 H5.5 L3 11.5 V9 H1.5 Z"/>
                         </svg>
-                        skills
+                        consulting
                     </a>
                 </li>
 
-                <!-- divider: sections of this page (above) vs. separate destinations (below) -->
+                <!-- divider: client-facing offerings (above, bare — the six-month priority) vs.
+                     everything else about the person behind them (below, one door) -->
                 <li class="nav-divider" role="separator" aria-hidden="true"></li>
 
-                <!-- Destination pages grouped under a "more" dropdown: at tablet widths
-                     (~820-1200px) the full 7-link row was cramped-but-not-yet-collapsed
-                     to the hamburger, reading as a "busy" nav. Reuses the .nav-has-dropdown/
-                     .nav-dropdown/.nav-caret CSS system that already existed in app.css
-                     (built at some point, never wired to any markup) rather than adding a
-                     new mechanism. -->
+                <!-- Everything else lives behind one "more" door: at tablet widths (~820-1200px)
+                     a full flat row reads as cramped-but-not-yet-collapsed, and none of these
+                     items need to compete for bare top-level space the way client work does right
+                     now. Dropdown items can be homepage anchors just as easily as routed pages —
+                     About/Experience/Skills work exactly as they always did, just relocated. -->
                 <li class="nav-has-dropdown">
                     <button class="nav-link nav-link--page" type="button">
                         <!-- three dots: "more" -->
@@ -108,30 +107,45 @@
                         <span class="nav-caret">▾</span>
                     </button>
                     <div class="nav-dropdown">
-                        <a class="nav-link nav-link--page nav-dropdown-item" href="/webdesign">
-                            <!-- split branch: craft/build, now the featured offering -->
+                        <a class="nav-link nav-link--page nav-dropdown-item" href="/#about">
+                            <!-- arch — mirrors the arch shapes in the art deco backgrounds -->
                             <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                                <line x1="7" y1="13" x2="7" y2="7"/>
-                                <line x1="7" y1="7" x2="3" y2="3"/>
-                                <line x1="7" y1="7" x2="11" y2="3"/>
+                                <path d="M2 13 L2 7.5 A5 5 0 0 0 12 7.5 L12 13"/>
                             </svg>
-                            web design
+                            about
                         </a>
-                        <a class="nav-link nav-link--page nav-dropdown-item" href="/services">
-                            <!-- briefcase: services offering -->
-                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <rect x="1.5" y="4.5" width="11" height="7.5" rx="1"/>
-                                <path d="M5 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5"/>
-                                <line x1="1.5" y1="7.5" x2="12.5" y2="7.5"/>
+                        <a class="nav-link nav-link--page nav-dropdown-item" href="/#experience">
+                            <!-- timeline: dots + lines -->
+                            <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+                                <circle cx="3" cy="4"  r="1.3" stroke="none"/>
+                                <line x1="6.5" y1="4"  x2="12" y2="4"/>
+                                <circle cx="3" cy="8"  r="1.3" stroke="none"/>
+                                <line x1="6.5" y1="8"  x2="10" y2="8"/>
+                                <circle cx="3" cy="12" r="1.3" stroke="none"/>
+                                <line x1="6.5" y1="12" x2="11" y2="12"/>
                             </svg>
-                            services
+                            experience
                         </a>
-                        <a class="nav-link nav-link--page nav-dropdown-item" href="/consulting">
-                            <!-- speech bubble: consulting conversation -->
-                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M1.5 2.5 H12.5 V9 H5.5 L3 11.5 V9 H1.5 Z"/>
+                        <a class="nav-link nav-link--page nav-dropdown-item" href="/#technicalskills">
+                            <!-- 2×2 grid of squares -->
+                            <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+                                <rect x="1.5" y="1.5" width="4.5" height="4.5" rx="0.5"/>
+                                <rect x="8"   y="1.5" width="4.5" height="4.5" rx="0.5"/>
+                                <rect x="1.5" y="8"   width="4.5" height="4.5" rx="0.5"/>
+                                <rect x="8"   y="8"   width="4.5" height="4.5" rx="0.5"/>
                             </svg>
-                            consulting
+                            skills
+                        </a>
+                        <!-- Résumé: promoted off the About section's scroll-away button into the
+                             nav (2026-08-21) — for a recruiter it's the single highest-intent
+                             artifact on the site. Same PDF as About.razor's "Download Resume". -->
+                        <a class="nav-link nav-link--page nav-dropdown-item" href="resume/DouglasRosenbergResumeAugust26.pdf" download target="_blank" rel="noopener">
+                            <!-- download arrow -->
+                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M7 1.5v7.5M3.5 6l3.5 3.5L10.5 6"/>
+                                <path d="M1.5 12.5h11"/>
+                            </svg>
+                            résumé
                         </a>
                         <a class="nav-link nav-link--page nav-dropdown-item" href="/blog">
                             <!-- book/blog: open book pages -->

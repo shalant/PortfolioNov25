@@ -60,6 +60,20 @@
 - **Effort:** 12-16 hours (layout + 3 posts × 3-4 hours each)
 - **ROI:** Organic search traffic, email capture, thought leadership
 
+**Future post ideas (backlog, not part of the 3 launch posts above):**
+- **"Angular → Blazor" before/after.** `/archive` and `/previous` (`PreviousPortfolio.razor`) already
+  embed the old Angular-based site live via iframe (`/archive/dist/portfolio/index.html`) — it was
+  built as a quick hack to keep the old site viewable, but it's already the exact asset a
+  before/after post needs: a live, clickable comparison, not just screenshots. Route is live but
+  unlinked from nav (intentionally, per the nav IA discussion — 2026-08-21).
+- **The stack-decision story: Angular → Blazor WebAssembly → MudBlazor → dropping MudBlazor →
+  (on haxbyte.com specifically) dropping Blazor WASM for Astro.** Doug's read: this is genuinely
+  interesting content — a real decision trail with reasons at each step, not a tutorial. Positions
+  well for the recruiter/engineer audience (haxbyte.com per the career-development repo's brand
+  split) since it's about *judgment* (when to use a framework vs. when to leave it) rather than
+  "how to." Pairs naturally with the before/after post above — the Angular→Blazor leg of the story
+  has a live artifact to point to.
+
 ### 4. **"Blog Preview" Section on Homepage**
 - **Why:** Drives visitors from homepage to blog (longer session time, more SEO signals)
 - **Scope:**
@@ -150,16 +164,23 @@
 
 ## 📊 Metrics & Analytics (Week 4)
 
-### 9. **Analytics Integration** 
-- **Why:** Can't optimize what you don't measure; need to track traffic, CTA clicks, lead source
+### 9. **Analytics Integration** — 🔥 relevant now (2026-08-21: Sept 2 FB launch approaching)
+- **Why:** Can't optimize what you don't measure; need to track traffic, CTA clicks, lead source.
+  Newly relevant: currently fixing GA4 + Meta Pixel tracking at the day job, so the skill is warm
+  right now. Also directly answers the mobile-vs-desktop question from the nav/hero discussion
+  (2026-08-21) with real data instead of inference, once the Sept 2 FB post starts sending traffic.
 - **Scope:**
   - [ ] Set up Google Analytics 4 (GA4) — free tier
-  - [ ] Add tracking code to `index.html` (single `<script>` tag)
-  - [ ] Define key events: CTA clicks, blog reads, email signup, form submissions
-  - [ ] Set up dashboard: traffic source, top pages, conversion funnel
+  - [ ] Set up Meta Pixel — same free tier logic as GA4; pairs naturally since traffic is coming
+        from a Facebook/Messenger funnel specifically (see Sept 2 plan in the career-development
+        repo's `HAXBYTE_BRAND_PLAN.md`) — Pixel captures the FB-side journey GA4 can't
+  - [ ] Add tracking code to `index.html` (GA4 `<script>` tag + Meta Pixel base code)
+  - [ ] Define key events: CTA clicks (résumé download, "get in touch"), `/webdesign` and
+        `/webdesign/{slug}` visits (the pages actually pasted into 1:1 DM replies), blog reads
+  - [ ] Set up dashboard: traffic source, top pages, device split (mobile vs. desktop), conversion funnel
   - [ ] Weekly review: which CTAs convert best? Which pages drive leads?
-- **Effort:** 2-3 hours (GA4 setup + goals)
-- **ROI:** Data-driven optimization; understand what works
+- **Effort:** 2-3 hours (GA4 + Meta Pixel setup + goals)
+- **ROI:** Data-driven optimization; understand what works; real device-split data for the Sept 2 cohort
 
 ### 10. **Core Web Vitals Check** 
 - **Why:** Google ranks fast sites higher; Blazor WASM apps are notoriously slow to load
