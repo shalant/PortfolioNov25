@@ -1169,6 +1169,33 @@ the corrected path. Verified locally: `/webdesign/hardware-etc` now renders the 
 (title, content, images) instead of 404. This was a site-wide bug, not specific to the webdesign
 section — any parameterized route hit on direct load/refresh was affected.
 
+## Fix: Broken Images on Every Nested Route (bad dynamic base href)
+**Status:** ✅ Complete (2026-08-21)
+**Branch:** `fix/spa-deep-link-routing` (same branch — found while re-verifying the fix above)
+
+**Why:** After the deep-link fix above, user reported the case-study screenshots still looked
+wrong live ("all the screenshots are cut off... having stunning pictures is essential"). Checked
+the live site directly: it wasn't cropping, the images were failing to load entirely (broken-image
+icon, `naturalWidth: 0`) on every page reached via a 2+-segment route.
+
+**Root cause:** `index.html` had a leftover dynamic `<base>` href script (dated to the initial
+commit, comment citing a "Blazor WASM base path problems" guide for apps hosted under a
+**subpath** like `username.github.io/repo-name/`). It read `window.location.pathname`, and for
+any path with more than 2 segments set `<base href="/" + path[1] + "/">` — treating `path[1]` as
+a hosting subpath. But this site is hosted at the domain **root**
+(`dougrosenbergdev.com/webdesign/hardware-etc`), so `path[1]` is actually the first *route*
+segment ("webdesign"), not a subpath. Every relative asset on a nested route (all `images/...`
+srcs) resolved against a wrong base like `/webdesign/`, producing 404s such as
+`dougrosenbergdev.com/webdesign/images/webdesign/hardwareetc-hero.jpg`. The `localhost` branch of
+the old script explicitly forced base href to `/`, which is why this was invisible in local dev
+the whole time — it only ever broke the live site.
+
+**Fix:** Replaced the entire dynamic script with a static `<base href="/" />`. This site is always
+served from the domain root (GitHub Pages custom domain, confirmed in `CLAUDE.md`), so there's no
+subpath to compute — a static root base is correct in every environment (local dev, GH Pages
+custom domain). Verified locally via `img.src`/`naturalWidth` checks that images now resolve
+correctly on a nested route.
+
 ---
 
 ## Hardware Etc: Before/After Case-Study Section
