@@ -346,16 +346,32 @@
 - **ROI:** Data-driven optimization; understand what works; real device-split data for the Sept 2
   cohort; a clean reference implementation for the day-job cleanup too
 
-### 10. **Core Web Vitals Check** 
+### 10. **Core Web Vitals Check** — ✅ Audited (2026-08-22), partially addressed
 - **Why:** Google ranks fast sites higher; Blazor WASM apps are notoriously slow to load
 - **Scope:**
-  - [ ] Run PageSpeed Insights on homepage
-  - [ ] Check: Largest Contentful Paint (LCP), First Input Delay (FID), Cumulative Layout Shift (CLS)
-  - [ ] If slow (>3s): consider optimizations
-    - Lazy load GitHub stats card
-    - Compress hero image
-    - Code splitting on Blazor bundle
-  - [ ] Retest after optimizations
+  - [x] Run PageSpeed Insights on homepage (mobile, live production URL, Slow 4G)
+  - [x] Check: LCP, TBT, CLS, Speed Index — **Performance score: 23/100.** LCP 19.4s, FCP 3.8s,
+        TBT 1,420ms, CLS 0.252, Speed Index 7.0s — all failing. Total network payload 3,912 KiB.
+        Accessibility 99/100 (good).
+  - **Root cause (confirms what's already tracked as the "Phase 4: Astro migration" item):** this
+    is the Blazor WASM runtime download/boot cost, not a fixable CSS/asset tweak — LCP at 19.4s
+    under throttling is the runtime blocking first paint. Not something to attempt as a quick
+    overnight fix; real fix is the tracked Astro migration, or at minimum server-side pre-rendering.
+  - [x] **Two safe, no-content-decision fixes applied tonight** (separate from the big one above):
+    - Fixed "Document does not have a main landmark" (Best Practices audit) — `MainLayout.razor`'s
+      wrapping `<div id="main">` is now `<main id="main">` (plus the matching `div#main` →
+      `main#main` CSS selector). Verified exactly one `<main>` renders, no visual regression.
+    - Investigated "Image elements do not have explicit width/height" (CLS contributor) — **not
+      applied**: most images on the site already use `aspect-ratio` in CSS (this session's
+      case-study/hero/music work), which is the modern equivalent Lighthouse doesn't always credit
+      the same way. Retrofitting explicit HTML `width`/`height` across every image site-wide
+      without checking each one individually risked fighting existing responsive CSS — left as a
+      real remaining task rather than guessing blindly.
+  - [ ] Retest after the Astro migration (or after a real width/height audit) — re-run PageSpeed,
+        expect the score to move meaningfully only once the WASM payload itself shrinks
+  - [ ] Reduce unused JS (105 KiB est.) / unused CSS (44 KiB est.) / minify CSS (11 KiB est.) — real
+        but modest savings next to the WASM bundle itself; worth doing alongside, not instead of,
+        Phase 4
 - **Effort:** 2-3 hours
 - **Nice to have:** Not blocking, but impacts SEO ranking
 

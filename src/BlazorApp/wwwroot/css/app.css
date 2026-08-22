@@ -181,7 +181,7 @@ html[data-theme="light"] .app-loading::before {
   }
 }
 
-div#main {
+main#main {
   display: flex;
   flex-direction: column;
   background-color: #060e1a;
