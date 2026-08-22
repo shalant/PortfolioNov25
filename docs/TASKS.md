@@ -1328,6 +1328,19 @@ Four small, unrelated requests from the same message, each scoped to a different
   still held the build lock — verified by reading files back and checking `app.css`'s brace count
   stayed balanced (850/850) instead.
 
+### Follow-up: SHIFT logo 20% larger, and confirming the Friars logo actually shipped (2026-08-21)
+- Added `transform: scale(1.2)` alongside the existing `brightness(1.6)` override for the SHIFT
+  logo (index 3) in `.experience-detail`, since it read small/dim next to the other companies'
+  logos at the shared 180px max-size.
+- User reported the Friars logo change "never made it onto the Experience section." Spun up a
+  clean `dotnet run` on a fresh port and confirmed live that both the Friars badge swap and the
+  SHIFT scale-up render correctly — the code is right. Most likely explanation: this session
+  checked out other branches (`main`, `fix/header-rerender-scroll-jump`) and back in the same
+  working directory this VS instance is running from, so a look at `localhost:5001` mid-switch,
+  or before a rebuild/hard-refresh picked up the change, would have shown stale content. Nothing
+  to fix in code; flagged to the user to hard-refresh / restart their session rather than assume
+  a regression.
+
 ---
 
 ## Completed ✅
