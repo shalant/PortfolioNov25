@@ -1142,6 +1142,36 @@ site — no longer accurate. Confirmed scope is now the whole site, see the top 
 
 ---
 
+## Fix: Theme Toggle (and any Header re-render) Jumping to a Stale Hash
+**Status:** ✅ Complete (2026-08-21)
+**Branch:** `fix/header-rerender-scroll-jump`
+
+**Why:** User reported: while reading the Music section, they clicked the dark/light theme
+toggle and the page suddenly jumped to the Skills section for no apparent reason.
+
+**Root cause:** `Header.razor`'s `OnAfterRenderAsync` called `DrNav.scrollToHash()`
+**unconditionally on every render**, not just the first one. Any Blazor `@onclick` handler on
+Header (the theme toggle included) triggers a re-render afterward regardless of whether it
+changed any Blazor state — `ToggleTheme()` only calls a JS function, no C# state changes, but
+still re-renders. `scrollToHash()` (`js/nav.js`) reads `window.location.hash`, which is never
+cleared by a manual scroll — it's still whatever an earlier nav-link click last set it to (e.g.
+`#technicalskills`, from clicking "skills" in the nav dropdown at any earlier point in the
+session). So any incidental Header re-render silently re-scrolled the page to that stale hash
+target, hours after the user had already scrolled away from it manually.
+
+**Fix:** Moved `DrNav.scrollToHash()` inside the existing `if (firstRender)` block (it only needs
+to run once, to honor a direct deep link like `/#experience` on initial load — real subsequent
+navigation is already handled correctly by the separate `OnLocationChanged` handler, which calls
+`scrollToHash()` in response to an actual location change, not just any render).
+
+**Verification:** `dotnet build` and `dotnet test .` both pass (8/8, same 2 pre-existing unrelated
+`Experience.razor` warnings — VS's earlier build lock had cleared by this point). Reproduced and
+confirmed fixed live: navigated to `/#technicalskills`, scrolled to the Music section via
+`scrollIntoView`, clicked `.theme-toggle` via JS, and confirmed `window.scrollY` stayed put
+(5343 → 5446, i.e. unchanged aside from the click itself) instead of jumping back to ~0/Skills.
+
+---
+
 ## Fix: Deep-Link Routing on GitHub Pages
 **Status:** ✅ Complete (2026-08-21)
 **Branch:** `fix/spa-deep-link-routing`

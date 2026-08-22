@@ -215,9 +215,16 @@
         if (firstRender)
         {
             await JS.InvokeVoidAsync("DrNav.init");
+            // Only run on the initial load (handles a direct deep link like /#experience).
+            // Actual in-app navigation is handled below via OnLocationChanged. This used to
+            // run unconditionally on every render, which re-ran on ANY Header re-render for
+            // ANY reason (e.g. the theme toggle button click) — since window.location.hash
+            // stays whatever it was last set to (nothing clears it after a manual scroll),
+            // that silently yanked the page back to a stale hash target like #technicalskills
+            // hours after actually navigating there.
+            await JS.InvokeVoidAsync("DrNav.scrollToHash");
         }
         await JS.InvokeVoidAsync("DrNav.highlightActive");
-        await JS.InvokeVoidAsync("DrNav.scrollToHash");
     }
 
     private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
