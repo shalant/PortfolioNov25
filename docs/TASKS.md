@@ -1142,6 +1142,62 @@ site — no longer accurate. Confirmed scope is now the whole site, see the top 
 
 ---
 
+## Fix: Deep-Link Routing on GitHub Pages
+**Status:** ✅ Complete (2026-08-21)
+**Branch:** `fix/spa-deep-link-routing`
+
+**Why:** User reported broken screenshots on live case-study pages (e.g.
+`/webdesign/dougrosenberg-music`). Root cause wasn't the images — it was that **every**
+`/webdesign/{slug}` deep link (and any other parameterized route) 404'd on direct navigation
+or refresh, rendering the app's own `<NotFound />` instead of the page.
+
+**Root cause:** GitHub Pages has no server-side rewrites, so this site relies on the standard
+`404.html` → `sessionStorage` → `index.html` SPA-fallback trick (`wwwroot/404.html` stores the
+attempted path, redirects to `/`, and an inline script in `index.html` restores it via
+`history.replaceState` before Blazor renders). But `index.html`'s
+`<script src="_framework/blazor.webassembly.js">` had no `autostart="false"`, so Blazor
+auto-started and ran its first route match racing against that restore script. Blazor locked in
+"not found" for whatever path it booted with; the later `replaceState` call fixed the address
+bar but nothing re-triggers the router off a raw `history.replaceState` (no `popstate` fires), so
+the page stayed on `NotFound` even though the URL was correct. Confirmed live: address bar showed
+the right path, GA's `page_view` fired with `dl` still `/`, and no `sample-data/webdesign.json`
+request was ever made.
+
+**Fix:** Added `autostart="false"` to the Blazor script tag and moved `Blazor.start()` to run
+*after* the sessionStorage redirect-restore logic, so the router's first route match always sees
+the corrected path. Verified locally: `/webdesign/hardware-etc` now renders the case-study page
+(title, content, images) instead of 404. This was a site-wide bug, not specific to the webdesign
+section — any parameterized route hit on direct load/refresh was affected.
+
+## Fix: Broken Images on Every Nested Route (bad dynamic base href)
+**Status:** ✅ Complete (2026-08-21)
+**Branch:** `fix/spa-deep-link-routing` (same branch — found while re-verifying the fix above)
+
+**Why:** After the deep-link fix above, user reported the case-study screenshots still looked
+wrong live ("all the screenshots are cut off... having stunning pictures is essential"). Checked
+the live site directly: it wasn't cropping, the images were failing to load entirely (broken-image
+icon, `naturalWidth: 0`) on every page reached via a 2+-segment route.
+
+**Root cause:** `index.html` had a leftover dynamic `<base>` href script (dated to the initial
+commit, comment citing a "Blazor WASM base path problems" guide for apps hosted under a
+**subpath** like `username.github.io/repo-name/`). It read `window.location.pathname`, and for
+any path with more than 2 segments set `<base href="/" + path[1] + "/">` — treating `path[1]` as
+a hosting subpath. But this site is hosted at the domain **root**
+(`dougrosenbergdev.com/webdesign/hardware-etc`), so `path[1]` is actually the first *route*
+segment ("webdesign"), not a subpath. Every relative asset on a nested route (all `images/...`
+srcs) resolved against a wrong base like `/webdesign/`, producing 404s such as
+`dougrosenbergdev.com/webdesign/images/webdesign/hardwareetc-hero.jpg`. The `localhost` branch of
+the old script explicitly forced base href to `/`, which is why this was invisible in local dev
+the whole time — it only ever broke the live site.
+
+**Fix:** Replaced the entire dynamic script with a static `<base href="/" />`. This site is always
+served from the domain root (GitHub Pages custom domain, confirmed in `CLAUDE.md`), so there's no
+subpath to compute — a static root base is correct in every environment (local dev, GH Pages
+custom domain). Verified locally via `img.src`/`naturalWidth` checks that images now resolve
+correctly on a nested route.
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)
