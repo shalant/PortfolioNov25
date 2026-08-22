@@ -1242,6 +1242,29 @@ link 404'd on direct navigation/refresh on the live GitHub Pages site — see th
 Routing on GitHub Pages" entry above (`fix/spa-deep-link-routing`, merged into this branch since
 it's what made testing this feature live possible in the first place).
 
+### Follow-up: fixed cropped screenshots + hover zoom (2026-08-21)
+User flagged (with a screenshot) that the `.wd-case__shots` secondary-image grid was visibly
+cropping into the site's own overlay text at both left and right edges. Root cause: the tiles
+used a fixed `height: 220px` with `object-fit: cover`, which doesn't match the images' native
+1522×784 ratio — cover-cropped ~60px off each side at that resolution, enough to clip words on
+screenshots where the text runs close to the edges.
+
+- Fixed by giving `.wd-case__shot img` `aspect-ratio: 1522 / 784` instead of a fixed pixel
+  height, so the tile's box ratio matches the source images exactly — `object-fit: cover` no
+  longer needs to crop anything at any grid column width.
+- Added the requested subtle hover zoom: `transition: transform 0.4s ease-in-out` on the image,
+  `transform: scale(1.06)` on `:hover` (same pattern applied to `.wd-case__hero-shot` at
+  `scale(1.04)` and `.wd-case__ba-shot` at `scale(1.06)` for a consistent feel across all
+  case-study imagery). Containers already had `overflow: hidden`, so the zoom clips cleanly
+  inside the rounded corners.
+- User also didn't like the pre-existing `.wd-case__shot:hover { transform: translateY(-4px) }`
+  card-lift — removed it, keeping only the border-color hover change on the card and the new
+  scale-zoom on the image itself, so hovering no longer shifts anything on the Y-axis.
+- CSS-only change; skipped a full `dotnet build`/`dotnet test` this time since the user's own
+  Visual Studio debug session (`localhost:5001`) held a lock on the shared build output —
+  verified the change by reading the compiled rule back instead of rebuilding, and left live
+  verification to the user's already-running session rather than competing for the lock.
+
 ---
 
 ## Completed ✅

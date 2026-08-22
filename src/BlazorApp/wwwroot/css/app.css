@@ -3063,6 +3063,11 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   width: 100%;
   height: auto;
   display: block;
+  transition: transform 0.4s ease-in-out;
+}
+
+.wd-case__hero-shot:hover img {
+  transform: scale(1.04);
 }
 
 .wd-case__hero-shot figcaption,
@@ -3156,20 +3161,23 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid rgba(var(--accent-rgb), 0.1);
-  transition: border-color 0.3s ease, transform 0.3s ease;
+  transition: border-color 0.3s ease;
 }
 
 .wd-case__shot:hover {
   border-color: rgba(var(--accent-rgb), 0.25);
-  transform: translateY(-4px);
 }
 
 .wd-case__shot img {
   width: 100%;
-  height: 220px;
+  aspect-ratio: 1522 / 784;
   object-fit: cover;
-  object-position: top;
   display: block;
+  transition: transform 0.4s ease-in-out;
+}
+
+.wd-case__shot:hover img {
+  transform: scale(1.06);
 }
 
 .wd-case__before-after {
@@ -3192,6 +3200,11 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   object-fit: cover;
   object-position: top;
   display: block;
+  transition: transform 0.4s ease-in-out;
+}
+
+.wd-case__ba-shot:hover img {
+  transform: scale(1.06);
 }
 
 .wd-case__ba-shot--before img {
