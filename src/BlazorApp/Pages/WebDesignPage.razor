@@ -33,7 +33,7 @@
             <h1 class="wd2-hero__title">@webDesign.Headline</h1>
             <p class="wd2-hero__sub">@webDesign.Subheadline</p>
             <button type="button" class="hero-btn hero-btn--primary wd2-hero__cta"
-                    onclick="document.getElementById('contactDialog').showModal()">
+                    onclick="gtag('event','contact_dialog_open');document.getElementById('contactDialog').showModal()">
                 get in touch
             </button>
         </div>
@@ -50,12 +50,14 @@
                 <h4>Quick note</h4>
                 <p>Just want to say hi or ask something small.</p>
                 <a class="hero-btn hero-btn--ghost"
+                   onclick="gtag('event','contact_option_select',{option:'quick_note'})"
                    href="mailto:doug.rosenberg@gmail.com?subject=Hey%20Doug">send a note</a>
             </div>
             <div class="contact-dialog__option">
                 <h4>Tell me about your project</h4>
                 <p>Give me the details up front so I can reply with something useful.</p>
                 <a class="hero-btn hero-btn--primary"
+                   onclick="gtag('event','contact_option_select',{option:'project_inquiry'})"
                    href="mailto:doug.rosenberg@gmail.com?subject=Website%20project&amp;body=Hi%20Doug%2C%0D%0A%0D%0AHere%27s%20a%20bit%20about%20what%20I%27m%20thinking%3A%0D%0A%0D%0AWhat%20it%27s%20for%3A%20%0D%0ARough%20timeline%3A%20%0D%0ABudget%20range%20%28if%20you%20have%20one%20in%20mind%29%3A%20">
                     start here
                 </a>
@@ -64,7 +66,7 @@
         <p class="contact-dialog__fallback">
             mailto link not opening? copy:
             <button type="button" class="contact-dialog__copy"
-                    onclick="navigator.clipboard.writeText('doug.rosenberg@gmail.com').then(()=>{this.textContent='copied!';setTimeout(()=>this.textContent='doug.rosenberg@gmail.com',1500)})">
+                    onclick="gtag('event','contact_email_copied');navigator.clipboard.writeText('doug.rosenberg@gmail.com').then(()=>{this.textContent='copied!';setTimeout(()=>this.textContent='doug.rosenberg@gmail.com',1500)})">
                 doug.rosenberg@gmail.com
             </button>
         </p>

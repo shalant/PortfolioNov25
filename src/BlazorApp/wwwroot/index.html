@@ -9,6 +9,25 @@
     <meta name="keywords" content="full-stack .NET developer, Blazor consultant, ERP systems, ASP.NET, C#, software engineer" />
     <meta name="author" content="Douglas Rosenberg" />
 
+    <!-- Google Analytics 4 — placed as early in <head> as possible per Google's own guidance.
+         async, so it doesn't block the theme-flash-prevention script below despite coming first.
+         Fresh property (created 2026-08-21, apex domain, zero inherited data) — the first ID used
+         here (G-FFXHPXFCKJ) turned out to actually be the old poorly-built www.-subdomain property
+         already live with real traffic; caught by checking Admin > Data Streams directly rather
+         than trusting the assumption, swapped to this genuinely new one. See docs/PORTFOLIO_TODO.md
+         item 9 for the cleanup decision and the event taxonomy this is scoped to. Custom events
+         (contact_dialog_open, contact_option_select, contact_email_copied) aren't wired yet — they
+         hang off the contact dialog built on feature/nav-client-relabel, not yet present on this
+         branch. Enhanced measurement (page_view, file_download, scroll, outbound_click) is already
+         live from this snippet alone with zero extra code. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3H1NB9ES0L"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-3H1NB9ES0L');
+    </script>
+
     <!-- Sets data-theme on <html> before first paint (avoids a flash of the wrong theme).
          Must be a blocking script here in <head> — this has to run before Blazor boots and
          before CSS-driven paint, so unlike the rest of this app's JS interop it can't wait

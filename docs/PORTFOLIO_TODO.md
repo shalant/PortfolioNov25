@@ -166,21 +166,156 @@
 
 ### 9. **Analytics Integration** — 🔥 relevant now (2026-08-21: Sept 2 FB launch approaching)
 - **Why:** Can't optimize what you don't measure; need to track traffic, CTA clicks, lead source.
-  Newly relevant: currently fixing GA4 + Meta Pixel tracking at the day job, so the skill is warm
-  right now. Also directly answers the mobile-vs-desktop question from the nav/hero discussion
-  (2026-08-21) with real data instead of inference, once the Sept 2 FB post starts sending traffic.
-- **Scope:**
-  - [ ] Set up Google Analytics 4 (GA4) — free tier
-  - [ ] Set up Meta Pixel — same free tier logic as GA4; pairs naturally since traffic is coming
-        from a Facebook/Messenger funnel specifically (see Sept 2 plan in the career-development
-        repo's `HAXBYTE_BRAND_PLAN.md`) — Pixel captures the FB-side journey GA4 can't
-  - [ ] Add tracking code to `index.html` (GA4 `<script>` tag + Meta Pixel base code)
-  - [ ] Define key events: CTA clicks (résumé download, "get in touch"), `/webdesign` and
-        `/webdesign/{slug}` visits (the pages actually pasted into 1:1 DM replies), blog reads
-  - [ ] Set up dashboard: traffic source, top pages, device split (mobile vs. desktop), conversion funnel
-  - [ ] Weekly review: which CTAs convert best? Which pages drive leads?
-- **Effort:** 2-3 hours (GA4 + Meta Pixel setup + goals)
-- **ROI:** Data-driven optimization; understand what works; real device-split data for the Sept 2 cohort
+  Newly relevant: currently fixing GA4 + Meta Pixel tracking at the day job (with a runbook already
+  written there), so doing this deliberately here doubles as a clean reference example — the same
+  taxonomy discipline that fixes a messy account applies directly back to that work. Also directly
+  answers the mobile-vs-desktop question from the nav/hero discussion (2026-08-21) with real data
+  instead of inference, once the Sept 2 FB post starts sending traffic.
+
+- **Analytics goals — what this is actually trying to answer (2026-08-21).** Written to stand alone
+  without needing to remember the conversation that produced it. Going through the candidate
+  questions honestly, not all of them cost the same:
+
+  - **Answered for free, no extra setup:** device split (mobile vs. desktop — GA4's Tech reports)
+    and page-level traffic (which pages got visited, engagement time — GA4's Pages report).
+
+  - **"How clients funneled" — needs one thing, and it's the most important item on this whole
+    list: tag every link before pasting it into a 1:1 DM reply.** Facebook's in-app browser (the one
+    people are in when they read a Messenger DM) frequently strips the referrer, so GA4 can show
+    this traffic as `(direct)` instead of attributing it to Facebook — even though it genuinely came
+    from the DM. Without a tag on the link, "how did they funnel in" is unanswerable no matter how
+    well everything else here is built. Fix: append UTM parameters to whichever `/webdesign/{slug}`
+    (or other) link gets pasted, e.g. `?utm_source=facebook&utm_medium=dm&utm_campaign=sept2026`.
+    **Also added as an action item to the Sept 2 runbook in the career-development repo**
+    (`projects/HAXBYTE_BRAND_PLAN.md`) so it surfaces at the moment of actually sending the DM, not
+    just buried here.
+
+  - **"Light vs. dark theme" — not tracked by GA4 at all today.** Theme choice lives in
+    `localStorage` (`dr-theme`), invisible to GA4 unless explicitly sent. Would need one small
+    custom dimension (`theme: light|dark` as a parameter on `page_view` or a user property) — a
+    real, deliberate decision to make, not yet built. Genuinely useful for knowing which theme is
+    worth investing further polish in, but adds a piece to the taxonomy, so worth deciding on
+    purpose rather than defaulting to "sure, why not."
+
+  - **"CTA clicks vs. abandonment"** — exactly what `contact_dialog_open` vs.
+    `contact_option_select` already answers (dialog opened but neither button clicked = abandoned).
+    Already scoped above, blocked on the UI branch merge, nothing new to decide here.
+
+  - **"Which page performed best" — answerable, but read it loosely.** You're the one choosing
+    which link to send each person, so a page "performing better" may just mean that lead was more
+    promising, not that the page itself is more persuasive. Real signal, but confounded — don't
+    over-read it.
+
+  - **Reality check on sample size.** ~2,000 friends, a realistic 5-10 responses expected — that's
+    not enough volume for meaningful percentages; a single visitor swings any "rate" by 10-20
+    points. Treat this round as directional signal plus a clean foundation for the higher-volume
+    January window (per the brand plan), not a statistically rigorous read. What it *will* reliably
+    tell you even at this scale: whether the mailto CTA silently breaks for anyone (a hard technical
+    signal, not a rate), a rough device lean, and whether people engage with the case-study pages at
+    all before replying.
+
+- **Phase 0 — cleanup before adding anything new:**
+  - [ ] Audit the existing personal GA4 account: several old learning/demo properties present —
+        archive or delete the ones with no ongoing purpose, so the account isn't cluttered before
+        this gets added
+  - [x] Decide the fate of the existing "poorly built" GA4 implementation already on the old
+        dougrosenbergdev.com — **decided 2026-08-21: start fresh, don't rescue it.** Confirmed via
+        Admin > Data Streams that the old property ("DougRosenbergDev", 376622939) tracks
+        `https://www.dougrosenbergdev.com` — the stale `www.` canonical the site's own SEO work
+        already moved away from — and already has a week of real multi-country traffic (14 users,
+        42 events), so its numbers aren't a clean baseline for measuring the Sept 2 launch anyway.
+        Left untouched, not deleted — revisit later if it's worth archiving, not urgent.
+  - [ ] Remaining Phase 0 item: audit and archive/delete the other old learning/demo properties on
+        the account (`DEMO`, `DRD.com2`, `ng-fitness-track...`, `ninja-firegram-1...`,
+        `portfoliodec22`) — not yet done, lower priority than getting the new property correct.
+
+- **Phase 1 — GA4, new/cleaned property:**
+  - [x] Create GA4 property + web data stream for dougrosenbergdev.com — **`G-3H1NB9ES0L`**,
+        apex domain (`https://dougrosenbergdev.com`, not `www.`), confirmed zero inherited data.
+        **Correction:** the ID first used here, `G-FFXHPXFCKJ`, was wrongly logged as "a fresh
+        property" — it was actually the old www.-subdomain property described above, caught by
+        checking Admin > Data Streams directly instead of trusting the assumption. `index.html` and
+        this doc are both now on the correct ID.
+  - [x] Add tracking code to `index.html` (gtag.js `<script>` tag) — done 2026-08-21 on
+        `feature/ga4-meta-pixel`, builds clean
+  - [x] **Don't duplicate GA4's own automatic events.** Enhanced measurement already fires a
+        `file_download` event for PDF link clicks — including the résumé nav link built tonight.
+        A custom `resume_download` event on top of that would double-count the same action; let
+        GA4's automatic event cover it. (No custom event added for this — confirmed as the plan,
+        nothing further to do here.)
+  - [x] Custom events — **wired up 2026-08-21**, after `feature/nav-client-relabel` merged to
+        `main` and was merged into this branch, bringing the contact dialog markup in. All four
+        `gtag('event', ...)` calls applied to `WebDesignPage.razor` exactly as drafted below,
+        builds clean. Kept the draft here for reference rather than deleting it:
+
+        **1. The CTA that opens the dialog** — add `gtag(...)` before the existing `showModal()`:
+        ```html
+        <button type="button" class="hero-btn hero-btn--primary wd2-hero__cta"
+                onclick="gtag('event','contact_dialog_open');document.getElementById('contactDialog').showModal()">
+        ```
+
+        **2. "Quick note" mailto link** — currently has no `onclick` at all, add one:
+        ```html
+        <a class="hero-btn hero-btn--ghost"
+           onclick="gtag('event','contact_option_select',{option:'quick_note'})"
+           href="mailto:doug.rosenberg@gmail.com?subject=Hey%20Doug">send a note</a>
+        ```
+
+        **3. "Tell me about your project" mailto link** — same idea, this is also the Key Event
+        trigger (see below):
+        ```html
+        <a class="hero-btn hero-btn--primary"
+           onclick="gtag('event','contact_option_select',{option:'project_inquiry'})"
+           href="mailto:doug.rosenberg@gmail.com?subject=Website%20project&amp;body=...">
+        ```
+
+        **4. Copy-email fallback button** — add `gtag(...)` in front of the existing clipboard logic:
+        ```html
+        onclick="gtag('event','contact_email_copied');navigator.clipboard.writeText('doug.rosenberg@gmail.com').then(()=>{this.textContent='copied!';setTimeout(()=>this.textContent='doug.rosenberg@gmail.com',1500)})"
+        ```
+
+        What each answers:
+        - `contact_dialog_open` — did the /webdesign CTA get someone to open the dialog?
+        - `contact_option_select` (param `option = quick_note | project_inquiry`) — which path did
+          they take?
+        - `contact_email_copied` — did the mailto fallback get used (signals the mailto link itself
+          may be failing for some visitors)?
+  - [ ] Mark exactly one **Key Event**: `contact_option_select` filtered to
+        `option=project_inquiry` — the actual "someone wants to hire me" signal. Resist marking
+        several events as Key Events; a property with ten "key events" communicates as little as one
+        with none.
+  - [x] Review enhanced measurement toggles deliberately — done 2026-08-21: page views, scrolls,
+        outbound clicks, and file downloads kept on; site search and form interactions turned off
+        (site has neither feature, so both toggles would just be noise). Video engagement left off
+        too, no video on the site.
+  - [ ] Set up dashboard: traffic source, top pages, device split (mobile vs. desktop — the open
+        question from earlier), the one Key Event
+  - [ ] Weekly review post-launch: which CTA path converts, which pages drive it
+
+- **Phase 2 — Meta Pixel: deprioritized 2026-08-21, not "not yet touched."** Worked through this
+  carefully rather than defaulting to "install it anyway since we're already in the neighborhood":
+  Pixel's actual value is retargeting and ad-conversion optimization inside Meta's ad ecosystem —
+  none of that applies here, since the entire Sept 2 strategy is organic/warm-network with zero ad
+  spend anywhere in the brand plan. Everything Pixel could tell you about *this* launch specifically
+  (on-site behavior after a click) is already covered by GA4 + the UTM-tagged DM links. Not "Pixel
+  vs. GA4 redundant in general" — specifically "adds nothing GA4 doesn't already do, for this goal."
+  **Real trigger to revisit, not a someday-maybe:** if paid Facebook/Instagram ads actually start.
+  Until then, this stays parked — the standard-events plan below is kept for whenever that happens,
+  not deleted, since the reasoning (use Meta's own standard event names, not custom ones) still
+  holds whenever it's picked back up:
+  - [ ] Add Meta Pixel base code to `index.html`
+  - [ ] Use Meta's own **standard events**, not custom names — this is what actually unlocks their
+        reporting, same "match the platform's taxonomy" discipline as GA4's Key Events:
+        - `Contact` (standard) — on dialog-open, same trigger as GA4's `contact_dialog_open`
+        - `Lead` (standard) — on the project-inquiry path, same trigger as GA4's
+          `contact_option_select` filtered to `project_inquiry`
+  - [ ] No custom conversions beyond that for now — start minimal, expand only if a real question
+        comes up that these two don't answer
+
+- **Effort:** 3-4 hours (cleanup + GA4 + Pixel setup, a bit more than the original GA4-only estimate
+  since Phase 0 is new)
+- **ROI:** Data-driven optimization; understand what works; real device-split data for the Sept 2
+  cohort; a clean reference implementation for the day-job cleanup too
 
 ### 10. **Core Web Vitals Check** 
 - **Why:** Google ranks fast sites higher; Blazor WASM apps are notoriously slow to load

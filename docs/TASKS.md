@@ -1087,6 +1087,17 @@ tool swap. Side benefit worth knowing about, not the reason to have decided this
 Cloudflare also resolves the CSP-headers gap SECURITY.md flags as unreachable on plain GitHub
 Pages.
 
+**Analytics carries over almost for free (2026-08-21).** Confirmed while setting up GA4 tonight:
+the Measurement ID, the custom-event code (`docs/PORTFOLIO_TODO.md` item 9), and every GA4 Admin
+setting (Internal Traffic, Data Retention, Enhanced Measurement) are all framework-agnostic — none
+of it is Blazor-specific. When the rewrite happens: paste the same `gtag.js` snippet into Astro's
+base layout, paste the same plain-JS event handlers onto Astro's version of the contact dialog
+buttons (they were written as plain `onclick="..."` specifically because that's what the existing
+markup already uses, not Blazor `@onclick` syntax), and nothing else needs to change. **The one
+real risk:** if Astro's page URLs differ from Blazor's current routes, that breaks page-level report
+continuity across the migration — worth keeping URL structure identical for that reason alone, not
+just SEO.
+
 **Effort note:** bigger than the two-page version below, which was already "unscoped, likely
 several sessions." A whole-site rewrite in a new framework on a new host is a materially larger
 lift — worth scoping properly (even just a rough page/component inventory) before starting, rather
