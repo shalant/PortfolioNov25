@@ -1265,6 +1265,33 @@ screenshots where the text runs close to the edges.
   verified the change by reading the compiled rule back instead of rebuilding, and left live
   verification to the user's already-running session rather than competing for the lock.
 
+### Follow-up 2: card polish — box-shadow over border, fill the caption area, zoom everywhere (2026-08-21)
+User sent a second screenshot (Haxbyte case study, light mode) showing the real bug behind the
+crop complaint's sibling issue: shorter captions in `.wd-case__shots` left a visibly blank strip
+of the card's own (transparent) background below the figcaption — grid `align-items: stretch`
+equalizes all cards in a row to the tallest, but the figcaption itself only sized to its own text,
+so short captions didn't reach the bottom of the stretched card. User also asked, generally: every
+photo should get the subtle zoom, and box-shadow is preferred over border for cards.
+
+- **Caption fill:** `.wd-case__shot` is now `display: flex; flex-direction: column`, and its
+  `figcaption` is `flex: 1 1 auto` — the caption's own background always stretches to the card's
+  true bottom edge now, regardless of how the grid row height stretches. No more second,
+  differently-colored blank surface.
+- **Border → box-shadow:** removed the flat `border` from `.wd-case__hero-shot`,
+  `.wd-case__shot`, `.wd-case__highlight-card`, `.wd-case__ba-shot`, and `.wd-project` (the
+  `/webdesign` list-page cards); replaced with soft `box-shadow` (deepening further on hover
+  instead of a border-color change). `.wd-case__hero-shot` already had its own large shadow, so
+  that one just lost the redundant border.
+- **Zoom everywhere:** added the same `transform: scale(...)` + `transition: transform 0.4s
+  ease-in-out` hover treatment to `.wd-project__frame-stage` (the crossfading thumbnail on the
+  `/webdesign` list page) — scaling the stage rather than the individual crossfading `<img>`s so
+  it doesn't interact with their existing opacity keyframe animation.
+- Also dropped the `.wd-project:hover` card lift (`transform: translateY(-1px)`) for the same
+  reason as the earlier `.wd-case__shot` one — kept the interaction language consistent (shadow
+  deepens, photo zooms, nothing shifts vertically) across both the list and detail pages.
+- CSS-only again; same VS lock as above, verified by reading the rules back and checking brace
+  balance rather than rebuilding.
+
 ---
 
 ## Completed ✅

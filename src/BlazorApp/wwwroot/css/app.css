@@ -3055,7 +3055,6 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   margin: 0 0 3.5rem 0;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid rgba(var(--accent-rgb), 0.12);
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
 }
 
@@ -3079,6 +3078,17 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   color: rgba(var(--text-rgb), 0.5);
   background: rgba(10, 18, 32, 0.6);
   border-top: 1px solid rgba(var(--accent-rgb), 0.1);
+}
+
+/* The grid can stretch shorter cards to match a taller sibling (longer
+   caption, more lines) — flex-filling the figcaption itself means its own
+   background always reaches the true bottom of the card, instead of leaving
+   a second, differently-colored blank strip of the card's own (transparent)
+   background below a caption sized only to its own text. */
+.wd-case__shot figcaption {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
 }
 
 .wd-case__stack {
@@ -3114,14 +3124,14 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
 
 .wd-case__highlight-card {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(var(--accent-rgb), 0.12);
   border-radius: 4px;
   padding: 2rem 1.75rem;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .wd-case__highlight-card:hover {
-  border-color: rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
   background: rgba(var(--accent-rgb), 0.04);
 }
 
@@ -3160,12 +3170,14 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   margin: 0;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid rgba(var(--accent-rgb), 0.1);
-  transition: border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  transition: box-shadow 0.3s ease;
 }
 
 .wd-case__shot:hover {
-  border-color: rgba(var(--accent-rgb), 0.25);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
 }
 
 .wd-case__shot img {
@@ -3191,7 +3203,12 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   position: relative;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid rgba(var(--accent-rgb), 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  transition: box-shadow 0.3s ease;
+}
+
+.wd-case__ba-shot:hover {
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
 }
 
 .wd-case__ba-shot img {
@@ -3717,15 +3734,12 @@ html[data-theme="light"] .dr-theme-scope .webdesign-link:hover {
 
 .wd-project {
     background-color: rgba(var(--accent-rgb), 0.08);
-    border: 1px solid rgba(var(--accent-rgb), 0.14);
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     padding: 2.5rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     transition: background-color 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-                border-color 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
                 box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     /* .wd-project is now an <a> wrapping the whole card (except the static
        BizMachina placeholder, which stays an <article>) — reset link defaults
@@ -3761,8 +3775,7 @@ html[data-theme="light"] .dr-theme-scope .webdesign-link:hover {
    rule immediately, so it never feels sticky. */
 .wd-project:hover {
   background-color: rgba(var(--accent-rgb), 0.14);
-  border-color: rgba(var(--accent-rgb), 0.2);
-  transform: translateY(-1px);
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 10px 28px;
   transition-delay: 0.18s;
 }
 
@@ -3906,6 +3919,11 @@ html[data-theme="light"] .dr-theme-scope .webdesign-link:hover {
   aspect-ratio: 1.94 / 1;
   background: #0a1220;
   overflow: hidden;
+  transition: transform 0.4s ease-in-out;
+}
+
+.wd-project:hover .wd-project__frame-stage {
+  transform: scale(1.06);
 }
 
 .wd-project__frame-img {
