@@ -284,12 +284,33 @@
         `option=project_inquiry` — the actual "someone wants to hire me" signal. Resist marking
         several events as Key Events; a property with ten "key events" communicates as little as one
         with none.
+        **⚠️ Conflict flagged (2026-08-22):** in a live chat reply, before checking this doc, Claude
+        told the user to mark all three contact events (`contact_dialog_open`,
+        `contact_option_select`, `contact_email_copied`) as Key Events. That contradicts the
+        deliberate "exactly one" decision above. Left both here rather than silently picking one —
+        **the "exactly one" reasoning above is almost certainly still right** (it's the one with an
+        actual argument attached), but flag it for the user to confirm before marking anything in
+        GA4.
   - [x] Review enhanced measurement toggles deliberately — done 2026-08-21: page views, scrolls,
         outbound clicks, and file downloads kept on; site search and form interactions turned off
         (site has neither feature, so both toggles would just be noise). Video engagement left off
         too, no video on the site.
+  - [ ] **Internal traffic exclusion (2026-08-22):** define the office/home IP as internal traffic
+        under Admin > Data collection > Data streams > [stream] > Configure tag settings > Define
+        internal traffic rules, then create a matching Data filter under Admin > Data display >
+        Data filters (start it in "Testing" mode to confirm it's catching the right traffic before
+        flipping to "Active"). Otherwise every dev/testing visit (including Claude's own browser-
+        automation sessions checking the live site) mixes into real user data.
   - [ ] Set up dashboard: traffic source, top pages, device split (mobile vs. desktop — the open
         question from earlier), the one Key Event
+  - [ ] **Lead-gen funnel exploration (2026-08-22):** build a custom Funnel exploration (Explore >
+        Funnel) for landing → scroll → `contact_dialog_open` → `contact_option_select` →
+        `contact_email_copied`, once there's enough real traffic to make one worth reading.
+  - [ ] **Audiences (2026-08-22):** segment "engaged visitors" (e.g. scrolled + spent >30s) vs.
+        "bouncers" for later analysis/remarketing.
+  - [ ] **Link Search Console (2026-08-22):** Admin > Product links > Search Console — surfaces
+        actual search queries driving traffic once the site is indexed; ties into the SEO items
+        above (#2).
   - [ ] Weekly review post-launch: which CTA path converts, which pages drive it
 
 - **Phase 2 — Meta Pixel: deprioritized 2026-08-21, not "not yet touched."** Worked through this
