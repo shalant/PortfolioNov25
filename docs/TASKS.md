@@ -1142,6 +1142,52 @@ site — no longer accurate. Confirmed scope is now the whole site, see the top 
 
 ---
 
+## Hardware Etc: Before/After Case-Study Section
+**Status:** ✅ Complete (2026-08-21)
+**Branch:** `feature/webdesign-before-after`
+
+**Why:** User asked for a before/after comparison for the two Squarespace client builds
+(Hardware Etc, Sonus Construction) on `/webdesign`. Checked with the user first: Sonus was a
+fresh build with no prior site, so it gets no before/after (no material to show, not a gap to
+fill). Hardware Etc did have a real prior site, so it's the only one with a before/after.
+
+### What was built
+- Found a genuine "before" via the Wayback Machine: `hardwareetc.net` captured 2021-12-06 — a
+  single unstyled placeholder page (default browser typography, no layout, no branding beyond a
+  plain wordmark). Sonus's own Wayback history has no usable capture (one 200 response, but the
+  Squarespace CSS/JS never got archived, so it renders blank) — confirms there's nothing to
+  recover for Sonus even if we wanted one.
+- Captured and cropped that Wayback snapshot into
+  `wwwroot/images/webdesign/hardwareetc-before.jpg` (1200×242, ~28KB).
+- Added `BeforeImage` / `BeforeCaption` / `BeforeSourceUrl` (optional) to `WebDesignProject`
+  (`Models/WebDesignModel.cs`) and populated them only on the `hardware-etc` entry in
+  `webdesign.json`. The caption links back to the actual Wayback URL for transparency.
+- `WebDesignDetailPage.razor`: renders a before/after block (guarded on `BeforeImage` being set)
+  between the hero shot and the stack/approach sections — before panel desaturated
+  (`grayscale(0.35) contrast(0.92)`), after panel reuses `project.Images[0]`, both framed at a
+  matching 220px height like the existing `.wd-case__shot` tiles. New `.wd-case__before-after`/
+  `.wd-case__ba-*` rules in `app.css`, stacking to one column under 640px.
+- Fixed a same-specificity CSS ordering bug during dev: `.wd-case__ba-shot--before img`'s
+  `object-position: top left` was silently overridden because the generic `.wd-case__ba-shot img`
+  rule appeared later in the file at equal specificity — moved the generic rule earlier so the
+  `--before` override actually wins.
+
+### Verification
+- `dotnet build` and `dotnet test .` both pass (8/8 tests, same 2 pre-existing unrelated
+  `Experience.razor` warnings).
+- Live-tested in Chrome via `dotnet run`: `/webdesign/hardware-etc` shows the before/after block
+  correctly (badges, desaturated "before" panel showing the real placeholder text, working
+  "View archived snapshot" link); `/webdesign/sonus-construction` renders with no before/after
+  block at all, confirming the guard works and nothing was fabricated for it.
+
+### Also fixed this session (separate branch)
+While investigating this, found and fixed a site-wide bug where every `/webdesign/{slug}` deep
+link 404'd on direct navigation/refresh on the live GitHub Pages site. See
+`fix/spa-deep-link-routing` — not part of this branch, called out here only because it's what
+made testing this feature live possible in the first place.
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)

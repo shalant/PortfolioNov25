@@ -42,6 +42,30 @@
                 </figure>
             }
 
+            @if (!string.IsNullOrEmpty(project.BeforeImage))
+            {
+                <div class="wd-case__before-after">
+                    <div class="wd-case__ba-shot wd-case__ba-shot--before">
+                        <span class="wd-case__ba-badge">Before</span>
+                        <img src="@project.BeforeImage" alt="@project.Name before" loading="lazy" />
+                    </div>
+                    <div class="wd-case__ba-shot wd-case__ba-shot--after">
+                        <span class="wd-case__ba-badge">After</span>
+                        <img src="@project.Images[0]" alt="@project.Name after" loading="lazy" />
+                    </div>
+                    @if (!string.IsNullOrEmpty(project.BeforeCaption))
+                    {
+                        <p class="wd-case__ba-caption">
+                            @project.BeforeCaption&nbsp;
+                            @if (!string.IsNullOrEmpty(project.BeforeSourceUrl))
+                            {
+                                <a href="@project.BeforeSourceUrl" target="_blank" rel="noopener noreferrer">View archived snapshot ↗</a>
+                            }
+                        </p>
+                    }
+                </div>
+            }
+
             @if (project.Stack.Count > 0)
             {
                 <div class="wd-case__stack">

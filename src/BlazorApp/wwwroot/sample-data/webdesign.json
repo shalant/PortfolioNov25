@@ -32,6 +32,9 @@
         "Organized services and private-label cabinet catalog for high-volume procurement audiences",
         "Responsive build optimized for both desktop spec-review and mobile field use"
       ],
+      "beforeImage": "images/webdesign/hardwareetc-before.jpg",
+      "beforeCaption": "hardwareetc.net, captured December 2021 — a single unstyled placeholder page: default browser typography, no layout, no branding beyond a plain wordmark.",
+      "beforeSourceUrl": "https://web.archive.org/web/20211206204438/http://hardwareetc.net/",
       "tagline": "A bulk-materials supplier's site built to read as credible to spec-writers doing desktop diligence, and fast to use for crews checking specs on-site.",
       "approach": [
         "Hardware Etc sells into multi-family residential construction — a market where the buyer is often a developer or GC comparing suppliers before ever placing a call. The site's job is to close that credibility gap before the first email.",

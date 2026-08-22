@@ -33,6 +33,11 @@ public class WebDesignProject
 
     /// <summary>Parallel to Images by index; empty string (or a short list) means no caption for that image.</summary>
     public List<string> ImageCaptions { get; set; } = [];
+
+    /// <summary>Optional before/after comparison. Only set for projects that had a real prior site to show — omit rather than fabricate one.</summary>
+    public string? BeforeImage { get; set; }
+    public string? BeforeCaption { get; set; }
+    public string? BeforeSourceUrl { get; set; }
 }
 
 public class WebDesignHighlight
