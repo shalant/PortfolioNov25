@@ -1410,6 +1410,22 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
   object-fit: contain;
 }
 
+/* Wide lockups (badge + wordmark, e.g. Franciscan Friars) don't suit a perfect circle —
+   swap to a rounded pill sized for the logo's real aspect ratio instead of letting a
+   wordmark render tiny inside a 120px circle. */
+.experience-detail__logo-wrap--wide {
+  width: auto;
+  min-width: 220px;
+  height: auto;
+  padding: 1.25rem 2rem;
+  border-radius: 12px;
+}
+
+.experience-detail__logo-wrap--wide .experience-detail__logo {
+  max-width: 280px;
+  max-height: 72px;
+}
+
 /* Brighten dark logos (SHIFT at index 3, Tackle AI at index 1) */
 .experience-layout:has(> .experience-list [role="tab"]:nth-child(2).active) .experience-detail__logo,
 .experience-layout:has(> .experience-list [role="tab"]:nth-child(4).active) .experience-detail__logo {

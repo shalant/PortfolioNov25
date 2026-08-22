@@ -1340,6 +1340,16 @@ Four small, unrelated requests from the same message, each scoped to a different
   or before a rebuild/hard-refresh picked up the change, would have shown stale content. Nothing
   to fix in code; flagged to the user to hard-refresh / restart their session rather than assume
   a regression.
+- Once actually seen live, user asked for the full lockup (badge + wordmark) instead of the
+  badge-only crop, in the detail panel specifically. Made a clean transparent-background crop of
+  the full logo (`franciscan-friars-full.png`, from the same real `franciscan-frairs-logo-2023.jpg`
+  source) and added an optional `DetailImage` field to `ExperienceModel` — when set, the detail
+  panel shows it instead of `Image`; the side-nav list still always shows `Image` (the small
+  circular mark), since a wordmark wouldn't read at 34px. Added a `--wide` modifier for
+  `.experience-detail__logo-wrap` (rounded pill instead of a 120px circle, sized for the logo's
+  real ~3.9:1 aspect ratio) so the wordmark isn't squeezed into a shape built for a badge.
+  Verified live: full lockup renders correctly in the pill; other companies (no `DetailImage` set)
+  unaffected. `dotnet build`/`test` both pass (8/8) — the VS lock had cleared by this point.
 
 ---
 

@@ -43,8 +43,8 @@
                     }
                     <div class="experience-detail__num-bg" aria-hidden="true">@numStr</div>
 
-                    <div class="experience-detail__logo-wrap">
-                        <img src="@active.Image" alt="@active.Title" class="experience-detail__logo" loading="lazy" />
+                    <div class="experience-detail__logo-wrap @(!string.IsNullOrEmpty(active.DetailImage) ? "experience-detail__logo-wrap--wide" : "")">
+                        <img src="@(active.DetailImage ?? active.Image)" alt="@active.Title" class="experience-detail__logo" loading="lazy" />
                     </div>
 
                     <h3 class="experience-detail__title">@active.Title</h3>
