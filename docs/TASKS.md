@@ -1292,6 +1292,42 @@ photo should get the subtle zoom, and box-shadow is preferred over border for ca
 - CSS-only again; same VS lock as above, verified by reading the rules back and checking brace
   balance rather than rebuilding.
 
+## Homepage polish: real Friars logo, Experience detail card, divider hover, music link (2026-08-21)
+Four small, unrelated requests from the same message, each scoped to a different component.
+
+- **Real Franciscan Friars logo:** the Experience section's Friars ERP entry used
+  `franciscan-friars-emblem.png` — visually close to the real friars.us badge but not actually
+  sourced from it (likely an earlier AI-regenerated approximation; its odd 115×177 non-square
+  canvas was a tell). The repo already had the real logo committed but unused
+  (`franciscan-frairs-logo-2023.jpg`, the full lockup with wordmark, matching what's live on
+  friars.us). Cropped just the circular badge out of that real file (avoiding the wordmark, which
+  wouldn't read at the ~34–150px sizes this asset is shown at) into a new
+  `franciscan-friars-badge.png`, pointed `experience.json`'s Friars entry at it, and deleted the
+  old approximated emblem file (confirmed via grep it was the only reference).
+- **Experience detail-panel card:** user said they like the existing side-nav list but wanted the
+  right-hand detail panel to read as a card rather than floating text. `.experience-detail` now
+  has a background, border-radius, and box-shadow (matching the site's established
+  shadow-over-border card language), with a light-mode background override alongside
+  `.wd-case__highlight-card`'s. Adjusted its mobile padding rule (was `padding: 0`) to keep a
+  small inset so the card doesn't touch its own edges on small screens.
+- **SectionDivider hover micro-interaction:** the 9-bar brass/teal "waveform" divider under
+  section headings (About, Casual, Contact, Experience, Music, TechnicalSkills) only ever
+  animated once, on scroll-reveal. Added a `:hover` state that re-"plays" it — bars alternate
+  taller/shorter in a quick staggered ripple (0.3s, `--ease-swing`), like an equalizer reacting,
+  distinct from the slower one-time entrance so it doesn't read as a replay.
+- **Music album art:** the "Better Than TV" cover (`dougRosenbergBetterThanTv.jpg`) had a thick
+  gray+white picture-frame mat baked directly into the image file (not CSS) — user wanted it
+  gone. Cropped it out with ImageMagick (`-shave 82x82`), leaving just the actual cover art (the
+  black top/bottom letterbox bars are part of the real cover design, not the mat, and were kept).
+  Wrapped the image in a link to `https://www.dougrosenberg.com` (new `.music-photo__link`,
+  `cursor: pointer`, `overflow: hidden` for the zoom to clip against), and added the same
+  0.4s ease-in-out hover zoom (`scale(1.06)`) used everywhere else this session, alongside the
+  existing grayscale-to-color hover effect.
+- CSS/JSON/image-only aside from the one Music.razor markup change (wrapping the `<img>` in an
+  `<a>`); skipped `dotnet build`/`test` again — Visual Studio's debug session (`localhost:5001`)
+  still held the build lock — verified by reading files back and checking `app.css`'s brace count
+  stayed balanced (850/850) instead.
+
 ---
 
 ## Completed ✅
