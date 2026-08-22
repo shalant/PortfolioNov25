@@ -140,7 +140,173 @@
 
 <body>
     <div id="app">
-        <div class="app-loading">
+        <!-- Static pre-paint of the real Header + Home hero (see Header.razor / Home.razor —
+             kept in sync by hand, not generated). Blazor WASM has to download and boot its
+             runtime before it can render anything (~3-4MB compressed even with
+             InvariantGlobalization on), so LCP was measuring "how long until Blazor finishes
+             booting" (~19s under PageSpeed's Slow 4G/mid-tier-CPU emulation) instead of
+             "how long until something real is on screen." This paints real markup immediately
+             from the static HTML/CSS already loaded in <head>, using the exact classes/ids
+             Header.razor and Home.razor render so that when Blazor mounts <App> into #app (which
+             replaces this element's children entirely — standard Blazor WASM root-component
+             behavior, not a merge/diff), the swap is visually a no-op rather than a "pop."
+             Non-interactive by design (no @onclick/JS wiring) — DrNav.init() and the theme
+             toggle's handler only exist once Blazor's real Header actually renders.
+             Home-route-only: hidden by default (see toggle script at the bottom of <body>) and
+             only revealed if the current path is genuinely "/" with no pending 404-redirect
+             bounce-back, so a deep link (e.g. /webdesign/hardware-etc) never flashes the
+             homepage hero before routing to the real page. -->
+        <div id="app-static-preview" style="display:none" class="dr-theme-scope">
+            <header class="navbar-wrapper" id="navbar">
+                <div class="navbar-content">
+                    <div class="logo-section">
+                        <a href="/#home" target="_top" aria-label="Back to top" title="DR Codeworks">
+                            <svg width="300" height="110" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DR Codeworks">
+                                <defs>
+                                    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#1e3a5f" />
+                                        <stop offset="100%" stop-color="#1ABC9C" />
+                                    </linearGradient>
+                                    <filter id="hexGlow" x="-40%" y="-40%" width="180%" height="180%">
+                                        <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+                                        <feColorMatrix in="blur" type="matrix"
+                                            values="0 0 0 0 0.1
+                                                    0 0 0 0 0.74
+                                                    0 0 0 0 0.61
+                                                    0 0 0 0.5 0"
+                                            result="coloredGlow" />
+                                        <feMerge>
+                                            <feMergeNode in="coloredGlow" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                </defs>
+                                <g transform="translate(14, 11)" filter="url(#hexGlow)">
+                                    <polygon points="38,0 76,22 76,66 38,88 0,66 0,22" fill="url(#hexGrad)" />
+                                    <text x="38" y="48" text-anchor="middle" dominant-baseline="middle" fill="#FFFFFF"
+                                          font-family="Montserrat, system-ui, sans-serif" font-size="28" font-weight="700"
+                                          letter-spacing="0.02em">dr</text>
+                                </g>
+                                <text x="108" y="65" fill="var(--text)"
+                                      font-family="Montserrat, system-ui, sans-serif" font-size="26" font-weight="300"
+                                      letter-spacing="0.07em">codeworks</text>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <nav>
+                        <ul class="nav-items" id="navItems">
+                            <li>
+                                <a class="nav-link nav-link--page" href="/webdesign">
+                                    <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                                        <line x1="7" y1="13" x2="7" y2="7"/>
+                                        <line x1="7" y1="7" x2="3" y2="3"/>
+                                        <line x1="7" y1="7" x2="11" y2="3"/>
+                                    </svg>
+                                    web design
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link nav-link--page" href="/services">
+                                    <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="1.5" y="4.5" width="11" height="7.5" rx="1"/>
+                                        <path d="M5 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5"/>
+                                        <line x1="1.5" y1="7.5" x2="12.5" y2="7.5"/>
+                                    </svg>
+                                    services
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link nav-link--page" href="/consulting">
+                                    <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M1.5 2.5 H12.5 V9 H5.5 L3 11.5 V9 H1.5 Z"/>
+                                    </svg>
+                                    consulting
+                                </a>
+                            </li>
+                            <li class="nav-divider" role="separator" aria-hidden="true"></li>
+                            <li class="nav-has-dropdown">
+                                <button class="nav-link nav-link--page" type="button">
+                                    <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+                                        <circle cx="3" cy="7" r="1.3"/>
+                                        <circle cx="7" cy="7" r="1.3"/>
+                                        <circle cx="11" cy="7" r="1.3"/>
+                                    </svg>
+                                    more
+                                    <span class="nav-caret">▾</span>
+                                </button>
+                                <div class="nav-dropdown">
+                                    <a class="nav-link nav-link--page nav-dropdown-item" href="/#about">about</a>
+                                    <a class="nav-link nav-link--page nav-dropdown-item" href="/#experience">experience</a>
+                                    <a class="nav-link nav-link--page nav-dropdown-item" href="/#technicalskills">skills</a>
+                                    <a class="nav-link nav-link--page nav-dropdown-item" href="resume/DouglasRosenbergResumeAugust26.pdf" download target="_blank" rel="noopener">résumé</a>
+                                    <a class="nav-link nav-link--page nav-dropdown-item" href="/blog">blog</a>
+                                </div>
+                            </li>
+                            <li class="nav-cta-mobile-item">
+                                <a href="mailto:doug.rosenberg@gmail.com" class="nav-link nav-link--cta" aria-label="Contact Doug Rosenberg">
+                                    get in touch
+                                    <span aria-hidden="true">↗</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <a href="mailto:doug.rosenberg@gmail.com" class="nav-cta" aria-label="Contact Doug Rosenberg">
+                        <span class="nav-cta__text">get in touch</span>
+                        <span class="nav-cta__arrow">↗</span>
+                    </a>
+
+                    <button class="theme-toggle" aria-label="Switch between light and dark theme">
+                        <svg class="nav-icon theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                            <circle cx="7" cy="7" r="2.75" />
+                            <line x1="7" y1="0.75" x2="7" y2="2.25" />
+                            <line x1="7" y1="11.75" x2="7" y2="13.25" />
+                            <line x1="0.75" y1="7" x2="2.25" y2="7" />
+                            <line x1="11.75" y1="7" x2="13.25" y2="7" />
+                            <line x1="2.55" y1="2.55" x2="3.6" y2="3.6" />
+                            <line x1="10.4" y1="10.4" x2="11.45" y2="11.45" />
+                            <line x1="2.55" y1="11.45" x2="3.6" y2="10.4" />
+                            <line x1="10.4" y1="3.6" x2="11.45" y2="2.55" />
+                        </svg>
+                        <svg class="nav-icon theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12.25 7.46A5.25 5.25 0 1 1 6.54 1.75 4.08 4.08 0 0 0 12.25 7.46Z" />
+                        </svg>
+                    </button>
+
+                    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
+            </header>
+
+            <section class="hero-section" id="home">
+                <div class="hero-grid-bg"></div>
+
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <span class="hero-eyebrow">// software engineer</span>
+                        <h1 class="hero-name">douglas rosenberg</h1>
+                        <div class="hero-divider"></div>
+                        <p class="hero-subtitle">software engineer building custom web apps and business systems with an eye for design</p>
+                        <div class="hero-cta">
+                            <a href="#experience" class="hero-btn hero-btn--primary" target="_top">View Work</a>
+                            <a href="#about" class="hero-btn hero-btn--ghost" target="_top">About Me</a>
+                        </div>
+                    </div>
+
+                    <div class="hero-portrait">
+                        <img src="images/DrCorporateHacker.webp" alt="Handsome man with glasses" class="hero-portrait__img" />
+                    </div>
+                </div>
+
+                <a href="#about" class="hero-scroll" target="_top" aria-label="Scroll down">
+                    <img src="images/down-arrow.svg" alt="scroll down" />
+                </a>
+            </section>
+        </div>
+
+        <div class="app-loading" id="app-loading-spinner">
             <svg class="loading-progress">
                 <circle r="40%" cx="50%" cy="50%" />
                 <circle r="40%" cx="50%" cy="50%" />
@@ -149,6 +315,22 @@
             <span class="app-loading__eyebrow">// loading experience</span>
         </div>
     </div>
+
+    <script>
+        // Reveal the static hero pre-paint only on the true home route with no pending
+        // 404-redirect bounce-back (checked, not consumed — the later restore script still
+        // needs to read/clear sessionStorage.redirect itself). Any other path keeps the
+        // existing spinner, so a deep link never flashes the homepage hero before routing
+        // to the real page.
+        (function () {
+            var isHomeNoRedirect = !sessionStorage.getItem('redirect') &&
+                (window.location.pathname === '/' || window.location.pathname === '');
+            if (isHomeNoRedirect) {
+                document.getElementById('app-static-preview').style.display = '';
+                document.getElementById('app-loading-spinner').style.display = 'none';
+            }
+        })();
+    </script>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.

@@ -1383,6 +1383,61 @@ Four small, unrelated requests from the same message, each scoped to a different
 
 ---
 
+## Static Hero Pre-Paint (LCP mitigation)
+**Status:** ✅ Complete (2026-08-22)
+**Branch:** `feature/static-hero-preview`
+
+**Why:** Core Web Vitals audit (see the "Core Web Vitals Check" item in `PORTFOLIO_TODO.md`) found
+LCP at ~19.5s on mobile — Blazor WASM has to download and boot its runtime before it can render
+anything, so LCP was really measuring "how long until Blazor finishes booting," not "how long
+until something real is on screen." Discussed with the user directly: this isn't worth blocking
+the Sept 2 launch over given the warm-network audience, but a cheap pre-launch mitigation for the
+one real failure mode (a visitor on a slow connection seeing a blank/spinner screen and bouncing)
+was worth doing.
+
+**What was built:** a static, hand-authored HTML replica of the real Header + Home hero (exact
+classes/ids from `Header.razor`/`Home.razor`, non-interactive — no `@onclick`/JS wiring, since
+`DrNav.init()` and the theme toggle only exist once Blazor's real components mount) placed inside
+`index.html`'s `#app` div, alongside the existing loading spinner:
+- Hidden by default (`display:none`), revealed by a small inline script only when the current path
+  is genuinely `/` **and** there's no pending `sessionStorage.redirect` (checked, not consumed —
+  the existing 404-bounce-back restore script further down still needs to read/clear it itself).
+  This is deliberate: without the redirect check, a deep link like `/webdesign/hardware-etc` would
+  briefly flash the homepage hero before routing to the real page, since `window.location` is
+  still `/` during the brief window between the 404.html bounce and the restore script running.
+- When Blazor's `<App>` root component mounts into `#app`, it replaces the element's children
+  entirely (standard WASM root-component behavior, not a merge/diff) — so the static content is
+  simply swapped for the live one. Built to be pixel-identical (same classes, same real content
+  values, pulled from `Home.razor`'s own fallback constants which already mirror
+  `siteproperties.json`/`heroimages.json`) so the swap reads as a no-op, not a "pop."
+- **Known maintenance cost, stated plainly:** this is hand-kept-in-sync, not generated. If the
+  hero's real name/tagline/photo or the header's nav links change, this static copy needs a
+  matching manual update or it'll flash stale content for a moment before Blazor corrects it.
+
+**Verification (this was tested carefully, not just written and assumed correct — it affects
+every single page load):**
+- `dotnet build`/`dotnet test .` both pass (8/8, 0 warnings this pass).
+- Functional verification used a temporary `setTimeout`-delayed `Blazor.start()` (20s, reverted
+  immediately after) rather than trying to catch a real boot race by screenshot timing — localhost
+  boots too fast to reliably observe the pre-mount window otherwise. Confirmed via direct DOM
+  inspection mid-delay:
+  - On `/`: `#app-static-preview` revealed (`display:""`), `#app-loading-spinner` hidden
+    (`display:"none"`), document title still the static `<head>` title (proof Blazor hadn't
+    mounted yet), hero text content present and correct.
+  - On `/webdesign` (deep link): the reverse — static preview stays hidden, spinner shows. No
+    wrong-content flash.
+- Visual: screenshotted both the frozen pre-boot state and the normal (undelayed) post-boot state
+  side by side — pixel-identical, confirming the swap is seamless. Also checked light mode
+  (`localStorage['dr-theme']='light'`) — theme.js's pre-boot `data-theme` attribute correctly
+  styles the static markup too, since it's plain CSS reacting to the same attribute Blazor's real
+  render also keys off.
+- **Not yet verified:** actual LCP improvement on the live deployed site (this only exists on a
+  local branch so far) — the real number needs a PageSpeed Insights re-run post-deploy, not a lab
+  guess. Expect a large drop (something visible in well under 1s instead of ~19s) since LCP will
+  now measure the static content's paint time, but that's a prediction, not a measured result yet.
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)
