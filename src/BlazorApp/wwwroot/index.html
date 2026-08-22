@@ -296,7 +296,7 @@
                     </div>
 
                     <div class="hero-portrait">
-                        <img src="images/DrCorporateHacker.webp" alt="Handsome man with glasses" class="hero-portrait__img" />
+                        <img src="images/DrCorporateHacker.webp" alt="Handsome man with glasses" class="hero-portrait__img" width="840" height="1260" />
                     </div>
                 </div>
 
@@ -328,6 +328,13 @@
             if (isHomeNoRedirect) {
                 document.getElementById('app-static-preview').style.display = '';
                 document.getElementById('app-loading-spinner').style.display = 'none';
+                // Also suppress the hero's one-time entrance animations (see the
+                // html.static-preview-shown rules in app.css) — otherwise the static
+                // preview plays them once, then Blazor's real hero (a fresh DOM element)
+                // plays the exact same fade/slide-in a second time when it swaps in,
+                // which visually reads as the page reloading even though it's just Blazor
+                // mounting normally underneath.
+                document.documentElement.classList.add('static-preview-shown');
             }
         })();
     </script>

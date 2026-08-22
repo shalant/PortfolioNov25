@@ -1411,14 +1411,24 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
 }
 
 /* Wide lockups (badge + wordmark, e.g. Franciscan Friars) don't suit a perfect circle —
-   swap to a rounded pill sized for the logo's real aspect ratio instead of letting a
-   wordmark render tiny inside a 120px circle. */
+   swap to sizing for the logo's real aspect ratio instead of letting a wordmark render tiny
+   inside a 120px circle. Also drops the circle's own glass-pill background/border/shadow
+   entirely rather than reshaping it into a rectangle: the circular treatment reads as a
+   deliberate "medallion" around a small monochrome mark, but the same glass panel stretched
+   into a wide rectangle around a wordmark just looks like a flat gray box competing with the
+   card behind it, in both themes. The logo's own artwork (warm glow, real color) already
+   has enough presence to sit directly on the card. */
 .experience-detail__logo-wrap--wide {
   width: auto;
-  min-width: 220px;
+  min-width: 0;
   height: auto;
-  padding: 1.25rem 2rem;
-  border-radius: 12px;
+  padding: 0.5rem 0;
+  background: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .experience-detail__logo-wrap--wide .experience-detail__logo {
@@ -1437,6 +1447,12 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
 .experience-layout:has(> .experience-list [role="tab"]:nth-child(4).active) .experience-detail__logo {
   filter: brightness(1.6);
   transform: scale(1.2);
+}
+
+/* TC Industries logo (index 2) reads too large next to the others at the shared
+   180px max-size — scaled down 20%. */
+.experience-layout:has(> .experience-list [role="tab"]:nth-child(3).active) .experience-detail__logo {
+  transform: scale(0.8);
 }
 
 .experience-detail__title {
@@ -2140,6 +2156,7 @@ html[data-theme="light"] .dr-theme-scope .nav-link--page {
 }
 
 .hero-divider {
+  width: 80px;
   height: 2px;
   background: linear-gradient(90deg, var(--accent), transparent);
   margin-bottom: 1.75rem;
@@ -3644,6 +3661,15 @@ html[data-theme="light"] .dr-theme-scope .experience-detail {
   background: rgba(var(--text-rgb), 0.03);
 }
 
+/* .experience-detail__logo-wrap's dark-mode background (rgba(44,62,80,0.6)) numerically
+   equals light mode's --text-rgb — a "dark glass" panel tuned for a dark backdrop reads as
+   a solid gray-navy box on cream instead of a subtle glass effect. Swap to a light,
+   surface-toned glass instead (matches the .wd-case__highlight-card/figcaption pattern
+   already used for glass panels elsewhere in light mode). */
+html[data-theme="light"] .dr-theme-scope .experience-detail__logo-wrap {
+  background: rgba(var(--surface-rgb), 0.7);
+}
+
 html[data-theme="light"] .dr-theme-scope .wd-case__highlight-card p {
   color: rgba(var(--text-rgb), 0.85);
 }
@@ -4691,6 +4717,36 @@ a.music-album__title--link:hover {
     opacity: 0;
     transform: scale(1.04) translateY(14px);
   }
+}
+
+/* index.html's static hero pre-paint plays these same entrance animations once on its
+   own copy of the hero; when Blazor mounts its own fresh .hero-section afterward, that's
+   a brand-new DOM element, so without this override every one of these would play a
+   *second* time — the whole hero visibly fading/sliding in again, which reads exactly
+   like the page reloading even though it's just Blazor's normal first render underneath.
+   html.static-preview-shown is set by the toggle script in index.html the moment the
+   static preview is revealed, and stays set through the real render.
+
+   Tried shrinking animation-duration to ~0 first (1ms) instead of this — measured via a
+   frame-by-frame computed-style log that it still let one real frame paint at the
+   animation's *from* state (opacity:0, translateY(-30px)) for ~70-80ms on Blazor's fresh
+   element before resolving, which is exactly long enough to read as a flash/flicker, not
+   long enough to look intentional. `animation: none` removes the animation outright, so
+   the element just renders at its normal (non-animated) computed style from the very first
+   frame — opacity/transform default to 1/none with no animation present, which is the same
+   as the animation's own end state, so visually identical to a "completed" animation with
+   zero risk of the from-state ever painting. */
+html.static-preview-shown .hero-grid-bg,
+html.static-preview-shown .hero-section::before,
+html.static-preview-shown .hero-section::after,
+html.static-preview-shown .hero-eyebrow,
+html.static-preview-shown .hero-section h1,
+html.static-preview-shown .hero-divider,
+html.static-preview-shown .hero-subtitle,
+html.static-preview-shown .hero-cta,
+html.static-preview-shown .hero-portrait,
+html.static-preview-shown .hero-scroll {
+  animation: none !important;
 }
 .hero-content {
   position: relative;
