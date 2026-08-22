@@ -1142,6 +1142,35 @@ site — no longer accurate. Confirmed scope is now the whole site, see the top 
 
 ---
 
+## Fix: Deep-Link Routing on GitHub Pages
+**Status:** ✅ Complete (2026-08-21)
+**Branch:** `fix/spa-deep-link-routing`
+
+**Why:** User reported broken screenshots on live case-study pages (e.g.
+`/webdesign/dougrosenberg-music`). Root cause wasn't the images — it was that **every**
+`/webdesign/{slug}` deep link (and any other parameterized route) 404'd on direct navigation
+or refresh, rendering the app's own `<NotFound />` instead of the page.
+
+**Root cause:** GitHub Pages has no server-side rewrites, so this site relies on the standard
+`404.html` → `sessionStorage` → `index.html` SPA-fallback trick (`wwwroot/404.html` stores the
+attempted path, redirects to `/`, and an inline script in `index.html` restores it via
+`history.replaceState` before Blazor renders). But `index.html`'s
+`<script src="_framework/blazor.webassembly.js">` had no `autostart="false"`, so Blazor
+auto-started and ran its first route match racing against that restore script. Blazor locked in
+"not found" for whatever path it booted with; the later `replaceState` call fixed the address
+bar but nothing re-triggers the router off a raw `history.replaceState` (no `popstate` fires), so
+the page stayed on `NotFound` even though the URL was correct. Confirmed live: address bar showed
+the right path, GA's `page_view` fired with `dl` still `/`, and no `sample-data/webdesign.json`
+request was ever made.
+
+**Fix:** Added `autostart="false"` to the Blazor script tag and moved `Blazor.start()` to run
+*after* the sessionStorage redirect-restore logic, so the router's first route match always sees
+the corrected path. Verified locally: `/webdesign/hardware-etc` now renders the case-study page
+(title, content, images) instead of 404. This was a site-wide bug, not specific to the webdesign
+section — any parameterized route hit on direct load/refresh was affected.
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)
