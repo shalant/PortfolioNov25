@@ -214,6 +214,14 @@
     signal, not a rate), a rough device lean, and whether people engage with the case-study pages at
     all before replying.
 
+- **GA4's own Setup Assistant (2026-08-22):** the GA4 UI itself reports "9/11 tasks remaining" in
+  its built-in setup checklist. Not itemized here — that panel lives inside the user's Google
+  login, Claude has no visibility into which 9 specifically, and guessing would risk logging wrong
+  items against this roadmap. **Action for the user:** paste the actual 9 items (or a screenshot)
+  and they'll get folded into the checklist below properly instead of sitting as this placeholder.
+  Some overlap is likely already covered above (Search Console link, Key events) or below (Phase 2
+  Meta Pixel) — worth checking for duplicates once the real list is in hand.
+
 - **Phase 0 — cleanup before adding anything new:**
   - [ ] Audit the existing personal GA4 account: several old learning/demo properties present —
         archive or delete the ones with no ongoing purpose, so the account isn't cluttered before
