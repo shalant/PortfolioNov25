@@ -1383,6 +1383,200 @@ Four small, unrelated requests from the same message, each scoped to a different
 
 ---
 
+## Static Hero Pre-Paint (LCP mitigation)
+**Status:** ✅ Complete (2026-08-22)
+**Branch:** `feature/static-hero-preview`
+
+**Why:** Core Web Vitals audit (see the "Core Web Vitals Check" item in `PORTFOLIO_TODO.md`) found
+LCP at ~19.5s on mobile — Blazor WASM has to download and boot its runtime before it can render
+anything, so LCP was really measuring "how long until Blazor finishes booting," not "how long
+until something real is on screen." Discussed with the user directly: this isn't worth blocking
+the Sept 2 launch over given the warm-network audience, but a cheap pre-launch mitigation for the
+one real failure mode (a visitor on a slow connection seeing a blank/spinner screen and bouncing)
+was worth doing.
+
+**What was built:** a static, hand-authored HTML replica of the real Header + Home hero (exact
+classes/ids from `Header.razor`/`Home.razor`, non-interactive — no `@onclick`/JS wiring, since
+`DrNav.init()` and the theme toggle only exist once Blazor's real components mount) placed inside
+`index.html`'s `#app` div, alongside the existing loading spinner:
+- Hidden by default (`display:none`), revealed by a small inline script only when the current path
+  is genuinely `/` **and** there's no pending `sessionStorage.redirect` (checked, not consumed —
+  the existing 404-bounce-back restore script further down still needs to read/clear it itself).
+  This is deliberate: without the redirect check, a deep link like `/webdesign/hardware-etc` would
+  briefly flash the homepage hero before routing to the real page, since `window.location` is
+  still `/` during the brief window between the 404.html bounce and the restore script running.
+- When Blazor's `<App>` root component mounts into `#app`, it replaces the element's children
+  entirely (standard WASM root-component behavior, not a merge/diff) — so the static content is
+  simply swapped for the live one. Built to be pixel-identical (same classes, same real content
+  values, pulled from `Home.razor`'s own fallback constants which already mirror
+  `siteproperties.json`/`heroimages.json`) so the swap reads as a no-op, not a "pop."
+- **Known maintenance cost, stated plainly:** this is hand-kept-in-sync, not generated. If the
+  hero's real name/tagline/photo or the header's nav links change, this static copy needs a
+  matching manual update or it'll flash stale content for a moment before Blazor corrects it.
+
+**Verification (this was tested carefully, not just written and assumed correct — it affects
+every single page load):**
+- `dotnet build`/`dotnet test .` both pass (8/8, 0 warnings this pass).
+- Functional verification used a temporary `setTimeout`-delayed `Blazor.start()` (20s, reverted
+  immediately after) rather than trying to catch a real boot race by screenshot timing — localhost
+  boots too fast to reliably observe the pre-mount window otherwise. Confirmed via direct DOM
+  inspection mid-delay:
+  - On `/`: `#app-static-preview` revealed (`display:""`), `#app-loading-spinner` hidden
+    (`display:"none"`), document title still the static `<head>` title (proof Blazor hadn't
+    mounted yet), hero text content present and correct.
+  - On `/webdesign` (deep link): the reverse — static preview stays hidden, spinner shows. No
+    wrong-content flash.
+- Visual: screenshotted both the frozen pre-boot state and the normal (undelayed) post-boot state
+  side by side — pixel-identical, confirming the swap is seamless. Also checked light mode
+  (`localStorage['dr-theme']='light'`) — theme.js's pre-boot `data-theme` attribute correctly
+  styles the static markup too, since it's plain CSS reacting to the same attribute Blazor's real
+  render also keys off.
+- **Not yet verified:** actual LCP improvement on the live deployed site (this only exists on a
+  local branch so far) — the real number needs a PageSpeed Insights re-run post-deploy, not a lab
+  guess. Expect a large drop (something visible in well under 1s instead of ~19s) since LCP will
+  now measure the static content's paint time, but that's a prediction, not a measured result yet.
+
+### Follow-up: the swap wasn't actually invisible (2026-08-22)
+User tested in their own VS debug session and reported "the splash disappeared, load is fast, but
+then it reloads after ~4s." Ruled out a real reload first — my own `dotnet run` test showed a
+single clean DOM swap with zero navigations over 16+ seconds of observation, and a shared
+diagnostic script confirmed `navCount: 1` in the user's session too (a real reload/navigation
+would have incremented it). So nothing was actually reloading — but something was clearly visible
+enough at the swap moment to read as one, and that was worth taking seriously rather than
+dismissing as "just VS being VS."
+
+**Root cause, found by instrumentation, not guessing:** the hero has several one-time CSS entrance
+animations (`fadeInDown`/`fadeInUp`/`bauhausRise`, `both` fill-mode) — `.hero-grid-bg`,
+`.hero-section::before/::after`, `.hero-eyebrow`, `.hero-section h1`, `.hero-divider`,
+`.hero-subtitle`, `.hero-cta`, `.hero-portrait`, `.hero-scroll`. The static preview plays these
+once; when Blazor mounts its own fresh `.hero-section` afterward (a brand-new DOM element), every
+one of them plays a *second* time — the whole hero visibly fading/sliding in again, which reads
+exactly like a reload.
+
+- First fix attempt: `animation-duration: 1ms !important` on all of them, scoped to a new
+  `html.static-preview-shown` class (set by the toggle script the moment the static preview is
+  revealed, stays set through the real render). Seemed to work in a static before/after screenshot
+  comparison.
+- **User reported a residual "flash around 0.8s" even after that fix.** Rather than eyeball more
+  screenshots, added a frame-by-frame `requestAnimationFrame` logger capturing `#app`'s children
+  and the h1's computed `opacity`/`transform` every frame. That showed the real mechanism: even at
+  1ms duration, Blazor's freshly-mounted h1 painted at least one real frame at the animation's
+  *from* state (`opacity:0`, `translateY(-30px)`) for ~70-80ms before resolving — long enough to
+  read as a flash, too short to look intentional.
+- **Actual fix:** `animation: none !important` instead of shrinking the duration — this removes
+  the animation outright, so the element renders at its normal (non-animated) computed style from
+  frame one, with no from-state to ever paint. Verified this is safe per-element: for every one of
+  these except `.hero-divider`, the animation's implicit/explicit "to" state matches the element's
+  own base (non-animation) CSS already (opacity defaults to 1, transform to none), so disabling the
+  animation lands exactly on the intended settled look. `.hero-divider` was the one exception — its
+  `expandWidth` animation's "to" state sets `width: 80px`, but the base rule had no `width` at all,
+  so removing the animation would've left it full-width. Added `width: 80px` to the base rule to
+  match.
+- Re-ran the frame-by-frame logger after this fix: `h1Opacity`/`h1Transform` now read `"1"`/`"none"`
+  from frame 1 straight through the swap, with zero change recorded at the swap moment. Confirmed
+  empirically, not just visually.
+- Also added explicit `width="840" height="1260"` to the hero portrait `<img>` (both the static
+  preview and `Home.razor`'s real one) after checking the Layout Instability API directly
+  (`PerformanceObserver({type:'layout-shift'})`) — turned out to be a red herring for *this*
+  specific flash (shifts measured were negligible, nowhere near visible), but it's a real, cheap,
+  correctly-targeted fix for actual CLS risk from an unsized above-the-fold image, so kept it.
+- Removed all temporary diagnostic instrumentation (the DOM-mutation logger and the
+  frame-by-frame logger) once each was diagnosed — none of it shipped.
+
+### Follow-up: Franciscan Friars logo still had a gray fringe; TC Industries logo 20% smaller (2026-08-22)
+- **Gray fringe, root cause:** the earlier `-fuzz N% -transparent white` chroma-key approach only
+  matched pixels close enough to pure white — the anti-aliased edge pixels (blended between the
+  colored artwork and the white background) weren't close enough, so they stayed as a faint
+  semi-opaque gray/white halo. Invisible against a white preview, clearly visible once composited
+  against the dark navy card — confirmed by actually compositing both PNGs over `#0a1220` before
+  concluding anything, not by eyeballing them on white.
+- **Fix:** re-cropped from the original `franciscan-frairs-logo-2023.jpg` using a flood-fill from a
+  bordered corner pixel (`-bordercolor white -border 1 -fuzz 8% -fill none -draw "alpha 0,0
+  floodfill"`) instead of a global color-key — this only clears the background *connected* to the
+  edge, so it can't accidentally eat into the interior white cross the way a higher global fuzz
+  threshold did on the first retry (tried 15% first, which did exactly that — cross turned
+  navy/transparent; dropped to 8%, verified via zoomed crops that both the cross stays opaque white
+  and the outer fringe is actually gone). Regenerated both `franciscan-friars-full.png` and
+  `franciscan-friars-badge.png` (the badge now cropped from the already-clean full version, so it
+  inherits the same fix rather than repeating the chroma-key separately). Checked on both dark and
+  light theme backgrounds.
+- **TC Industries logo:** added a `transform: scale(0.8)` override for its detail-panel logo
+  (index 2 / nth-child(3)), same pattern as the existing SHIFT (`scale(1.2)`) and Friars
+  (`--wide` pill) per-company overrides — it read oversized next to the others at the shared 180px
+  max-size.
+- Both verified live via `dotnet run` on a fresh port: Friars badge/logo render with no visible
+  fringe in a genuinely fresh browser context (the user's own report of "still gray" while testing
+  was very likely their browser reusing cached image bytes under the same unchanged filename — a
+  hard refresh, not a fix, was what they actually needed); TC Industries logo visibly smaller and
+  better-proportioned. `dotnet build`/`test` both pass (8/8) once the VS build lock cleared.
+
+### Follow-up: gray box in light mode, plain box in dark mode, and finally-actually-fixing the letter counters (2026-08-22)
+Three more rounds on the same Friars logo, in quick succession:
+
+- **Light mode: `.experience-detail__logo-wrap--wide` showed a solid gray-navy box.** Root cause:
+  the circle's dark-mode background `rgba(44, 62, 80, 0.6)` numerically equals light mode's own
+  `--text-rgb` (`44, 62, 80`) — a "dark glass" panel tuned for a dark backdrop reads as a solid
+  box on cream. Added a light-mode-specific override (`rgba(var(--surface-rgb), 0.7)`), matching
+  the same glass-panel pattern already used for `.wd-case__highlight-card`/figcaptions elsewhere.
+- **User then said dark mode "looks bad" too** (screenshot: a plain flat rectangle competing with
+  the card behind it). Reconsidered the whole approach rather than re-tuning the same box's colors
+  again: removed the wide variant's background/border/shadow/backdrop-filter entirely (`!important`
+  on `background` specifically, since the light-mode fix above targets the same shared base class
+  and would otherwise still win there) — the circular "medallion" treatment suits a small
+  monochrome mark, but stretched into a wide rectangle around a wordmark it just reads as a box.
+  The logo's own artwork (real color, warm glow) has enough presence to sit directly on the card
+  in both themes. Verified via `dotnet run` in both themes — confirmed clean.
+- **Then: "get rid of the white interior letter fills."** The enclosed counters in letters like O,
+  a, d, p, e, G weren't connected to the outer background, so the corner-seeded flood-fill from the
+  earlier fringe fix legitimately couldn't reach them — they were left as solid opaque white
+  blobs. This took three real attempts to fix correctly, worth recording since two of them looked
+  right and weren't:
+  1. ImageMagick `-connected-components` with an area-threshold, recoloring small components to
+     background — conceptually right (letter counters are tiny, the cross is huge), but the
+     multi-step composite to apply the resulting mask back onto the original kept producing a
+     fully-opaque-white image (verified by directly checking corner-pixel alpha with `identify`,
+     not by eyeballing a thumbnail) — `-compose CopyOpacity` wasn't doing what the semantics
+     suggested even with correct parenthesization; not worth chasing further under time pressure.
+  2. A "strip all white, then restore just the cross" two-image composite using the same
+     connected-components mask — cleared the background and every counter correctly, but missed
+     one: the "O" in "Our" was large enough to land close to the area-threshold and survived. Also
+     surfaced (via `connected-components:verbose=true`) that the cross itself gets split into two
+     4-connected sub-regions at the crossbar (1021px and 909px, straddling the 1000px threshold) —
+     a second latent bug that happened not to matter yet, but meant this threshold was fragile
+     regardless of the "O" miss.
+  3. **What actually worked:** a small standalone Python (Pillow) script doing its own 8-connected
+     BFS flood-fill in pure pixel space — no ImageMagick compose semantics to fight. Found 162
+     distinct opaque-white components; the largest (the cross, 2,882px) was 26× bigger than the
+     next-largest (111px) — an unambiguous gap, unlike the two IM attempts' threshold guessing.
+     Kept only the largest component, cleared every other one to alpha 0. Verified: cross fully
+     intact (no crossbar gap this time — 8-connectivity doesn't have the pinch-point problem
+     4-connectivity did), every letter counter including the "O" in "Our" now correctly
+     transparent, checked at actual zoom on both dark and light composited backgrounds.
+  Lesson for next time a similar fix is needed: reach for a real per-pixel script sooner rather
+  than iterating on ImageMagick composite-mode guesses — the debugging loop (checking corner-pixel
+  `srgba(...)` values directly via `identify -format`, not trusting a rendered thumbnail) is what
+  actually caught both failed attempts; the Python version was correct on the first real try once
+  written.
+- Regenerated `franciscan-friars-badge.png` again from this final corrected `full.png`.
+  `dotnet build`/`test` pass (8/8) once the VS lock cleared again.
+
+### Discussed, not fixed: brief unresponsive scroll during boot (2026-08-22)
+User reported: on first load, scrolling doesn't respond for a few seconds. Checked for anything
+in this session's changes that could cause it (no `overflow: hidden` on `html`/`body` outside the
+existing conditional mobile-menu lock) — this is Blazor WASM's main-thread-heavy runtime
+instantiation, already visible in the very first PageSpeed audit tonight ("Minimize main-thread
+work — 4.4s", "12 long tasks found") **before** any static-preview work existed. What changed is
+visibility, not the underlying behavior: the old spinner gave nothing to try scrolling; the static
+preview now shows what looks like the finished page immediately, so a scroll attempt during that
+same pre-existing main-thread-blocking window now reads as "frozen" instead of "still loading."
+Presented this as a real tradeoff, not a quick-fixable bug, with the mitigating data point that
+production's own measured Total Blocking Time (650–1,420ms across a few PageSpeed runs) is far
+less severe than what unoptimized VS Debug shows. **User's call: keep the static preview, accept
+the tradeoff** — worth re-confirming the actual severity once this is live on the real deployed
+(Release-optimized) site rather than judging by VS Debug alone.
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)

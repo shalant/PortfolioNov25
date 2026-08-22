@@ -395,6 +395,16 @@
 - **ROI:** High — visitors perceive site as "more premium" immediately
 - **Files to edit:** `app.css`
 
+**New idea (2026-08-22), not yet scoped:** the `/webdesign` list-page project cards
+(`ProjectMediaFrame.razor`) already crossfade through each project's screenshots on hover — but
+there's no signal *before* the crossfade starts that the thumbnail is interactive/animated at all.
+User's idea: show a small icon denoting motion (e.g. a subtle play/motion glyph, corner badge, or
+similar) on the image as a hover cue, so it reads as "hover here, something's about to move"
+instead of the crossfade just starting with no warm-up. Would live in `.wd-project__frame`/
+`.wd-project__frame-stage` (`app.css`) plus maybe a small SVG in `ProjectMediaFrame.razor`. Not
+scoped yet — icon choice/placement/timing (does it fade out once the crossfade begins, or stay?)
+still needs a design pass, not just an implementation one.
+
 ### 12. **Scroll Animations** (Fade-in + Slide-up)
 - **Why:** Content appearing instantly feels static; animations make site feel "alive"
 - **Scope:**
