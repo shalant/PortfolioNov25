@@ -1172,6 +1172,217 @@ confirmed fixed live: navigated to `/#technicalskills`, scrolled to the Music se
 
 ---
 
+## Fix: Deep-Link Routing on GitHub Pages
+**Status:** ✅ Complete (2026-08-21)
+**Branch:** `fix/spa-deep-link-routing`
+
+**Why:** User reported broken screenshots on live case-study pages (e.g.
+`/webdesign/dougrosenberg-music`). Root cause wasn't the images — it was that **every**
+`/webdesign/{slug}` deep link (and any other parameterized route) 404'd on direct navigation
+or refresh, rendering the app's own `<NotFound />` instead of the page.
+
+**Root cause:** GitHub Pages has no server-side rewrites, so this site relies on the standard
+`404.html` → `sessionStorage` → `index.html` SPA-fallback trick (`wwwroot/404.html` stores the
+attempted path, redirects to `/`, and an inline script in `index.html` restores it via
+`history.replaceState` before Blazor renders). But `index.html`'s
+`<script src="_framework/blazor.webassembly.js">` had no `autostart="false"`, so Blazor
+auto-started and ran its first route match racing against that restore script. Blazor locked in
+"not found" for whatever path it booted with; the later `replaceState` call fixed the address
+bar but nothing re-triggers the router off a raw `history.replaceState` (no `popstate` fires), so
+the page stayed on `NotFound` even though the URL was correct. Confirmed live: address bar showed
+the right path, GA's `page_view` fired with `dl` still `/`, and no `sample-data/webdesign.json`
+request was ever made.
+
+**Fix:** Added `autostart="false"` to the Blazor script tag and moved `Blazor.start()` to run
+*after* the sessionStorage redirect-restore logic, so the router's first route match always sees
+the corrected path. Verified locally: `/webdesign/hardware-etc` now renders the case-study page
+(title, content, images) instead of 404. This was a site-wide bug, not specific to the webdesign
+section — any parameterized route hit on direct load/refresh was affected.
+
+## Fix: Broken Images on Every Nested Route (bad dynamic base href)
+**Status:** ✅ Complete (2026-08-21)
+**Branch:** `fix/spa-deep-link-routing` (same branch — found while re-verifying the fix above)
+
+**Why:** After the deep-link fix above, user reported the case-study screenshots still looked
+wrong live ("all the screenshots are cut off... having stunning pictures is essential"). Checked
+the live site directly: it wasn't cropping, the images were failing to load entirely (broken-image
+icon, `naturalWidth: 0`) on every page reached via a 2+-segment route.
+
+**Root cause:** `index.html` had a leftover dynamic `<base>` href script (dated to the initial
+commit, comment citing a "Blazor WASM base path problems" guide for apps hosted under a
+**subpath** like `username.github.io/repo-name/`). It read `window.location.pathname`, and for
+any path with more than 2 segments set `<base href="/" + path[1] + "/">` — treating `path[1]` as
+a hosting subpath. But this site is hosted at the domain **root**
+(`dougrosenbergdev.com/webdesign/hardware-etc`), so `path[1]` is actually the first *route*
+segment ("webdesign"), not a subpath. Every relative asset on a nested route (all `images/...`
+srcs) resolved against a wrong base like `/webdesign/`, producing 404s such as
+`dougrosenbergdev.com/webdesign/images/webdesign/hardwareetc-hero.jpg`. The `localhost` branch of
+the old script explicitly forced base href to `/`, which is why this was invisible in local dev
+the whole time — it only ever broke the live site.
+
+**Fix:** Replaced the entire dynamic script with a static `<base href="/" />`. This site is always
+served from the domain root (GitHub Pages custom domain, confirmed in `CLAUDE.md`), so there's no
+subpath to compute — a static root base is correct in every environment (local dev, GH Pages
+custom domain). Verified locally via `img.src`/`naturalWidth` checks that images now resolve
+correctly on a nested route.
+
+---
+
+## Hardware Etc: Before/After Case-Study Section
+**Status:** ✅ Complete (2026-08-21)
+**Branch:** `feature/webdesign-before-after`
+
+**Why:** User asked for a before/after comparison for the two Squarespace client builds
+(Hardware Etc, Sonus Construction) on `/webdesign`. Checked with the user first: Sonus was a
+fresh build with no prior site, so it gets no before/after (no material to show, not a gap to
+fill). Hardware Etc did have a real prior site, so it's the only one with a before/after.
+
+### What was built
+- Found a genuine "before" via the Wayback Machine: `hardwareetc.net` captured 2021-12-06 — a
+  single unstyled placeholder page (default browser typography, no layout, no branding beyond a
+  plain wordmark). Sonus's own Wayback history has no usable capture (one 200 response, but the
+  Squarespace CSS/JS never got archived, so it renders blank) — confirms there's nothing to
+  recover for Sonus even if we wanted one.
+- Captured and cropped that Wayback snapshot into
+  `wwwroot/images/webdesign/hardwareetc-before.jpg` (1200×242, ~28KB).
+- Added `BeforeImage` / `BeforeCaption` / `BeforeSourceUrl` (optional) to `WebDesignProject`
+  (`Models/WebDesignModel.cs`) and populated them only on the `hardware-etc` entry in
+  `webdesign.json`. The caption links back to the actual Wayback URL for transparency.
+- `WebDesignDetailPage.razor`: renders a before/after block (guarded on `BeforeImage` being set)
+  between the hero shot and the stack/approach sections — before panel desaturated
+  (`grayscale(0.35) contrast(0.92)`), after panel reuses `project.Images[0]`, both framed at a
+  matching 220px height like the existing `.wd-case__shot` tiles. New `.wd-case__before-after`/
+  `.wd-case__ba-*` rules in `app.css`, stacking to one column under 640px.
+- Fixed a same-specificity CSS ordering bug during dev: `.wd-case__ba-shot--before img`'s
+  `object-position: top left` was silently overridden because the generic `.wd-case__ba-shot img`
+  rule appeared later in the file at equal specificity — moved the generic rule earlier so the
+  `--before` override actually wins.
+
+### Verification
+- `dotnet build` and `dotnet test .` both pass (8/8 tests, same 2 pre-existing unrelated
+  `Experience.razor` warnings).
+- Live-tested in Chrome via `dotnet run`: `/webdesign/hardware-etc` shows the before/after block
+  correctly (badges, desaturated "before" panel showing the real placeholder text, working
+  "View archived snapshot" link); `/webdesign/sonus-construction` renders with no before/after
+  block at all, confirming the guard works and nothing was fabricated for it.
+
+### Also fixed this session (separate branch, merged into this one)
+While investigating this, found and fixed a site-wide bug where every `/webdesign/{slug}` deep
+link 404'd on direct navigation/refresh on the live GitHub Pages site — see the "Fix: Deep-Link
+Routing on GitHub Pages" entry above (`fix/spa-deep-link-routing`, merged into this branch since
+it's what made testing this feature live possible in the first place).
+
+### Follow-up: fixed cropped screenshots + hover zoom (2026-08-21)
+User flagged (with a screenshot) that the `.wd-case__shots` secondary-image grid was visibly
+cropping into the site's own overlay text at both left and right edges. Root cause: the tiles
+used a fixed `height: 220px` with `object-fit: cover`, which doesn't match the images' native
+1522×784 ratio — cover-cropped ~60px off each side at that resolution, enough to clip words on
+screenshots where the text runs close to the edges.
+
+- Fixed by giving `.wd-case__shot img` `aspect-ratio: 1522 / 784` instead of a fixed pixel
+  height, so the tile's box ratio matches the source images exactly — `object-fit: cover` no
+  longer needs to crop anything at any grid column width.
+- Added the requested subtle hover zoom: `transition: transform 0.4s ease-in-out` on the image,
+  `transform: scale(1.06)` on `:hover` (same pattern applied to `.wd-case__hero-shot` at
+  `scale(1.04)` and `.wd-case__ba-shot` at `scale(1.06)` for a consistent feel across all
+  case-study imagery). Containers already had `overflow: hidden`, so the zoom clips cleanly
+  inside the rounded corners.
+- User also didn't like the pre-existing `.wd-case__shot:hover { transform: translateY(-4px) }`
+  card-lift — removed it, keeping only the border-color hover change on the card and the new
+  scale-zoom on the image itself, so hovering no longer shifts anything on the Y-axis.
+- CSS-only change; skipped a full `dotnet build`/`dotnet test` this time since the user's own
+  Visual Studio debug session (`localhost:5001`) held a lock on the shared build output —
+  verified the change by reading the compiled rule back instead of rebuilding, and left live
+  verification to the user's already-running session rather than competing for the lock.
+
+### Follow-up 2: card polish — box-shadow over border, fill the caption area, zoom everywhere (2026-08-21)
+User sent a second screenshot (Haxbyte case study, light mode) showing the real bug behind the
+crop complaint's sibling issue: shorter captions in `.wd-case__shots` left a visibly blank strip
+of the card's own (transparent) background below the figcaption — grid `align-items: stretch`
+equalizes all cards in a row to the tallest, but the figcaption itself only sized to its own text,
+so short captions didn't reach the bottom of the stretched card. User also asked, generally: every
+photo should get the subtle zoom, and box-shadow is preferred over border for cards.
+
+- **Caption fill:** `.wd-case__shot` is now `display: flex; flex-direction: column`, and its
+  `figcaption` is `flex: 1 1 auto` — the caption's own background always stretches to the card's
+  true bottom edge now, regardless of how the grid row height stretches. No more second,
+  differently-colored blank surface.
+- **Border → box-shadow:** removed the flat `border` from `.wd-case__hero-shot`,
+  `.wd-case__shot`, `.wd-case__highlight-card`, `.wd-case__ba-shot`, and `.wd-project` (the
+  `/webdesign` list-page cards); replaced with soft `box-shadow` (deepening further on hover
+  instead of a border-color change). `.wd-case__hero-shot` already had its own large shadow, so
+  that one just lost the redundant border.
+- **Zoom everywhere:** added the same `transform: scale(...)` + `transition: transform 0.4s
+  ease-in-out` hover treatment to `.wd-project__frame-stage` (the crossfading thumbnail on the
+  `/webdesign` list page) — scaling the stage rather than the individual crossfading `<img>`s so
+  it doesn't interact with their existing opacity keyframe animation.
+- Also dropped the `.wd-project:hover` card lift (`transform: translateY(-1px)`) for the same
+  reason as the earlier `.wd-case__shot` one — kept the interaction language consistent (shadow
+  deepens, photo zooms, nothing shifts vertically) across both the list and detail pages.
+- CSS-only again; same VS lock as above, verified by reading the rules back and checking brace
+  balance rather than rebuilding.
+
+## Homepage polish: real Friars logo, Experience detail card, divider hover, music link (2026-08-21)
+Four small, unrelated requests from the same message, each scoped to a different component.
+
+- **Real Franciscan Friars logo:** the Experience section's Friars ERP entry used
+  `franciscan-friars-emblem.png` — visually close to the real friars.us badge but not actually
+  sourced from it (likely an earlier AI-regenerated approximation; its odd 115×177 non-square
+  canvas was a tell). The repo already had the real logo committed but unused
+  (`franciscan-frairs-logo-2023.jpg`, the full lockup with wordmark, matching what's live on
+  friars.us). Cropped just the circular badge out of that real file (avoiding the wordmark, which
+  wouldn't read at the ~34–150px sizes this asset is shown at) into a new
+  `franciscan-friars-badge.png`, pointed `experience.json`'s Friars entry at it, and deleted the
+  old approximated emblem file (confirmed via grep it was the only reference).
+- **Experience detail-panel card:** user said they like the existing side-nav list but wanted the
+  right-hand detail panel to read as a card rather than floating text. `.experience-detail` now
+  has a background, border-radius, and box-shadow (matching the site's established
+  shadow-over-border card language), with a light-mode background override alongside
+  `.wd-case__highlight-card`'s. Adjusted its mobile padding rule (was `padding: 0`) to keep a
+  small inset so the card doesn't touch its own edges on small screens.
+- **SectionDivider hover micro-interaction:** the 9-bar brass/teal "waveform" divider under
+  section headings (About, Casual, Contact, Experience, Music, TechnicalSkills) only ever
+  animated once, on scroll-reveal. Added a `:hover` state that re-"plays" it — bars alternate
+  taller/shorter in a quick staggered ripple (0.3s, `--ease-swing`), like an equalizer reacting,
+  distinct from the slower one-time entrance so it doesn't read as a replay.
+- **Music album art:** the "Better Than TV" cover (`dougRosenbergBetterThanTv.jpg`) had a thick
+  gray+white picture-frame mat baked directly into the image file (not CSS) — user wanted it
+  gone. Cropped it out with ImageMagick (`-shave 82x82`), leaving just the actual cover art (the
+  black top/bottom letterbox bars are part of the real cover design, not the mat, and were kept).
+  Wrapped the image in a link to `https://www.dougrosenberg.com` (new `.music-photo__link`,
+  `cursor: pointer`, `overflow: hidden` for the zoom to clip against), and added the same
+  0.4s ease-in-out hover zoom (`scale(1.06)`) used everywhere else this session, alongside the
+  existing grayscale-to-color hover effect.
+- CSS/JSON/image-only aside from the one Music.razor markup change (wrapping the `<img>` in an
+  `<a>`); skipped `dotnet build`/`test` again — Visual Studio's debug session (`localhost:5001`)
+  still held the build lock — verified by reading files back and checking `app.css`'s brace count
+  stayed balanced (850/850) instead.
+
+### Follow-up: SHIFT logo 20% larger, and confirming the Friars logo actually shipped (2026-08-21)
+- Added `transform: scale(1.2)` alongside the existing `brightness(1.6)` override for the SHIFT
+  logo (index 3) in `.experience-detail`, since it read small/dim next to the other companies'
+  logos at the shared 180px max-size.
+- User reported the Friars logo change "never made it onto the Experience section." Spun up a
+  clean `dotnet run` on a fresh port and confirmed live that both the Friars badge swap and the
+  SHIFT scale-up render correctly — the code is right. Most likely explanation: this session
+  checked out other branches (`main`, `fix/header-rerender-scroll-jump`) and back in the same
+  working directory this VS instance is running from, so a look at `localhost:5001` mid-switch,
+  or before a rebuild/hard-refresh picked up the change, would have shown stale content. Nothing
+  to fix in code; flagged to the user to hard-refresh / restart their session rather than assume
+  a regression.
+- Once actually seen live, user asked for the full lockup (badge + wordmark) instead of the
+  badge-only crop, in the detail panel specifically. Made a clean transparent-background crop of
+  the full logo (`franciscan-friars-full.png`, from the same real `franciscan-frairs-logo-2023.jpg`
+  source) and added an optional `DetailImage` field to `ExperienceModel` — when set, the detail
+  panel shows it instead of `Image`; the side-nav list still always shows `Image` (the small
+  circular mark), since a wordmark wouldn't read at 34px. Added a `--wide` modifier for
+  `.experience-detail__logo-wrap` (rounded pill instead of a 120px circle, sized for the logo's
+  real ~3.9:1 aspect ratio) so the wordmark isn't squeezed into a shape built for a badge.
+  Verified live: full lockup renders correctly in the pill; other companies (no `DetailImage` set)
+  unaffected. `dotnet build`/`test` both pass (8/8) — the VS lock had cleared by this point.
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)
