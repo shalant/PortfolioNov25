@@ -231,6 +231,7 @@
     {
         await JS.InvokeVoidAsync("DrNav.highlightActive");
         await JS.InvokeVoidAsync("DrNav.scrollToHash");
+        await JS.InvokeVoidAsync("DrNav.resetScroll75");
     }
 
     private async Task ToggleTheme()

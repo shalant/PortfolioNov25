@@ -214,18 +214,21 @@
     signal, not a rate), a rough device lean, and whether people engage with the case-study pages at
     all before replying.
 
-- **GA4's own Setup Assistant (2026-08-22):** the GA4 UI itself reports "9/11 tasks remaining" in
-  its built-in setup checklist. Not itemized here — that panel lives inside the user's Google
-  login, Claude has no visibility into which 9 specifically, and guessing would risk logging wrong
-  items against this roadmap. **Action for the user:** paste the actual 9 items (or a screenshot)
-  and they'll get folded into the checklist below properly instead of sitting as this placeholder.
-  Some overlap is likely already covered above (Search Console link, Key events) or below (Phase 2
-  Meta Pixel) — worth checking for duplicates once the real list is in hand.
+- **GA4's own Setup Assistant (2026-08-22):** reviewed via screenshot — this is Google's generic
+  template shown on every property (ads optimization, first-party/Customer Match data upload,
+  Google signals cross-device tracking), not a custom checklist. Not worth itemizing here: most
+  sections (Optimize your advertising, Add first-party data) don't apply to a portfolio site with
+  no ad spend or CRM data. The two sections that do matter — data collection and key events — are
+  already covered by the real checklist above. **Decision: user handles this section directly in
+  the GA4 UI at their own pace, not tracked in this roadmap.** One item flagged as worth a
+  deliberate choice rather than reflexively enabling: **Turn on Google signals** (cross-device/
+  demographics tracking sourced from signed-in Google accounts) — optional, has privacy
+  implications, not needed unless demographic reports become a priority.
 
 - **Phase 0 — cleanup before adding anything new:**
-  - [ ] Audit the existing personal GA4 account: several old learning/demo properties present —
+  - [x] Audit the existing personal GA4 account: several old learning/demo properties present —
         archive or delete the ones with no ongoing purpose, so the account isn't cluttered before
-        this gets added
+        this gets added. (See resolution below — already handled.)
   - [x] Decide the fate of the existing "poorly built" GA4 implementation already on the old
         dougrosenbergdev.com — **decided 2026-08-21: start fresh, don't rescue it.** Confirmed via
         Admin > Data Streams that the old property ("DougRosenbergDev", 376622939) tracks
@@ -233,9 +236,11 @@
         already moved away from — and already has a week of real multi-country traffic (14 users,
         42 events), so its numbers aren't a clean baseline for measuring the Sept 2 launch anyway.
         Left untouched, not deleted — revisit later if it's worth archiving, not urgent.
-  - [ ] Remaining Phase 0 item: audit and archive/delete the other old learning/demo properties on
+  - [x] Remaining Phase 0 item: audit and archive/delete the other old learning/demo properties on
         the account (`DEMO`, `DRD.com2`, `ng-fitness-track...`, `ninja-firegram-1...`,
-        `portfoliodec22`) — not yet done, lower priority than getting the new property correct.
+        `portfoliodec22`) — confirmed 2026-08-22: all show strikethrough in the property switcher,
+        meaning they're already deleted and sitting in GA4's 35-day recovery/trash window before
+        permanent purge. No action needed.
 
 - **Phase 1 — GA4, new/cleaned property:**
   - [x] Create GA4 property + web data stream for dougrosenbergdev.com — **`G-3H1NB9ES0L`**,
@@ -288,17 +293,18 @@
           they take?
         - `contact_email_copied` — did the mailto fallback get used (signals the mailto link itself
           may be failing for some visitors)?
-  - [ ] Mark exactly one **Key Event**: `contact_option_select` filtered to
-        `option=project_inquiry` — the actual "someone wants to hire me" signal. Resist marking
-        several events as Key Events; a property with ten "key events" communicates as little as one
-        with none.
-        **⚠️ Conflict flagged (2026-08-22):** in a live chat reply, before checking this doc, Claude
+  - [x] Mark exactly one **Key Event** — **done 2026-08-23:** `contact_option_select` (general
+        event, both `quick_note` and `project_inquiry` options) starred as the sole Key Event.
+        Resolves the conflict flagged below: went with the simpler general-event version rather
+        than building a derived `project_inquiry`-only event, since at the realistic volume here
+        (5-10 total responses expected) the quick_note/project_inquiry split isn't worth the extra
+        GA4 config — that breakdown is just as easy to read manually later via the `option`
+        parameter in Explore if it ever matters. `contact_dialog_open` and `contact_email_copied`
+        correctly left unstarred.
+        ~~**⚠️ Conflict flagged (2026-08-22):** in a live chat reply, before checking this doc, Claude
         told the user to mark all three contact events (`contact_dialog_open`,
         `contact_option_select`, `contact_email_copied`) as Key Events. That contradicts the
-        deliberate "exactly one" decision above. Left both here rather than silently picking one —
-        **the "exactly one" reasoning above is almost certainly still right** (it's the one with an
-        actual argument attached), but flag it for the user to confirm before marking anything in
-        GA4.
+        deliberate "exactly one" decision above.~~ Resolved as above.
   - [x] Review enhanced measurement toggles deliberately — done 2026-08-21: page views, scrolls,
         outbound clicks, and file downloads kept on; site search and form interactions turned off
         (site has neither feature, so both toggles would just be noise). Video engagement left off
@@ -316,9 +322,18 @@
         `contact_email_copied`, once there's enough real traffic to make one worth reading.
   - [ ] **Audiences (2026-08-22):** segment "engaged visitors" (e.g. scrolled + spent >30s) vs.
         "bouncers" for later analysis/remarketing.
-  - [ ] **Link Search Console (2026-08-22):** Admin > Product links > Search Console — surfaces
+  - [x] **Link Search Console (2026-08-22):** Admin > Product links > Search Console — surfaces
         actual search queries driving traffic once the site is indexed; ties into the SEO items
-        above (#2).
+        above (#2). **Done 2026-08-22:** linked the "Domain" property (`dougrosenbergdev.com`,
+        covers all protocols/subdomains) rather than the narrower URL-prefix property — GA4 only
+        needed the one link.
+  - [x] **`scroll_75` custom event (2026-08-23):** added, mirroring one seen in a GA4 property at
+        the user's day job — but motivated by the "did people engage with case-study pages before
+        replying" question above, not copied reflexively. Fires once per page at 75% scroll depth
+        (GA4's built-in `scroll` event only fires at 90%, too strict a bar at this site's expected
+        traffic volume). See `docs/TASKS.md` (2026-08-23 entry) for implementation details. Feeds
+        the "Audiences: engaged visitors vs. bouncers" item below once real traffic exists. Built
+        on `feature/scroll-75-tracking`, verified via browser automation, not yet merged.
   - [ ] Weekly review post-launch: which CTA path converts, which pages drive it
 
 - **Phase 2 — Meta Pixel: deprioritized 2026-08-21, not "not yet touched."** Worked through this

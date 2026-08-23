@@ -73,12 +73,33 @@ window.DrNav = (function () {
     let scrolled = false;
     let scrollTicking = false;
 
+    // Fires once per page — mirrors GA4's own built-in 90%-depth scroll event, but at 75%
+    // so it triggers for readers who didn't quite hit the bottom. Reset per SPA navigation
+    // via resetScroll75(), called from Header.razor's OnLocationChanged.
+    let scroll75Fired = false;
+
+    function checkScroll75() {
+        if (scroll75Fired) return;
+        const doc = document.documentElement;
+        const scrollable = doc.scrollHeight - doc.clientHeight;
+        const pct = scrollable > 0 ? window.scrollY / scrollable : 1;
+        if (pct >= 0.75) {
+            scroll75Fired = true;
+            if (typeof gtag === 'function') gtag('event', 'scroll_75');
+        }
+    }
+
+    function resetScroll75() {
+        scroll75Fired = false;
+    }
+
     function handleScroll() {
         const y = window.scrollY;
         if (!scrolled && y > 60) scrolled = true;
         else if (scrolled && y < 40) scrolled = false;
         document.getElementById('navbar')?.classList.toggle('scrolled', scrolled);
         highlightActive();
+        checkScroll75();
         scrollTicking = false;
     }
 
@@ -126,5 +147,5 @@ window.DrNav = (function () {
         });
     }
 
-    return { init, highlightActive, scrollToHash: scrollToHashAndSettle };
+    return { init, highlightActive, scrollToHash: scrollToHashAndSettle, resetScroll75 };
 })();

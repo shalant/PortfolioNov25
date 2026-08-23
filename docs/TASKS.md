@@ -1575,6 +1575,33 @@ less severe than what unoptimized VS Debug shows. **User's call: keep the static
 the tradeoff** — worth re-confirming the actual severity once this is live on the real deployed
 (Release-optimized) site rather than judging by VS Debug alone.
 
+### `scroll_75` custom GA4 event (2026-08-23)
+Added a `scroll_75` custom event, mirroring one the user saw in a GA4 property at their day job.
+Motivated by an already-identified real question (`PORTFOLIO_TODO.md` #9's analytics goals note):
+"whether people engage with the case-study pages at all before replying" — GA4's built-in `scroll`
+enhanced-measurement event only fires at 90% depth, a stricter bar than useful at this site's low
+expected traffic volume. Feeds the already-deferred "engaged visitors vs. bouncers" Audiences item.
+
+Implementation hooks into two existing patterns rather than adding new plumbing:
+- `src/BlazorApp/wwwroot/js/nav.js`: `checkScroll75()` runs inside the existing rAF-throttled
+  `handleScroll()` (same function already driving the navbar-shrink/highlightActive logic), fires
+  `gtag('event','scroll_75')` once via a `scroll75Fired` guard. `resetScroll75()` clears that guard
+  and is exported alongside the module's existing `init`/`highlightActive`/`scrollToHash`.
+- `src/BlazorApp/Layout/Header.razor`: `resetScroll75` is called from the existing
+  `OnLocationChanged` handler — the app's established "a new page was navigated to" signal (Header
+  is a single persistent component across Blazor's client-side routing, not recreated per page;
+  this is the same mechanism already driving `scrollToHash`/`highlightActive` on navigation).
+
+Verified via Chrome browser automation against a local dev server (port 5099, killed after):
+overrode `window.gtag` to capture calls without hitting the live property, then used real simulated
+scroll input (not JS-driven `scrollTo`, which turned out to be unreliable in an automated/backgrounded
+tab due to `requestAnimationFrame` throttling — a testing-environment artifact, not a product bug;
+confirmed by the *pre-existing* navbar-shrink logic failing identically under the same JS-driven
+scroll before switching methods). Confirmed: fires once on crossing 75% depth, does not duplicate on
+repeated scrolling within the same page, and correctly re-arms after `resetScroll75()`.
+
+Built on `feature/scroll-75-tracking`.
+
 ---
 
 ## Completed ✅
