@@ -25,6 +25,18 @@
             }
         }
     </div>
+    @if (string.IsNullOrEmpty(VideoUrl) && Images.Count > 1)
+    {
+        <span class="wd-project__count-chip" aria-hidden="true">1/@Images.Count</span>
+        @foreach (var corner in CornerNames)
+        {
+            <div class="wd-project__corner wd-project__corner--@corner" aria-hidden="true">
+                <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                    <path d="M1 8 L1 1 L8 1" />
+                </svg>
+            </div>
+        }
+    }
 </div>
 
 @code {
@@ -37,6 +49,8 @@
     /// <summary>When set, renders a looping muted video instead of the crossfading images. Drop a recording's path in here once one exists — no other changes needed.</summary>
     [Parameter]
     public string? VideoUrl { get; set; }
+
+    private static readonly string[] CornerNames = { "tl", "tr", "br", "bl" };
 
     private bool _active;
     private CancellationTokenSource? _hoverCts;
