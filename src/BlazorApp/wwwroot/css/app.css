@@ -3968,11 +3968,136 @@ html[data-theme="light"] .dr-theme-scope .webdesign-link:hover {
 }
 
 .wd-project__frame {
+  position: relative;
   border-radius: 4px;
   overflow: hidden;
   background: #0a1220;
   border: 1px solid rgba(var(--accent-rgb), 0.12);
   margin: -0.5rem -0.5rem 0.5rem;
+}
+
+/* Hint marks on every project card that has more than one screenshot
+   (ProjectMediaFrame.razor only renders these when Images.Count > 1),
+   telling desktop visitors that hovering sets the screenshot crossfading.
+   A glass count badge ("1/5") sits lower-center at rest — off dead-center so
+   it doesn't compete with whatever the screenshot itself is showing at the
+   frame's visual focal point, same glass treatment already used elsewhere
+   on this page (.wd-case__ba-badge, .wd2-hero__glass) rather than a new
+   material. On hover it fades as four small corner brackets fly out from
+   the frame's center to lock the frame, like a camera finding focus — then
+   retract when the pointer leaves. Touch devices already autoplay the
+   crossfade (see the (hover: none) rule below) so there's nothing to hint
+   at there — the brackets are hidden accordingly, though the count badge
+   stays since it's information, not a motion cue, and touch visitors have
+   no hover to reveal it otherwise. */
+.wd-project__count-chip {
+  position: absolute;
+  top: 72%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.01em;
+  color: #fff;
+  background: rgba(10, 18, 32, 0.55);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
+.wd-project__frame:hover .wd-project__count-chip {
+  opacity: 0;
+}
+
+/* mix-blend-mode: difference is doing the contrast work for the brackets —
+   it inverts against whatever screenshot content sits underneath, so the
+   same plain white mark reads on Hardware Etc's black nav bar and a light
+   kitchen photo alike, with no per-screenshot tuning. */
+.wd-project__corner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  transform: translate(-50%, -50%) rotate(var(--wd-corner-rot));
+  color: #fff;
+  mix-blend-mode: difference;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: top 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              left 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.3s ease;
+}
+
+.wd-project__corner svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.wd-project__frame:hover .wd-project__corner {
+  opacity: 0.95;
+}
+
+.wd-project__corner--tl { --wd-corner-rot: 0deg; }
+.wd-project__corner--tr { --wd-corner-rot: 90deg; transition-delay: 0.03s; }
+.wd-project__corner--br { --wd-corner-rot: 180deg; transition-delay: 0.06s; }
+.wd-project__corner--bl { --wd-corner-rot: 270deg; transition-delay: 0.09s; }
+
+.wd-project__frame:hover .wd-project__corner--tl {
+  top: 9px;
+  left: 9px;
+  transform: rotate(0deg);
+}
+
+.wd-project__frame:hover .wd-project__corner--tr {
+  top: 9px;
+  left: calc(100% - 24px);
+  transform: rotate(90deg);
+}
+
+.wd-project__frame:hover .wd-project__corner--br {
+  top: calc(100% - 24px);
+  left: calc(100% - 24px);
+  transform: rotate(180deg);
+}
+
+.wd-project__frame:hover .wd-project__corner--bl {
+  top: calc(100% - 24px);
+  left: 9px;
+  transform: rotate(270deg);
+}
+
+@media (hover: none) {
+  .wd-project__corner {
+    display: none;
+  }
+
+  /* Touch has no hover to fade the count badge on, and the crossfade is
+     already autoplaying there — so instead of leaving the badge up
+     permanently (it'd just become a fixture on top of the now-larger mobile
+     screenshot), let it announce itself once and fade out on its own after
+     the visitor has had a moment to read it. */
+  .wd-project__count-chip {
+    animation: wd-count-fade-touch 0.6s ease 3.2s forwards;
+  }
+}
+
+@keyframes wd-count-fade-touch {
+  to { opacity: 0; }
 }
 
 .wd-project__frame-stage {
@@ -4056,7 +4181,23 @@ html[data-theme="light"] .dr-theme-scope .webdesign-link:hover {
     grid-template-columns: 1fr;
   }
   .wd-project {
-    padding: 2rem;
+    padding: 1.25rem;
+  }
+  /* Mobile feedback: nobody reads the bullet list on a phone, they scroll past
+     it — drop it and let the screenshot itself (which is what people actually
+     look at) bleed to the card edge instead. */
+  .wd-project__bullets {
+    display: none;
+  }
+  .wd-project__frame {
+    margin: -1.25rem -1.25rem 0.75rem;
+  }
+  /* Frame already bleeds to the card's full width on mobile, so "bigger"
+     here means taller: 1.94/1.2 ≈ 1.62 gives ~20% more visible image area
+     at the same width (object-fit: cover just shows more of each
+     screenshot's vertical extent rather than cropping it as tight). */
+  .wd-project__frame-stage {
+    aspect-ratio: 1.62 / 1;
   }
 }
 

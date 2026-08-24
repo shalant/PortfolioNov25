@@ -1604,6 +1604,76 @@ Built on `feature/scroll-75-tracking`.
 
 ---
 
+## Phase: `/webdesign` mobile touchups (2026-08-23)
+
+**Why:** A mobile user (friend) reported that on `/webdesign`, nobody reads the project card bullet
+text on a phone, and the screenshots should be bigger. Separately, resolved the hover-hint idea
+logged under [PORTFOLIO_TODO.md §11](./PORTFOLIO_TODO.md) (2026-08-22) — no signal that the first
+card's screenshot crossfades on hover.
+
+- [x] Mobile (`@media (max-width: 820px)`, `app.css`): hide `.wd-project__bullets`, tighten card
+  padding to `1.25rem`, and let `.wd-project__frame` bleed to the card edge (negative margin equal
+  to the new padding) so the screenshot itself — not the feature list — dominates the card. Project
+  name + industry tag stay as a compact caption.
+- [x] Added a small black circular hover-hint badge (cursor + motion-swoosh SVG,
+  `.wd-project__hover-hint`) to the **first** project card only via a new `ShowHoverHint` param on
+  `ProjectMediaFrame.razor`, wired from `WebDesignPage.razor` by comparing against
+  `webDesign.Projects.FirstOrDefault()`. Fades out on actual hover; hidden under
+  `@media (hover: none)` since touch devices already autoplay the crossfade with nothing to hint at
+  (matches the existing touch-autoplay rule this file already had for the crossfade itself).
+- [x] Verified via `dotnet build` (succeeds, pre-existing unrelated warnings only) and live in
+  Chrome via `dotnet run`: badge renders only on card #1, fades on hover, hidden at narrow
+  viewport; at 390×844 the bullet list is gone and the screenshot bleeds edge-to-edge on cards #1
+  and #2.
+- [x] **Follow-up:** user reported the badge wasn't visible in the resting (non-hovered) state.
+  Root cause: Hardware Etc's own screenshot has a black nav bar in exactly that top-right corner,
+  so the plain `rgba(0,0,0,0.7)` circle blended straight into it. Added a light ring
+  (`border: 1.5px solid rgba(255,255,255,0.55)`) and a drop shadow so the badge reads against both
+  dark and light screenshot content instead of depending on background contrast. Re-verified live:
+  visible against the dark resting screenshot, still fades correctly on hover.
+- [x] **Redesign:** user liked the nav's bespoke line-icon idiom (14×14 viewBox, thin strokes,
+  right angles — the `web design` branch mark, the briefcase) and wanted something in that
+  language rather than a stock cursor pictogram, plus an animation instead of a static badge.
+  Landed on a "viewfinder" concept: four small `⌐` corner-bracket marks (`.wd-project__corner`,
+  same 14×14 stroke idiom as the nav icons) sit invisibly stacked at the frame's center at rest,
+  then fly out to lock all four corners on hover — like a camera finding focus — and retract on
+  mouse-leave. Replaced `mix-blend-mode: difference` for the ring/shadow hack from the prior
+  follow-up: it inverts against whatever's underneath, so the same mark reads on any screenshot
+  with zero per-corner tuning, superseding that patch rather than adding to it.
+- [x] **Count indicator:** user suggested showing how many photos are in the rotation. Added
+  `.wd-project__count-chip` — initially a plain "1 / N" text dead-center (paired with the
+  brackets: it fades as they fly out), then per follow-up feedback moved to a small glass circle
+  (`background: rgba(10,18,32,0.55)`, `backdrop-filter: blur(6px) saturate(140%)`, matching the
+  glassmorphism already used in `.wd-case__ba-badge` / `.wd2-hero__glass`) sitting lower-third
+  (`top: 72%`) instead of dead-center, so it doesn't sit on top of whatever the screenshot itself
+  is showing at the frame's visual focal point. Compact "1/N" text (no spaces) to fit the circle.
+- [x] **Rollout:** originally scoped to the first card only (`ShowHoverHint` param, `==` compared
+  against `Projects.FirstOrDefault()`); user asked for it on all five live-site cards. Since the
+  only real precondition is "more than one screenshot," dropped `ShowHoverHint` entirely —
+  `ProjectMediaFrame.razor` now renders the count badge + corner brackets automatically whenever
+  `Images.Count > 1` (also guarded on `VideoUrl` being unset, since a video-backed card has no
+  crossfade to hint at). `WebDesignPage.razor` no longer wires anything hint-related; no per-card
+  parameter left to set. Verified live via `dotnet run` + Chrome automation: all five live-site
+  cards render the badge and four corners, the static "coming soon: BizMachina" placeholder
+  (which isn't a `ProjectMediaFrame` at all) renders none, hover/retract confirmed via computed
+  styles on all four corners.
+- [x] **Mobile follow-up, round two:** user asked "would this be bad on mobile?" — flagged that
+  the count badge has no hover to fade on there, so it would otherwise sit permanently on top of
+  every screenshot forever rather than reading as a brief hint. Added a one-shot CSS animation
+  (`wd-count-fade-touch`, inside the existing `@media (hover: none)` block) that fades the badge
+  out on its own ~3.2s after first paint — announces itself once, then gets out of the way, same
+  intent as the desktop hover-fade without depending on an event touch devices never fire.
+- [x] **20% larger mobile photo:** the mobile frame already bleeds to the card's full width (round
+  one above), so "larger" could only mean taller. Added an `aspect-ratio: 1.62 / 1` override for
+  `.wd-project__frame-stage` inside the `@media (max-width: 820px)` block (was `1.94 / 1` site-wide)
+  — 1.94 / 1.2 ≈ 1.62, giving ~20% more visible image height at the same width; `object-fit: cover`
+  just shows more of each screenshot's vertical extent rather than cropping it as tight. Desktop
+  ratio unchanged.
+
+Built on `feature/webdesign-mobile-touchups`.
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)
