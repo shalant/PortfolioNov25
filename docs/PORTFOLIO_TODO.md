@@ -361,29 +361,53 @@
 - **Follow-up from 2026-08-25 GA4 assessment (Claude-run walkthrough of the live property,
   28-day window):** confirmed 100% of traffic is `(direct) / (none)` and Google Search Console
   shows only 3 impressions / 1 click / avg. position 41.3 over the same window — the site isn't
-  meaningfully indexed yet. Two open items from that review:
-  - [ ] **Tighten the write-up's bottom-line conclusion.** The assessment's closing paragraph
-        leaned on "grow visibility" as the single takeaway without weighing it against the
-        bot-traffic doubt below — a sharper version should lead with "numbers are too small and
-        too bot-contaminated to act on yet," and treat SEO/indexing as the one clean, real signal
-        worth acting on regardless of sample size.
-  - [ ] **Bounce rate — decide how to handle it, given Doug's read that most/all of the European
-        cities (Paris, Warsaw, Amsterdam) in the city breakdown are bots, leaving realistically
-        <10 actual human visitors in the 28-day window.** Options, not yet chosen between:
-        1. **Verify GA4's built-in bot filtering is actually on** (Admin > Data Streams > web
-           stream > Configure tag settings — "Define internal traffic" is separate from this;
-           the bot-exclusion toggle is on by the IAB/ABC bot list and should already default-on,
-           but worth confirming rather than assuming).
-        2. **Add a manual bot heuristic today, no new tooling:** cross-reference the city list
-           against sessions with 0 key events + single pageview + near-zero engagement time —
-           segment those out in Explore to see what the bounce rate looks like for the remainder.
-        3. **Treat current bounce rate as statistically meaningless and stop optimizing against
-           it** until real traffic volume (post-launch, per the Sept 2 FB plan above) makes the
-           number trustworthy — revisit then instead of reacting to a <10-person sample now.
-        4. **Add a lightweight bot-suspicion signal going forward:** a GA4 segment/audience
-           ("Likely bot" = direct/none + 0 engagement time + non-US geography) so future reports
-           can show bounce rate with and without that segment excluded, rather than re-deriving
-           this by hand each time.
+  meaningfully indexed yet.
+  - [x] **Tightened bottom-line conclusion (resolved below, via the bot-check exploration).** The
+        original write-up's closing paragraph leaned on "grow visibility" without weighing it
+        against bot contamination. Sharper version: **the 28-day sample is ~68% bot traffic; only
+        6-8 of the 22 "active users" are real** (see breakdown below). SEO/indexing (3 impressions,
+        1 click, avg. position 41.3) remains the one clean, real signal, independent of sample size
+        — that's the actual thing worth acting on, not the bounce/engagement numbers.
+  - [x] **Bounce rate — resolved with data, not guesswork.** Checked GA4's bot-filtering setting
+        first (Admin > Data Streams > Data collection): **there is no user-facing toggle** — GA4
+        applies the IAB/ABC known-bots list automatically and unconditionally to all data. So this
+        traffic already passed that filter; it's not a "flip a setting" fix (rules out option 1
+        from the original list below). Built a free-form Explore ("Bounce/Bot Check by City",
+        saved in the property, 2026-08-25) crossing City against Engagement rate and Average
+        engagement time per session to test the hypothesis directly (option 2 from the original
+        list):
+
+        | City | Active users | Events | Engagement rate | Avg. engagement time |
+        |---|---|---|---|---|
+        | Paris | 8 | 31 | 0% | 0s |
+        | Oak Park | 4 | 349 | 86.36% | 1m 35s |
+        | Council Bluffs | 3 | 10 | 0% | 0s |
+        | (not set) | 2 | 6 | 50% | 8s |
+        | Warsaw | 2 | 7 | 0% | 0s |
+        | Amsterdam | 1 | 4 | 0% | 0s |
+        | Chicago | 1 | 3 | 100% | 0s |
+        | Deerfield | 1 | 6 | 100% | 3m 33s |
+        | Reston | 1 | 5 | 0% | 3s |
+
+        **Reading it:** Oak Park, Chicago, and Deerfield (6 users total) show real engagement —
+        Oak Park alone accounts for 349 of the 421 total events (83%), almost certainly Doug's own
+        dev/testing traffic plus real visits, not a stranger's session. Paris, Council Bluffs,
+        Warsaw, Amsterdam, and Reston (15 users, 68% of the 22-user total) show **0% engagement
+        and 0s (or near-0s) engagement time** — the signature of a scripted visit (fetch the page,
+        fire a `page_view`, never actually engage), not a human who bounced after skimming. Paris
+        alone is 8 of those 15 and is the single biggest contributor to the property's traffic —
+        this isn't "Europe is noisy," it's specifically one Paris-based crawler/bot pattern
+        dominating the sample. "(not set)" (2 users, 50% engagement) is genuinely ambiguous and
+        not worth resolving further at this volume.
+        - [x] Confirms Doug's read: realistically **6-8 real human visitors** in the 28-day window,
+              not 22.
+        - [ ] **Decision needed (only remaining open piece):** whether to formalize this as a
+              standing GA4 segment/audience ("Likely bot" = 0% engagement + 0s engagement time,
+              excluding Oak Park's own known-good IP if internal-traffic filtering doesn't already
+              cover it) so future reports show bounce/engagement with and without it automatically,
+              or just re-run the saved "Bounce/Bot Check by City" exploration by hand each time —
+              low volume today makes a standing segment low-priority, revisit once real Sept 2
+              launch traffic arrives and this becomes a recurring question worth automating.
 
 - **Phase 2 — Meta Pixel: deprioritized 2026-08-21, not "not yet touched."** Worked through this
   carefully rather than defaulting to "install it anyway since we're already in the neighborhood":
