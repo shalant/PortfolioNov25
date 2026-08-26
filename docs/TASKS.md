@@ -1674,6 +1674,39 @@ Built on `feature/webdesign-mobile-touchups`.
 
 ---
 
+## GA4: internal traffic, dashboard, lead-gen funnel (2026-08-23)
+
+**Why:** Resumed the GA4 punch list from `docs/PORTFOLIO_TODO.md` §9 — three items were still open:
+internal traffic exclusion, the property dashboard, and the lead-gen funnel exploration. This is
+GA4 console configuration, not app code, so no branch/PR — the account changes live in Google
+Analytics directly and only the docs need a commit.
+
+- [x] **Internal traffic exclusion.** Found the IP rule and data filter already existed from an
+  earlier session, sitting in Testing mode. Fetched the current public IP live (`99.116.188.45`)
+  and confirmed it still matched the rule's IPv4 condition exactly. Confirmed the filter had
+  actually caught real traffic before activating it (GA4's `Traffic Type` dimension picker only
+  offered one existing value, `internal`, meaning matching events already existed) — Realtime
+  doesn't support custom-dimension comparisons and DebugView needs `debug_mode` the site doesn't
+  set, so this indirect check stood in for both. Flipped Testing → Active, confirmed GA4's own
+  "destructive and irreversible" dialog.
+- [x] **Dashboard.** Applied GA4's "User behavior" template to the property's `Reports snapshot`
+  (its landing dashboard) — covered traffic source and the Key Event card out of the box. Added two
+  cards via the report editor: Views by Page title and screen class (top pages), Active users by
+  Device category as a donut (device split — 85.7% desktop / 14.3% mobile over the last 28 days).
+  Saved to the shared snapshot, not a private copy.
+- [x] **Lead-gen funnel exploration.** Explore > "Lead-gen Funnel": Landing (`page_view`) → Scroll
+  75% (`scroll_75`) → Contact dialog open (`contact_dialog_open`) → Contact option selected
+  (`contact_option_select`) → Contact email copied (`contact_email_copied`). Verified each event
+  name against real recorded data while building it (four matched; `contact_email_copied` has
+  genuinely never fired — the copy-to-clipboard fallback nobody's needed yet). Checked the two
+  other existing saved explorations first to avoid building a duplicate. Reads 0% past step 1 on
+  the current small sample, as expected — ready for when real traffic arrives.
+
+All three verified live in the account (dougrosenbergdev.com property, `G-3H1NB9ES0L`) via Chrome
+browser automation, not just configured and assumed working.
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)
