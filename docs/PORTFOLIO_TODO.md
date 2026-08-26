@@ -309,19 +309,46 @@
         outbound clicks, and file downloads kept on; site search and form interactions turned off
         (site has neither feature, so both toggles would just be noise). Video engagement left off
         too, no video on the site.
-  - [ ] **Internal traffic exclusion (2026-08-22):** define the office/home IP as internal traffic
-        under Admin > Data collection > Data streams > [stream] > Configure tag settings > Define
-        internal traffic rules, then create a matching Data filter under Admin > Data display >
-        Data filters (start it in "Testing" mode to confirm it's catching the right traffic before
-        flipping to "Active"). Otherwise every dev/testing visit (including Claude's own browser-
-        automation sessions checking the live site) mixes into real user data.
-  - [ ] Set up dashboard: traffic source, top pages, device split (mobile vs. desktop — the open
-        question from earlier), the one Key Event
-  - [ ] **Lead-gen funnel exploration (2026-08-22):** build a custom Funnel exploration (Explore >
-        Funnel) for landing → scroll → `contact_dialog_open` → `contact_option_select` →
-        `contact_email_copied`, once there's enough real traffic to make one worth reading.
-  - [ ] **Audiences (2026-08-22):** segment "engaged visitors" (e.g. scrolled + spent >30s) vs.
-        "bouncers" for later analysis/remarketing.
+  - [x] **Internal traffic exclusion — done 2026-08-23.** Found both pieces already existed from an
+        earlier session: an internal traffic rule ("Doug's IP") under Data streams > Configure tag
+        settings > Define internal traffic, and a matching "Internal Traffic" data filter (Exclude,
+        `traffic_type` = `internal`) under Admin > Data filters, sitting in Testing mode. Verified
+        the IP rule still matches — fetched the current public IP live (`99.116.188.45`) and
+        confirmed it's an exact match for the rule's IPv4 condition (plus an IPv6 /64 range already
+        covered). Confirmed the filter has actually been catching real traffic (not just configured
+        and untested): GA4's own dimension picker only offered one existing value for the
+        `Traffic Type` custom dimension — `internal` — meaning matching events already exist in the
+        property. Flipped the filter from Testing to Active (confirmed the "destructive and
+        irreversible" dialog, matching the plan's own "verify before activating" caveat). Realtime
+        report doesn't support custom-dimension comparisons and DebugView needs `debug_mode` the
+        site doesn't set, so verification used the dimension-value-list approach above instead.
+  - [x] **Dashboard — done 2026-08-23.** Applied GA4's "User behavior" template to the property's
+        `Reports snapshot` (its landing dashboard), which already covered traffic source (Active
+        users by first user source/medium) and the Key Event card (Key events by Platform) out of
+        the box. Customized it further via the report editor to add two cards it was missing: Views
+        by Page title and screen class (top pages) and Active users by Device category as a donut
+        chart (device split — currently 85.7% desktop / 14.3% mobile over the last 28 days, small
+        early sample). Saved to the current (shared) Reports snapshot rather than as a new private
+        report, so it's what anyone opening the property lands on.
+  - [x] **Lead-gen funnel exploration — built 2026-08-23.** Explore > "Lead-gen Funnel", five steps:
+        Landing (`page_view`) → Scroll 75% (`scroll_75`) → Contact dialog open
+        (`contact_dialog_open`) → Contact option selected (`contact_option_select`) → Contact email
+        copied (`contact_email_copied`). Confirmed each event name against the property's actual
+        recorded events while wiring it up (all four matched real data except `contact_email_copied`,
+        which has genuinely never fired yet — the copy-to-clipboard fallback nobody's needed so far).
+        Checked two other saved explorations first ("Launch Tracking - 2 Sept 26", "First
+        Exploration") to make sure this wasn't a duplicate — neither was the funnel. Currently reads
+        0% past step 1 on the last-28-days sample (7 users total), exactly the "not enough traffic
+        yet" caveat this item already flagged — the exploration is built and will read correctly
+        once real launch traffic arrives, nothing further to do here.
+  - [x] **Audiences — built 2026-08-25.** Two custom GA4 audiences, both saved in the property:
+        **"Engaged visitors"** (`scroll_75` fired at least once — 2 users, 8.33% of all-time users,
+        matches the Page Read-Through finding below exactly) and **"Likely bot"** (Session medium
+        contains `(none)` AND Country does not exactly match United States — 12 users, 50% of
+        all-time users). No explicit "bouncers" audience built — that's just "not in Engaged
+        visitors," doesn't need its own definition. "Likely bot" also resolves the "Decision
+        needed" item from the 2026-08-25 bounce-rate follow-up below (it went with option 4, a
+        standing segment, rather than waiting).
   - [x] **Link Search Console (2026-08-22):** Admin > Product links > Search Console — surfaces
         actual search queries driving traffic once the site is indexed; ties into the SEO items
         above (#2). **Done 2026-08-22:** linked the "Domain" property (`dougrosenbergdev.com`,
@@ -333,8 +360,89 @@
         (GA4's built-in `scroll` event only fires at 90%, too strict a bar at this site's expected
         traffic volume). See `docs/TASKS.md` (2026-08-23 entry) for implementation details. Feeds
         the "Audiences: engaged visitors vs. bouncers" item below once real traffic exists. Built
-        on `feature/scroll-75-tracking`, verified via browser automation, not yet merged.
+        on `feature/scroll-75-tracking`, verified via browser automation, merged to `main` 2026-08-23
+        (PR #32).
   - [ ] Weekly review post-launch: which CTA path converts, which pages drive it
+
+- **Follow-up from 2026-08-25 GA4 assessment (Claude-run walkthrough of the live property,
+  28-day window):** confirmed 100% of traffic is `(direct) / (none)` and Google Search Console
+  shows only 3 impressions / 1 click / avg. position 41.3 over the same window — the site isn't
+  meaningfully indexed yet.
+  - [x] **Tightened bottom-line conclusion (resolved below, via the bot-check exploration).** The
+        original write-up's closing paragraph leaned on "grow visibility" without weighing it
+        against bot contamination. Sharper version: **the 28-day sample is ~68% bot traffic; only
+        6-8 of the 22 "active users" are real** (see breakdown below). SEO/indexing (3 impressions,
+        1 click, avg. position 41.3) remains the one clean, real signal, independent of sample size
+        — that's the actual thing worth acting on, not the bounce/engagement numbers.
+  - [x] **Bounce rate — resolved with data, not guesswork.** Checked GA4's bot-filtering setting
+        first (Admin > Data Streams > Data collection): **there is no user-facing toggle** — GA4
+        applies the IAB/ABC known-bots list automatically and unconditionally to all data. So this
+        traffic already passed that filter; it's not a "flip a setting" fix (rules out option 1
+        from the original list below). Built a free-form Explore ("Bounce/Bot Check by City",
+        saved in the property, 2026-08-25) crossing City against Engagement rate and Average
+        engagement time per session to test the hypothesis directly (option 2 from the original
+        list):
+
+        | City | Active users | Events | Engagement rate | Avg. engagement time |
+        |---|---|---|---|---|
+        | Paris | 8 | 31 | 0% | 0s |
+        | Oak Park | 4 | 349 | 86.36% | 1m 35s |
+        | Council Bluffs | 3 | 10 | 0% | 0s |
+        | (not set) | 2 | 6 | 50% | 8s |
+        | Warsaw | 2 | 7 | 0% | 0s |
+        | Amsterdam | 1 | 4 | 0% | 0s |
+        | Chicago | 1 | 3 | 100% | 0s |
+        | Deerfield | 1 | 6 | 100% | 3m 33s |
+        | Reston | 1 | 5 | 0% | 3s |
+
+        **Reading it:** Oak Park, Chicago, and Deerfield (6 users total) show real engagement —
+        Oak Park alone accounts for 349 of the 421 total events (83%), almost certainly Doug's own
+        dev/testing traffic plus real visits, not a stranger's session. Paris, Council Bluffs,
+        Warsaw, Amsterdam, and Reston (15 users, 68% of the 22-user total) show **0% engagement
+        and 0s (or near-0s) engagement time** — the signature of a scripted visit (fetch the page,
+        fire a `page_view`, never actually engage), not a human who bounced after skimming. Paris
+        alone is 8 of those 15 and is the single biggest contributor to the property's traffic —
+        this isn't "Europe is noisy," it's specifically one Paris-based crawler/bot pattern
+        dominating the sample. "(not set)" (2 users, 50% engagement) is genuinely ambiguous and
+        not worth resolving further at this volume.
+        - [x] Confirms Doug's read: realistically **6-8 real human visitors** in the 28-day window,
+              not 22.
+        - [x] **Decision made and built, 2026-08-25 (same day, work was slow — got ahead of it
+              rather than waiting for Sept 2).** Built the standing "Likely bot" GA4 audience
+              (Session medium `(none)` AND Country ≠ United States) instead of relying on re-running
+              the saved exploration by hand — see the Audiences item above. 12 users / 50% of
+              all-time users match, roughly double the 28-day-window bot share (68%) because this
+              audience has no time bound (lifetime membership) while the exploration was scoped to
+              the last 28 days — expected, not a discrepancy to chase.
+
+- **Follow-up from 2026-08-25 "which pages are most read" question — Page Read-Through
+  exploration.** Built a second saved Explore, **"Page Read-Through (scroll_75 vs page_view)"**,
+  crossing Page path against `page_view` and `scroll_75` event counts to answer that question with
+  actual read-depth data instead of just view counts:
+
+  | Page | page_view | scroll_75 | Completion rate |
+  |---|---|---|---|
+  | `/` (homepage) | 111 | 0 | 0% |
+  | `/webdesign` | 35 | 5 | 14.3% |
+  | all other pages | 30 (combined) | 0 | 0% |
+
+  **Investigated the 0-on-homepage result as a possible bug before trusting it** — GA4's own
+  built-in 90%-scroll event fired for 16 of the homepage's 22 users, and 90% is a *harder* bar than
+  our 75%, so on its face this looked like broken instrumentation. Live-tested `nav.js`'s
+  `checkScroll75()` directly on production (hooked `gtag`, scrolled the real homepage from 0% to
+  76% via CDP-simulated mouse wheel, watched `scroll_75` fire exactly at the 75% threshold) —
+  **the code is correct, not a bug.** The likely real explanation: GA4's built-in scroll listener
+  is bound once per full page load and isn't SPA-route-aware, so a scroll that happens after a
+  client-side navigation (e.g. landing on `/`, then clicking into `/webdesign` without a full
+  reload) can get misattributed back to whatever page was current when the listener first attached.
+  Our custom `scroll_75` re-arms itself per Blazor route via `resetScroll75()` (`Header.razor`'s
+  `OnLocationChanged`), so it doesn't have that problem — it's the more trustworthy of the two
+  signals here, not the less trustworthy one.
+  - [x] No code fix needed — confirmed via live production test, not just code review.
+  - [x] Read-through conclusion: real visitors mostly aren't reading deep into the long homepage;
+        they're heading to `/webdesign` and reading there. Consistent with, not contradicted by,
+        the bounce-rate findings above.
+  - [x] Feeds the "Engaged visitors" GA4 audience above (`scroll_75` fired at least once).
 
 - **Phase 2 — Meta Pixel: deprioritized 2026-08-21, not "not yet touched."** Worked through this
   carefully rather than defaulting to "install it anyway since we're already in the neighborhood":
