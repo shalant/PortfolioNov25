@@ -935,6 +935,24 @@
         font-style: italic;
     }
 
+    /* Post body is raw HTML (MarkupString) so any link the content contains
+       gets no class to hook — underline reveals left-to-right on hover via an
+       animated background-size gradient rather than a pseudo-element, since
+       that keeps the effect working across wrapped/multi-line link text. */
+    .blog-post-detail__content a {
+        color: var(--accent);
+        text-decoration: none;
+        background-image: linear-gradient(var(--accent), var(--accent));
+        background-repeat: no-repeat;
+        background-position: left bottom;
+        background-size: 0% 1px;
+        transition: background-size 0.3s ease;
+    }
+
+    .blog-post-detail__content a:hover {
+        background-size: 100% 1px;
+    }
+
     .blog-post-detail__toc {
         background: #f9f9f9;
         border-left: 4px solid #1abc9c;
