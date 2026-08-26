@@ -2330,6 +2330,20 @@ html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   transform: translateY(-2px);
 }
 
+/* Reused wherever a hero-btn's label ends in an arrow (View Work, Send a
+   Message, Visit <site>, etc.) — mirrors the same translate-on-hover pattern
+   already used for .nav-cta__arrow / .site-footer__cta-arrow, just moving
+   right instead of diagonally since these sit inline in a button, not next
+   to a "go somewhere else" external-link glyph. */
+.hero-btn__arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.hero-btn:hover .hero-btn__arrow {
+  transform: translateX(3px);
+}
+
 .hero-portrait {
   flex-shrink: 0;
   width: min(420px, 38vw);

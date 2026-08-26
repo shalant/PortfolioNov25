@@ -14,14 +14,14 @@
             {
                 <div class="contact-actions">
                     <a href="mailto:@props.Email" class="hero-btn hero-btn--primary">
-                        Send a Message ↗
+                        Send a Message <span class="hero-btn__arrow" aria-hidden="true">↗</span>
                     </a>
                     @if (!string.IsNullOrEmpty(props.LinkedIn))
                     {
                         <a href="https://www.linkedin.com/in/@props.LinkedIn"
                            class="hero-btn hero-btn--ghost"
                            target="_blank" rel="noopener noreferrer">
-                            LinkedIn ↗
+                            LinkedIn <span class="hero-btn__arrow" aria-hidden="true">↗</span>
                         </a>
                     }
                 </div>

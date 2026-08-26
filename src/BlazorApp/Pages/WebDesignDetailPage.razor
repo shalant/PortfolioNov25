@@ -122,13 +122,13 @@
                 @if (!string.IsNullOrEmpty(project.ExternalUrl))
                 {
                     <a href="@project.ExternalUrl" target="_blank" rel="noopener noreferrer" class="hero-btn hero-btn--primary">
-                        Visit @project.SiteLabel ↗
+                        Visit @project.SiteLabel <span class="hero-btn__arrow" aria-hidden="true">↗</span>
                     </a>
                 }
                 @if (!string.IsNullOrEmpty(project.GitHubUrl))
                 {
                     <a href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="hero-btn hero-btn--ghost">
-                        View on GitHub ↗
+                        View on GitHub <span class="hero-btn__arrow" aria-hidden="true">↗</span>
                     </a>
                 }
             </div>
