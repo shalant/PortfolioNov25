@@ -341,8 +341,14 @@
         0% past step 1 on the last-28-days sample (7 users total), exactly the "not enough traffic
         yet" caveat this item already flagged — the exploration is built and will read correctly
         once real launch traffic arrives, nothing further to do here.
-  - [ ] **Audiences (2026-08-22):** segment "engaged visitors" (e.g. scrolled + spent >30s) vs.
-        "bouncers" for later analysis/remarketing.
+  - [x] **Audiences — built 2026-08-25.** Two custom GA4 audiences, both saved in the property:
+        **"Engaged visitors"** (`scroll_75` fired at least once — 2 users, 8.33% of all-time users,
+        matches the Page Read-Through finding below exactly) and **"Likely bot"** (Session medium
+        contains `(none)` AND Country does not exactly match United States — 12 users, 50% of
+        all-time users). No explicit "bouncers" audience built — that's just "not in Engaged
+        visitors," doesn't need its own definition. "Likely bot" also resolves the "Decision
+        needed" item from the 2026-08-25 bounce-rate follow-up below (it went with option 4, a
+        standing segment, rather than waiting).
   - [x] **Link Search Console (2026-08-22):** Admin > Product links > Search Console — surfaces
         actual search queries driving traffic once the site is indexed; ties into the SEO items
         above (#2). **Done 2026-08-22:** linked the "Domain" property (`dougrosenbergdev.com`,
@@ -401,13 +407,42 @@
         not worth resolving further at this volume.
         - [x] Confirms Doug's read: realistically **6-8 real human visitors** in the 28-day window,
               not 22.
-        - [ ] **Decision needed (only remaining open piece):** whether to formalize this as a
-              standing GA4 segment/audience ("Likely bot" = 0% engagement + 0s engagement time,
-              excluding Oak Park's own known-good IP if internal-traffic filtering doesn't already
-              cover it) so future reports show bounce/engagement with and without it automatically,
-              or just re-run the saved "Bounce/Bot Check by City" exploration by hand each time —
-              low volume today makes a standing segment low-priority, revisit once real Sept 2
-              launch traffic arrives and this becomes a recurring question worth automating.
+        - [x] **Decision made and built, 2026-08-25 (same day, work was slow — got ahead of it
+              rather than waiting for Sept 2).** Built the standing "Likely bot" GA4 audience
+              (Session medium `(none)` AND Country ≠ United States) instead of relying on re-running
+              the saved exploration by hand — see the Audiences item above. 12 users / 50% of
+              all-time users match, roughly double the 28-day-window bot share (68%) because this
+              audience has no time bound (lifetime membership) while the exploration was scoped to
+              the last 28 days — expected, not a discrepancy to chase.
+
+- **Follow-up from 2026-08-25 "which pages are most read" question — Page Read-Through
+  exploration.** Built a second saved Explore, **"Page Read-Through (scroll_75 vs page_view)"**,
+  crossing Page path against `page_view` and `scroll_75` event counts to answer that question with
+  actual read-depth data instead of just view counts:
+
+  | Page | page_view | scroll_75 | Completion rate |
+  |---|---|---|---|
+  | `/` (homepage) | 111 | 0 | 0% |
+  | `/webdesign` | 35 | 5 | 14.3% |
+  | all other pages | 30 (combined) | 0 | 0% |
+
+  **Investigated the 0-on-homepage result as a possible bug before trusting it** — GA4's own
+  built-in 90%-scroll event fired for 16 of the homepage's 22 users, and 90% is a *harder* bar than
+  our 75%, so on its face this looked like broken instrumentation. Live-tested `nav.js`'s
+  `checkScroll75()` directly on production (hooked `gtag`, scrolled the real homepage from 0% to
+  76% via CDP-simulated mouse wheel, watched `scroll_75` fire exactly at the 75% threshold) —
+  **the code is correct, not a bug.** The likely real explanation: GA4's built-in scroll listener
+  is bound once per full page load and isn't SPA-route-aware, so a scroll that happens after a
+  client-side navigation (e.g. landing on `/`, then clicking into `/webdesign` without a full
+  reload) can get misattributed back to whatever page was current when the listener first attached.
+  Our custom `scroll_75` re-arms itself per Blazor route via `resetScroll75()` (`Header.razor`'s
+  `OnLocationChanged`), so it doesn't have that problem — it's the more trustworthy of the two
+  signals here, not the less trustworthy one.
+  - [x] No code fix needed — confirmed via live production test, not just code review.
+  - [x] Read-through conclusion: real visitors mostly aren't reading deep into the long homepage;
+        they're heading to `/webdesign` and reading there. Consistent with, not contradicted by,
+        the bounce-rate findings above.
+  - [x] Feeds the "Engaged visitors" GA4 audience above (`scroll_75` fired at least once).
 
 - **Phase 2 — Meta Pixel: deprioritized 2026-08-21, not "not yet touched."** Worked through this
   carefully rather than defaulting to "install it anyway since we're already in the neighborhood":
