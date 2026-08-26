@@ -78,6 +78,47 @@ instead of empty markup.
 
 **Branch:** `feature/image-optimization`
 
+### Follow-up: round 2 — the batch missed six more oversized images (2026-08-26)
+**Why:** Re-ran PageSpeed Insights against the live site to check whether the Static Hero Pre-Paint
+fix (below) actually moved LCP — it didn't (still ~19.5s; DOM-replacement invalidates the earlier
+LCP candidate, so Blazor's freshly-mounted element is what gets measured), but everything else
+improved (Performance 23→46, CLS 0.252→0, TBT 1420ms→840ms). The scan's "Improve image delivery"
+diagnostic flagged ~498 KiB across six images the original Phase 0 pass never touched — company
+logos and tech-stack icons, same bug as before (full-size source served for a tiny display slot),
+just on assets outside the three biggest offenders that pass covered.
+
+- [x] Identified via PageSpeed's per-image breakdown, then confirmed dimensions directly with
+      `magick identify` before touching anything:
+      - `images/Tackle_Ai_SUA_logo.png` — 2502×977 shown at 34×13 (`.experience-list__logo`)
+      - `icons/tech/sql-server.png` — 250×250, `icons/tech/claude-logo.png` — 250×250,
+        `icons/tech/canva-logo.png` — 600×600, all shown at 17×17 (`.tech-chip__icon`)
+      - `images/franciscan-friars-badge.png` — 109×135 shown at 27×34 (`.experience-list__logo`)
+      - `images/franciscan-friars-full.png` — 562×135 shown at 280×67 — already correctly
+        2x-sized for retina, so this one got format conversion only, no resize
+- [x] Resized to 2x their actual display box (matching the existing retina convention from Phase 0)
+      and converted to WebP at quality 85: `magick <src> -resize <2x-box> -quality 85 <dst>.webp`.
+      Results: 332,824 bytes → 22,430 bytes combined (93% reduction) —
+      Tackle_Ai_SUA_logo 153.6 KiB→1.8 KiB, sql-server 28.6 KiB→0.8 KiB, claude-logo 14.0 KiB→1.0 KiB,
+      canva-logo 45.3 KiB→0.6 KiB, franciscan-friars-badge 26.2 KiB→3.4 KiB,
+      franciscan-friars-full 65.0 KiB→14.8 KiB.
+- [x] Updated all 4 real references (`TechChip.razor`'s icon map ×2, `experience.json` ×2) plus
+      one orphaned reference in `projects.json` (dead data, no component loads this file, but
+      updated for consistency rather than leaving a stale path pointing at a file about to be
+      deleted). Deleted the six old PNGs.
+- [x] Visually verified each new `.webp` at its actual display size (Read tool image view) before
+      wiring in — no visible quality loss at 17×17/27×34/34×13. Verified live on the dev server:
+      built clean, fetched all six new paths (200, correct byte counts matching the conversion
+      output) and all six old `.png` paths (404, confirming no leftover reference anywhere).
+- [x] **Checked the "easy win #2" from the same conversation (Google Fonts `preconnect`) before
+      touching it — already present in `index.html` (lines 69-70).** Nothing to fix there; the
+      ~200ms render-blocking cost PageSpeed flags is the floor for a cross-origin CSS fetch even
+      with preconnect, not a missing optimization.
+- [ ] Not done, explicitly out of scope for this pass: the hero portrait's own "compression could
+      improve this" flag (real quality/size tradeoff, not a mechanical fix), and render-blocking
+      CSS deferral for `app.css`/Bootstrap (risks a flash of unstyled content, needs real testing).
+
+**Branch:** `feature/image-optimization-round2`
+
 ---
 
 ## Phase 1: SEO Foundation (Week 1)
