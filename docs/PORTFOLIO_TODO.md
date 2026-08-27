@@ -490,11 +490,23 @@
       the same way. Retrofitting explicit HTML `width`/`height` across every image site-wide
       without checking each one individually risked fighting existing responsive CSS — left as a
       real remaining task rather than guessing blindly.
-  - [ ] Retest after the Astro migration (or after a real width/height audit) — re-run PageSpeed,
-        expect the score to move meaningfully only once the WASM payload itself shrinks
+  - [x] Retest after the Astro migration (or after a real width/height audit) — re-run PageSpeed,
+        expect the score to move meaningfully only once the WASM payload itself shrinks. **Partially
+        confirmed, 2026-08-25/26/27** (see `docs/TASKS.md` "Static Hero Pre-Paint" and "Phase 0
+        follow-up: round 2" for full detail): shipped the static hero pre-paint (LCP still 19.5s —
+        DOM-replacement invalidates the earlier paint as an LCP candidate, so it doesn't count) and
+        two rounds of image optimization (~333 KiB then ~232 KiB of remaining waste identified,
+        most fixed). **Performance score moved 23→46 and stayed at 46 through both rounds of image
+        work** — CLS, TBT, and total page weight all improved for real, but the *score* itself only
+        moved once, from the pre-paint fix, and hasn't budged since. This is the predicted outcome
+        actually confirmed with data, not just theorized: the remaining ~19.5s LCP and the score
+        ceiling are structural (WASM boot cost), not fixable by asset-level tweaks — full Astro
+        migration (Phase 4) is genuinely the only lever left for the headline number.
   - [ ] Reduce unused JS (105 KiB est.) / unused CSS (44 KiB est.) / minify CSS (11 KiB est.) — real
         but modest savings next to the WASM bundle itself; worth doing alongside, not instead of,
         Phase 4
+  - [ ] One more oversized image surfaced by the 2026-08-27 re-scan, not yet fixed:
+        `images/Tc-logo-small.png` (TC Industries logo) — see `docs/TASKS.md` round-2 follow-up.
 - **Effort:** 2-3 hours
 - **Nice to have:** Not blocking, but impacts SEO ranking
 

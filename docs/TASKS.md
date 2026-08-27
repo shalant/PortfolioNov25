@@ -117,7 +117,43 @@ just on assets outside the three biggest offenders that pass covered.
       improve this" flag (real quality/size tradeoff, not a mechanical fix), and render-blocking
       CSS deferral for `app.css`/Bootstrap (risks a flash of unstyled content, needs real testing).
 
-**Branch:** `feature/image-optimization-round2`
+**Branch:** `feature/image-optimization-round2` — merged via PR #36 (2026-08-27).
+
+### Follow-up: measured the real before/after post-merge (2026-08-27)
+**Why:** Waited for the GitHub Pages deploy to actually finish (checked `gh run list` for the
+publish workflow's `completed`/`success` status, not just the merge itself), then re-ran PageSpeed
+Insights against the live site — same mobile methodology as every prior measurement in this doc —
+to get real numbers instead of assuming the fix worked.
+
+| Metric | Before round 2 | After round 2 (live) |
+|---|---|---|
+| Performance score | 46 | 46 — unchanged |
+| FCP | 3.1s | 3.6s |
+| LCP | 19.5s | 19.5s — unchanged |
+| TBT | 840ms | 740ms |
+| CLS | 0 | 0 |
+| Speed Index | 5.1s | 5.2s |
+
+**The headline score didn't move — expected, not a failure.** All six fixed images live in the
+Experience/Skills sections, below the fold, and are all marked `loading="lazy"` in the markup.
+Lighthouse's five scored metrics only measure the initial-viewport critical path; lazy-loaded,
+below-fold images were never part of that path regardless of file size. The small FCP/Speed Index
+wiggle (3.1s→3.6s, 5.1s→5.2s) is normal Lighthouse run-to-run variance, not a regression.
+
+**Where the fix does show up:** PageSpeed's "Improve image delivery" diagnostic dropped from
+**498 KiB → 232 KiB** of estimated waste — a real, measured bandwidth win for anyone who scrolls
+through those sections, just not something the top-line score reflects.
+
+**Found via the same fresh scan, not caught in round 1:** a seventh oversized image —
+`images/Tc-logo-small.png` (TC Industries logo, 1138×1087, 60,166 bytes) shown at 34×34
+(`.experience-list__logo`) — same exact bug, same fix pattern. Missed the first time because the
+original PageSpeed text extraction got cut off before reaching this entry in the list (confirmed
+by the byte-count gap: the first pass's itemized findings summed to ~415 KiB against a stated
+498 KiB total for six items — the missing ~83 KiB was this image, sitting past where the
+extraction stopped). Referenced from `experience.json` (`TC Industries` entry) and the same
+orphaned `projects.json`.
+- [ ] Not yet fixed — flagged for a follow-up pass, same mechanical resize+WebP treatment as the
+      other six.
 
 ---
 
