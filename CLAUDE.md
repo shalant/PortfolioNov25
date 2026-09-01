@@ -48,14 +48,17 @@ src/BlazorApp/                    # Main portfolio (WebAssembly SPA)
 │       └── ...                 # Other JSON data
 └── BlazorApp.csproj
 
-BlogPost-Generator/              # Blog generator tool (Blazor Server)
+BackendTools/                    # Local-only Claude-powered tools (Blazor Server)
 ├── Components/
-│   └── BlogEditor.razor        # Photo upload + version selection
+│   ├── Layout.razor            # Nav bar between the tools below
+│   ├── BlogEditor.razor        # Blog generator: photo upload + version selection
+│   └── RingCuration.razor      # Ring curation: re-ranks /webdesign hero images by quality/breadth
 ├── Services/
-│   └── BlogPostService.cs      # Claude API integration + image handling
+│   ├── BlogPostService.cs      # Claude API integration + image handling (blog generator)
+│   └── RingCurationService.cs  # Claude vision API integration (ring curation)
 ├── Program.cs                  # Startup config
 ├── appsettings.json            # Config (store ANTHROPIC_API_KEY in secrets)
-└── BlogPost-Generator.csproj
+└── BackendTools.csproj
 ```
 
 ## Key Files & Their Purpose
@@ -149,15 +152,15 @@ Blog post objects now include:
 }
 ```
 
-### Use the Blog Post Generator
+### Use Backend Tools
 
-The **BlogPost-Generator** is an internal tool—**do not deploy publicly**. Run locally only:
+**BackendTools** is an internal Blazor Server app bundling multiple local-only Claude-powered utilities—**do not deploy publicly**. Run locally only:
 ```bash
-dotnet run --project BlogPost-Generator/BlogPost-Generator.csproj
-# Runs on http://localhost:5001
+dotnet run --project BackendTools/BackendTools.csproj
+# Runs on http://localhost:5011 — nav bar switches between the tools below
 ```
 
-**Features:**
+**Blog Generator** (`/`):
 - Write raw blog post content
 - **Upload photos** (jpg, png, gif, webp) - images stored as base64 data URIs in JSON
 - Generate 3 polished versions using Claude API
@@ -170,7 +173,12 @@ dotnet run --project BlogPost-Generator/BlogPost-Generator.csproj
 - Images stored with blog post in `wwwroot/sample-data/blog-posts.json`
 - Base64 encoding keeps everything self-contained (no external image hosting)
 
-**⚠️ Security:** This tool uses your Anthropic API key. Keep it **localhost-only**. Do not expose on public internet without authentication.
+**Ring Curation** (`/ring-curation`):
+- Sends every `/webdesign` case-study image to Claude's vision API and asks it to rank each project's images best-to-worst plus an overall project quality rank, for the `/webdesign` hero's 3D ring
+- Outputs a C# snippet matching `WebDesignPage.razor`'s `RingCuration` array — review and paste it in manually rather than having the tool patch source directly
+- Run it again whenever case-study images change; nothing about the ring itself calls the Claude API at runtime — see `WebDesignPage.razor`'s `RingCuration` comment for why
+
+**⚠️ Security:** These tools use your Anthropic API key. Keep them **localhost-only**. Do not expose on the public internet without authentication.
 
 ### Add a New Component
 
@@ -317,16 +325,16 @@ Deployment is automatic: push/merge to `main` triggers the GitHub Actions workfl
 **Before shipping to production:**
 
 - [x] **HTTPS only** — GitHub Pages enforces this automatically on the custom domain
-- [x] **API Keys** — `ANTHROPIC_API_KEY`/`AI:AnthropicApiKey` supplied via environment variable or `dotnet user-secrets` for the local-only BlogPost-Generator; never committed. `.gitignore` excludes `.env` and `appsettings.*.json` (except the committed, secret-free base `appsettings.json`).
+- [x] **API Keys** — `ANTHROPIC_API_KEY`/`AI:AnthropicApiKey` supplied via environment variable or `dotnet user-secrets` for the local-only BackendTools; never committed. `.gitignore` excludes `.env` and `appsettings.*.json` (except the committed, secret-free base `appsettings.json`).
 - [ ] **Input validation** — Blog title/content validated before sending to Claude API
 - [x] **File size limits** — Images capped at 5MB per upload (already in code)
 - [ ] **CSP headers** — not achievable on plain GitHub Pages; would require a reverse proxy (e.g. Cloudflare) in front of the domain. See SECURITY.md for the honest tradeoff.
 - [ ] **Regular updates** — Keep .NET, MudBlazor, and all packages current (no fixed cadence established yet)
 - [ ] **Backups** — `blog-posts.json` is versioned in git, which is the backup
 
-### BlogPost-Generator
+### BackendTools
 
-**✅ Stays private** — never deploy publicly. Runs locally only (`dotnet run`, localhost). To publish blog posts: export JSON from the generator, copy to `src/BlazorApp/wwwroot/sample-data/blog-posts.json`, commit, and merge to `main` like any other change.
+**✅ Stays private** — never deploy publicly. Runs locally only (`dotnet run`, localhost). To publish blog posts: export JSON from the Blog Generator tab, copy to `src/BlazorApp/wwwroot/sample-data/blog-posts.json`, commit, and merge to `main` like any other change. Ring Curation works the same way — copy its generated snippet into `WebDesignPage.razor`'s `RingCuration` array, commit, merge.
 
 ### Blocking Common Attacks
 

@@ -1784,6 +1784,195 @@ browser automation, not just configured and assumed working.
 
 ---
 
+## `/webdesign` Hero: 3D Ring Replaces Flat Marquee, Home CTA Repointed, BackendTools Rename (2026-09-01)
+
+**Why:** The homepage hero's primary CTA still pointed at `#experience` (job-history framing),
+contradicting the nav's own 2026-08-21 repriority of client work to flat, top-level nav items. On
+`/webdesign`, the flat two-row image marquee read as static; a genuine 3D effect was worth trying,
+and with ~60% of traffic mobile, that hero needed real mobile treatment rather than the desktop
+layout scaled down.
+
+### Homepage hero CTA
+- [x] Swapped the primary CTA from "View Work" → `#experience` to "See My Work" → `/webdesign`, in
+  both `Home.razor` and the static pre-boot skeleton in `wwwroot/index.html`. Matches the nav's
+  existing client-work-first positioning instead of contradicting it.
+
+### `/webdesign` hero: flat marquee → 3D ring
+- [x] Replaced the two-row `translateX` marquee with a true rotating ring: each card orbits via
+  `rotateY(angle) translateZ(radius)` inside one `perspective` parent, individually counter-rotated
+  every frame so it always billboards toward the camera (nothing goes edge-on or disappears on the
+  far side, unlike a plain ring). New `wwwroot/js/ring.js` (`window.DrRing.init`), called from
+  `WebDesignPage.razor` via `IJSRuntime` once the project data and the container element both exist.
+- [x] Bird's-eye tilt via `rotateX(-22deg)` on the ring — negative is what actually reads as
+  "viewed from above" (positive pins the near card at the top with everything drooping below it,
+  which reads as looking up from underneath instead).
+- [x] Opacity/scale continuously chase an angle-derived target through an exponential smoothing
+  filter (~1.2s time constant), peaking left of dead-center rather than exactly on it, for a
+  gradual crossfade instead of a snap.
+- [x] **Root-caused two separate "pop" bugs**, neither of which was the easing: (1) raw CSS
+  perspective foreshortening on `translateZ()` was growing/shrinking a card's actual size as it
+  swung through its closest point, bypassing the smoothing filter entirely since that only smooths
+  the *artistic* scale layered on top — fixed by flattening `.wd2-hero`'s `perspective` way out
+  (1100px → thousands, scales with the ring radius). (2) The browser's native 3D depth sort was
+  flipping paint order between two already-bright overlapping cards at an arbitrary geometric
+  threshold — fixed by driving `z-index` explicitly off the same smoothed opacity instead, so the
+  paint-order swap lands where the two cards are already near-equally prominent.
+- [x] **Image pop-in on load:** ~12 full-size images loading at different network speeds were each
+  snapping straight to their angle-based opacity the instant the `<img>` element existed, before the
+  browser had any pixels to show — read as a buggy, staggered pop. Fixed by gating each card's
+  target opacity to 0 until its own `load` event fires, then letting the existing smoothing filter
+  fade it in — reuses the same easing already used for everything else instead of a separate CSS
+  transition.
+- [x] **Dynamic image selection**, not hand-picked once: `WebDesignPage.razor` has a curated
+  `RingCuration` table (per-project image quality ranking, best-first, plus an overall per-project
+  quality rank) and `SelectRingImages(count)`, a breadth-first round-robin — round 0 takes every
+  project's best image in quality order, round 1 takes the second-best from whichever projects have
+  one, and so on — so the ring always has full breadth before going deeper into any single project.
+  At `RingCardCount = 12` that lands on exactly "one per project (8) + second-best from the top 4."
+- [x] **Mobile:** narrowing the glass card to peek the ring out around its edges was never going to
+  work — a phone doesn't have the horizontal room for the ring to read as a ring AND share its
+  footprint with legible text. Restructured instead: the ring gets its own full-width band up top
+  with the glass card in normal flow below it, pulled up to visibly overlap the band's image content
+  (not just close the gap) rather than floating on top and hiding most of it. Ring tilt steepened to
+  `-34deg` under `820px` (one value covers both tablet and phone widths) — the same `-22deg` as
+  desktop read as nearly flat at the band's shorter height.
+- [x] **Follow-up tuning (same day):** the first overlap pass (`margin-top: -1.5rem`/`-1.25rem`) was
+  confirmed live (`getComputedStyle` in the user's own DevTools, not just this session's automation)
+  to be genuinely applied but too subtle to read as overlap at all — and a second pass that bumped
+  only the `820px` block's margin silently did nothing at real phone widths because a more specific
+  `480px` override further down the file was still winning the cascade with the old value. Fixed by
+  updating both breakpoints together, shrinking the ring band height (`min(50vh,400px)`→
+  `min(36vh,280px)` at 820px, `min(44vh,340px)`→`min(30vh,230px)` at 480px) so less of the band is
+  empty space around the image cluster, and increasing the glass card's pull-up (`margin-top`) at
+  each breakpoint until the images visibly bleed under the card's rounded top corners — confirmed via
+  actual before/after screenshots at each step, not just computed-style values, since a numerically
+  "correct" change had already turned out to be visually imperceptible once already. First correction
+  landed on `-9rem`/`-7.5rem` (820px) and `-11rem` (480px), which read as a clear overlap but then
+  drew the opposite complaint live ("overshoots... i want it to subtly overlap") — the ring's own
+  opacity animation means a fixed pixel overlap reads as covering *more* of the strip whenever the
+  animation happens to catch a dimmer/sparser moment, so what looked right in one screenshot read as
+  too much a moment later. Settled lower, at `-4.5rem` (820px) / `-5.5rem` (480px), confirmed by the
+  user across multiple animation frames as the "subtle but clearly there" middle ground between the
+  imperceptible first pass and the strip-swallowing one. An even more aggressive first attempt at the
+  820px value (derived from bounding-box math over all 12 ring cards, including ones faded
+  near-invisible at the ring's far edge) fully hid the strip behind the card — bounding-box math over
+  the whole rotating set isn't a reliable proxy for what's actually visible at a glance; tuning this
+  by eye against real screenshots worked, analytical derivation from full-set geometry didn't.
+- [x] Verified extensively via live `dotnet run` + Chrome browser automation across many iterations
+  (tilt direction, perspective flattening, card sizing, mobile restructure, overlap tuning) — see git
+  history on `feature/homepage-cta-webdesign` for the full iteration trail.
+
+### BackendTools (was BlogPost-Generator) + Ring Curation tool
+- [x] Renamed the whole local-only tools project `BlogPost-Generator` → `BackendTools` (`git mv`,
+  namespace, `.sln`, `launchSettings.json`, `CLAUDE.md`/`SECURITY.md` references) — it now hosts
+  more than one tool behind a nav bar (`Layout.razor`).
+- [x] Added **Ring Curation** (`/ring-curation`, `RingCurationService.cs`): sends every `/webdesign`
+  case-study image to Claude's vision API in one call, asks it to rank each project's images
+  best-to-worst plus an overall project quality rank, and outputs a C# snippet matching
+  `WebDesignPage.razor`'s `RingCuration` array for manual review-and-paste — same
+  local-tool-only-never-runtime pattern the blog generator already used for its own Claude API key.
+- [x] **Fixed a real port collision**, unrelated to anything above but surfaced by running both
+  projects together in Visual Studio: `BlazorApp` and `BackendTools` both defaulted to port 5001 in
+  `launchSettings.json`. Moved `BackendTools` to 5011/7011 rather than touch `BlazorApp`'s
+  established dev port.
+
+### A note on this session's dev-server flakiness
+A long stretch of "page fails to boot" symptoms during this session (repeated `TypeError: Failed to
+fetch` on the app's own `.wasm`/`.pdb`, despite `curl` and direct `fetch()` confirming the files were
+genuinely served correctly) turned out to be self-inflicted: a personal `dotnet run` dev server was
+running in parallel with the user's own Visual Studio debug session of the same `BlazorApp` project,
+both fighting over the same build output. Not a code bug — stopped the redundant server and verified
+against the user's own running instance instead.
+
+Built on `feature/homepage-cta-webdesign` (uncommitted as of this entry).
+
+---
+
+## Homepage & Site Nav Overhaul: Mobile Rebuild, Desktop Grouping, Vertical Rail (2026-09-01)
+
+**Why:** User called the mobile menu "ad-hoc" and flagged the desktop "...more" dropdown and the
+theme toggle's placement. Explored via published design-canvas artifacts (5-6 static/animated
+directions each for mobile nav, desktop nav, and a new homepage vertical section-nav) before
+touching production code, then implemented the directions the user actually picked.
+
+### Mobile menu
+- [x] Rebuilt as a floating glass sheet: transparent panel + heavy backdrop blur, rounded bottom
+  corners, drop shadow — replacing the old near-solid panel.
+- [x] Added a full-screen scrim (`.nav-scrim`, new element in `Header.razor`) behind the sheet,
+  blurred + dimmed. This is the actual bug fix, not just visual polish: the old menu had no fixed
+  height, so the real page's own hero CTA button showed through underneath it, reading as a second,
+  accidental "get in touch" button.
+- [x] Replaced the instant `display:none`/`flex` toggle with a real open/close animation —
+  `scaleY` from a fixed top origin (transform-origin) plus an opacity fade, so it reads as a
+  vertical roll down/up instead of a flash. `display:none` can't be animated, so the sheet stays
+  `display:flex` always; `visibility` (delayed on close so the sheet stays visible through its own
+  closing animation) carries the actually-hidden state instead.
+- [x] "More" dropdown's items regrouped into a tinted, rounded block instead of a left-border
+  indent; the "more" trigger itself restyled as a small muted caption (icon/caret dropped) instead
+  of a full nav-link row that did nothing on tap.
+- [x] Replaced the text-link + peekthrough-button combo with one real filled CTA button
+  (`.hero-btn--primary` treatment) — direct consequence of the scrim fix above finally letting there
+  be only one "get in touch" control instead of two competing ones.
+
+### Desktop "more" dropdown
+- [x] Reorganized into two labeled columns — "on this page" (homepage anchors: about, experience,
+  skills, contact) and "elsewhere" (résumé, blog) — instead of one flat undifferentiated list.
+- [x] Added casual/music/contact to the dropdown (they had no nav entry point anywhere before this),
+  then trimmed casual/music back out after reconsidering: they're personal/hobby content someone
+  reads by scrolling past About, not something a visitor hunts for in a menu. Still reachable via
+  the vertical rail and natural scroll; kept the dropdown to the destinations that are actually
+  conversion/recruiter-critical.
+- [x] **Fixed a real bug:** the dropdown stayed visibly open after clicking a link and navigating
+  away, because the just-clicked `<a>` kept `:focus-within` true on its `.nav-has-dropdown` parent.
+  Fixed in `nav.js`'s existing click handler — blurs the clicked link, which was already closing the
+  mobile menu but not this.
+- [x] **Fixed a real bug:** the nav's hamburger cutoff (820px) and `.hero-content`'s row→stacked
+  cutoff (960px) were misaligned, leaving an 820-960px dead zone where the desktop nav row tried to
+  render with no room for it (clipped the CTA button off the viewport at ~822px, confirmed live) while
+  the hero simultaneously had no room to keep text+portrait side by side either. Aligned both
+  breakpoints to 960px — the nav's own `@media(max-width:820px)` blocks (and the mobile-flatten
+  `.nav-dropdown` override) moved to 960px to match.
+
+### New: vertical section rail (homepage only)
+- [x] Added `VerticalSectionNav.razor`, composed only in `Index.razor` — never renders on
+  `/webdesign` or any other page. Icon-only at rest (no pill fills), hover reveals the section label
+  with the site's existing underline-sweep treatment, icon position pinned via a fixed-width box so
+  it never slides as the label reveals.
+- [x] Reveals only once scrolled past the hero, hidden again below 1100px — the hero portrait
+  occupies the right side of the viewport at common desktop widths (confirmed via the actual
+  `.hero-content` breakpoint math: at ~1440px wide the margin outside the hero's 1300px content
+  column shrinks to ~70px, not enough room), and tablet already gets the plain full top nav instead.
+- [x] Wired into `nav.js`'s existing `highlightActive()` scroll-spy (which already computes the
+  current section for the top nav) rather than a duplicate `IntersectionObserver` — one source of
+  truth for "what section is active."
+- [x] **Fixed a real accessibility gap:** the rail's label-reveal only fired on `:hover`/`.active`,
+  not `:focus-visible` — a keyboard user tabbing through got the global outline ring around a bare
+  icon with no visible label. Added `:focus-visible` alongside `:hover` for the label, underline, and
+  icon color.
+
+### Mobile hero
+- [x] Fixed excessive top padding (`7rem` → `2rem`) in the `≤960px` hero rule — was tuned back when
+  this rule applied only to true phones; left ~112px of genuinely empty space above the content once
+  it also started applying to the wider 820-960px range.
+- [x] Swapped `flex-direction: column-reverse` → `column` so the name/headline renders before the
+  portrait photo when stacked, instead of a large photo pushing identity/CTA text below the fold.
+
+### Other fixes
+- [x] Contact dialog's close button bumped from a 32×32px tap target to a real 44×44px one, matching
+  the 44×44px standard already used elsewhere in the nav (theme toggle, hamburger).
+- [x] `/webdesign` hero subheadline copy rewritten to drop framework jargon ("Blazor, Angular...")
+  in favor of outcome-focused copy — meaningless inside-baseball to a prospective client.
+
+### Verification
+- [x] Every change above verified live via `dotnet run` + Chrome browser automation — real
+  `getComputedStyle`/`getBoundingClientRect` checks and screenshots at real breakpoints (390, 822,
+  960, 1440px+), not just a code read-through. The two "real bug" items above were both found and
+  confirmed this way, not assumed from the code.
+
+Built on `feature/homepage-cta-webdesign` (uncommitted as of this entry).
+
+---
+
 ## Completed ✅
 
 - [x] Consolidate documentation (deleted redundant docs)
@@ -1811,5 +2000,5 @@ browser automation, not just configured and assumed working.
 
 ---
 
-**Last Updated:** 2026-08-09  
+**Last Updated:** 2026-09-01  
 **Next Review:** After Phase 1 complete

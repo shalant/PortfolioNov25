@@ -1,5 +1,6 @@
 @page "/webdesign"
 @inject HttpClient Http
+@inject IJSRuntime JS
 
 <PageTitle>Web Design — Doug Rosenberg Dev</PageTitle>
 
@@ -8,25 +9,8 @@
 
 @if (webDesign is not null)
 {
-    var marqueeImages = webDesign.Projects.SelectMany(p => p.Images).ToList();
-
     <section class="wd2-hero">
-        <div class="wd2-hero__marquee wd2-hero__marquee--back">
-            <div class="wd2-hero__track wd2-hero__track--slow">
-                @foreach (var src in marqueeImages.Concat(marqueeImages))
-                {
-                    <img src="@src" alt="" loading="eager" />
-                }
-            </div>
-        </div>
-        <div class="wd2-hero__marquee wd2-hero__marquee--front">
-            <div class="wd2-hero__track wd2-hero__track--fast wd2-hero__track--reverse">
-                @foreach (var src in marqueeImages.Concat(marqueeImages))
-                {
-                    <img src="@src" alt="" loading="eager" />
-                }
-            </div>
-        </div>
+        <div class="wd2-hero__ring" id="wd2HeroRing"></div>
         <div class="wd2-hero__scrim"></div>
         <div class="wd2-hero__glass">
             <span class="section-eyebrow">// web design</span>
@@ -140,9 +124,82 @@
 
 @code {
     private WebDesignModel? webDesign;
+    private bool ringInitialized;
+
+    // How many cards the hero's 3D ring should hold. Picked to land exactly
+    // on "one image from every project, plus a second image from the four
+    // strongest" — see SelectRingImages.
+    private const int RingCardCount = 12;
+
+    // Hand-curated for the hero ring: which of each project's images best
+    // represent it, ranked best-first (index into that project's Images
+    // array), plus each project's overall quality rank (1 = strongest) for
+    // ordering which projects get a *second* card once every project
+    // already has its best one in. Update this by eye when project images
+    // change — there's no live scoring here, just a snapshot of a judgment
+    // call. (Automating that judgment via the Claude API is possible in
+    // principle, but only as a local/offline tool whose output gets
+    // committed here, the same pattern BackendTools/RingCuration already uses —
+    // never a runtime call from this public, static-hosted page.)
+    private static readonly (string Slug, int ProjectRank, int[] ImageIndexesBestFirst)[] RingCuration =
+    [
+        ("guacamayo-band",         1, [0, 3, 2]), // hero, shows tiles, music/video section
+        ("arborkin",               2, [1, 2, 3]), // tree canvas hero, detail drawer, dark mode
+        ("dougrosenberg-music-v2", 3, [0, 1]),    // portrait hero, recordings
+        ("hardware-etc",           4, [0, 2]),    // hero, real interior/materials photo
+        ("sonus-construction",     5, [1]),       // split-panel kitchen photo (stronger than the washed-out hero)
+        ("dougrosenberg-music",    6, [3]),       // album covers — avoids duplicating the v2 portrait
+        ("haxbyte",                7, [0]),       // hero
+        ("gigsync",                8, [0]),       // only image available
+    ];
 
     protected override async Task OnInitializedAsync()
     {
         webDesign = await Http.GetFromJsonAsync<WebDesignModel>("sample-data/webdesign.json");
+    }
+
+    // Breadth-first, round-robin: round 0 takes every curated project's best
+    // image (in project-quality order), round 1 takes the second-best from
+    // whichever projects have one (again in quality order), and so on — so
+    // the ring always has full breadth before it ever goes deeper into any
+    // single project. At RingCardCount=12 this lands on exactly "one per
+    // project (8) + second-best from the top 4," which is what it should.
+    private List<string> SelectRingImages(int count)
+    {
+        if (webDesign is null) return [];
+
+        var bySlug = webDesign.Projects.ToDictionary(p => p.Slug);
+        var pools = RingCuration
+            .Where(c => bySlug.ContainsKey(c.Slug))
+            .OrderBy(c => c.ProjectRank)
+            .Select(c => c.ImageIndexesBestFirst.Select(i => bySlug[c.Slug].Images[i]).ToList())
+            .ToList();
+
+        var picks = new List<string>();
+        for (var round = 0; picks.Count < count; round++)
+        {
+            var addedAny = false;
+            foreach (var pool in pools)
+            {
+                if (picks.Count >= count) break;
+                if (round < pool.Count)
+                {
+                    picks.Add(pool[round]);
+                    addedAny = true;
+                }
+            }
+            if (!addedAny) break; // every curated pool exhausted
+        }
+        return picks;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!ringInitialized && webDesign is not null)
+        {
+            ringInitialized = true;
+            var ringImages = SelectRingImages(RingCardCount);
+            await JS.InvokeVoidAsync("DrRing.init", "wd2HeroRing", ringImages);
+        }
     }
 }
