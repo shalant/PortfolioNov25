@@ -107,53 +107,80 @@
                         <span class="nav-caret">▾</span>
                     </button>
                     <div class="nav-dropdown">
-                        <a class="nav-link nav-link--page nav-dropdown-item" href="/#about">
-                            <!-- arch — mirrors the arch shapes in the art deco backgrounds -->
-                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                                <path d="M2 13 L2 7.5 A5 5 0 0 0 12 7.5 L12 13"/>
-                            </svg>
-                            about
-                        </a>
-                        <a class="nav-link nav-link--page nav-dropdown-item" href="/#experience">
-                            <!-- timeline: dots + lines -->
-                            <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-                                <circle cx="3" cy="4"  r="1.3" stroke="none"/>
-                                <line x1="6.5" y1="4"  x2="12" y2="4"/>
-                                <circle cx="3" cy="8"  r="1.3" stroke="none"/>
-                                <line x1="6.5" y1="8"  x2="10" y2="8"/>
-                                <circle cx="3" cy="12" r="1.3" stroke="none"/>
-                                <line x1="6.5" y1="12" x2="11" y2="12"/>
-                            </svg>
-                            experience
-                        </a>
-                        <a class="nav-link nav-link--page nav-dropdown-item" href="/#technicalskills">
-                            <!-- 2×2 grid of squares -->
-                            <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
-                                <rect x="1.5" y="1.5" width="4.5" height="4.5" rx="0.5"/>
-                                <rect x="8"   y="1.5" width="4.5" height="4.5" rx="0.5"/>
-                                <rect x="1.5" y="8"   width="4.5" height="4.5" rx="0.5"/>
-                                <rect x="8"   y="8"   width="4.5" height="4.5" rx="0.5"/>
-                            </svg>
-                            skills
-                        </a>
-                        <!-- Résumé: promoted off the About section's scroll-away button into the
-                             nav (2026-08-21) — for a recruiter it's the single highest-intent
-                             artifact on the site. Same PDF as About.razor's "Download Resume". -->
-                        <a class="nav-link nav-link--page nav-dropdown-item" href="resume/DouglasRosenbergResumeAugust26.pdf" download target="_blank" rel="noopener">
-                            <!-- download arrow -->
-                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M7 1.5v7.5M3.5 6l3.5 3.5L10.5 6"/>
-                                <path d="M1.5 12.5h11"/>
-                            </svg>
-                            résumé
-                        </a>
-                        <a class="nav-link nav-link--page nav-dropdown-item" href="/blog">
-                            <!-- book/blog: open book pages -->
-                            <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                                <path d="M7 1 L7 13 M1 3 L7 3 M7 3 L13 3 M1 8 L7 8 M7 8 L13 8"/>
-                            </svg>
-                            blog
-                        </a>
+                        <!-- Grouped into two labeled columns rather than one flat 8-item
+                             list — "on this page" (homepage anchors, also covered by the
+                             desktop-only vertical rail once past the hero) vs "elsewhere"
+                             (actual separate destinations). Same items as before, just
+                             given real hierarchy instead of reading as one undifferentiated
+                             stack. -->
+                        <div class="nav-dropdown-group">
+                            <span class="nav-dropdown-label">on this page</span>
+                            <a class="nav-link nav-link--page nav-dropdown-item" href="/#about">
+                                <!-- arch — mirrors the arch shapes in the art deco backgrounds -->
+                                <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                                    <path d="M2 13 L2 7.5 A5 5 0 0 0 12 7.5 L12 13"/>
+                                </svg>
+                                about
+                            </a>
+                            <a class="nav-link nav-link--page nav-dropdown-item" href="/#experience">
+                                <!-- timeline: dots + lines -->
+                                <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+                                    <circle cx="3" cy="4"  r="1.3" stroke="none"/>
+                                    <line x1="6.5" y1="4"  x2="12" y2="4"/>
+                                    <circle cx="3" cy="8"  r="1.3" stroke="none"/>
+                                    <line x1="6.5" y1="8"  x2="10" y2="8"/>
+                                    <circle cx="3" cy="12" r="1.3" stroke="none"/>
+                                    <line x1="6.5" y1="12" x2="11" y2="12"/>
+                                </svg>
+                                experience
+                            </a>
+                            <a class="nav-link nav-link--page nav-dropdown-item" href="/#technicalskills">
+                                <!-- 2×2 grid of squares -->
+                                <svg class="nav-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+                                    <rect x="1.5" y="1.5" width="4.5" height="4.5" rx="0.5"/>
+                                    <rect x="8"   y="1.5" width="4.5" height="4.5" rx="0.5"/>
+                                    <rect x="1.5" y="8"   width="4.5" height="4.5" rx="0.5"/>
+                                    <rect x="8"   y="8"   width="4.5" height="4.5" rx="0.5"/>
+                                </svg>
+                                skills
+                            </a>
+                            <!-- Casual/Music deliberately left out of this menu — they're
+                                 personal/hobby content someone reads by scrolling past About,
+                                 not something a visitor hunts for in a nav. Still reachable via
+                                 the desktop-only vertical rail (VerticalSectionNav.razor) and by
+                                 just scrolling; keeping them out of "more" keeps this dropdown to
+                                 the destinations that are actually conversion/recruiter-critical. -->
+                            <a class="nav-link nav-link--page nav-dropdown-item" href="/#contact">
+                                <!-- envelope: distinct from consulting's speech bubble -->
+                                <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="1.5" y="2.5" width="11" height="9" rx="1"/>
+                                    <path d="M1.8 3.2 L7 7.3 L12.2 3.2"/>
+                                </svg>
+                                contact
+                            </a>
+                        </div>
+                        <div class="nav-dropdown-divider"></div>
+                        <div class="nav-dropdown-group">
+                            <span class="nav-dropdown-label">elsewhere</span>
+                            <!-- Résumé: promoted off the About section's scroll-away button into the
+                                 nav (2026-08-21) — for a recruiter it's the single highest-intent
+                                 artifact on the site. Same PDF as About.razor's "Download Resume". -->
+                            <a class="nav-link nav-link--page nav-dropdown-item" href="resume/DouglasRosenbergResumeAugust26.pdf" download target="_blank" rel="noopener">
+                                <!-- download arrow -->
+                                <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M7 1.5v7.5M3.5 6l3.5 3.5L10.5 6"/>
+                                    <path d="M1.5 12.5h11"/>
+                                </svg>
+                                résumé
+                            </a>
+                            <a class="nav-link nav-link--page nav-dropdown-item" href="/blog">
+                                <!-- book/blog: open book pages -->
+                                <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                                    <path d="M7 1 L7 13 M1 3 L7 3 M7 3 L13 3 M1 8 L7 8 M7 8 L13 8"/>
+                                </svg>
+                                blog
+                            </a>
+                        </div>
                     </div>
                 </li>
 
@@ -203,6 +230,12 @@
 
     </div>
 </header>
+
+<!-- Full-screen scrim + blur behind the mobile menu sheet (app.css, ≤820px).
+     Without this, the sheet's own height is all it covers — page content
+     below it (including the homepage hero's own CTA button) shows straight
+     through and reads as a second, accidental "get in touch" button. -->
+<div class="nav-scrim" id="navScrim"></div>
 
 @code {
     protected override void OnInitialized()

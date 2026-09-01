@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 
-namespace BlogPost_Generator.Services;
+namespace BackendTools.Services;
 
 public class BlogPostService
 {

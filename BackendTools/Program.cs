@@ -1,6 +1,6 @@
-using BlogPost_Generator;
-using BlogPost_Generator.Components;
-using BlogPost_Generator.Services;
+using BackendTools;
+using BackendTools.Components;
+using BackendTools.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor.Services;
 
@@ -11,6 +11,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(sp.GetRequiredService<NavigationManager>().BaseUri) });
 builder.Services.AddScoped<BlogPostService>();
+builder.Services.AddScoped<RingCurationService>();
 builder.Services.AddMudServices();
 
 var webApp = builder.Build();

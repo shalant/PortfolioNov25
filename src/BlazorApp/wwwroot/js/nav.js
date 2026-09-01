@@ -58,6 +58,19 @@ window.DrNav = (function () {
                 link.classList.toggle('active', isActive);
             }
         });
+
+        // Vertical section rail (VerticalSectionNav.razor, homepage only) rides the
+        // same currentSection this function already computes — no separate scroll-spy
+        // needed. Reveals only once scrolled past the hero (see the CSS comment on
+        // .vertical-section-nav for why: the hero portrait owns the right side of the
+        // viewport at common desktop widths).
+        const rail = document.getElementById('verticalSectionNav');
+        if (rail) {
+            rail.classList.toggle('past-hero', currentSection !== null && currentSection !== 'home');
+            rail.querySelectorAll('.vsn-item[data-section]').forEach(item => {
+                item.classList.toggle('active', item.dataset.section === currentSection);
+            });
+        }
     }
 
     // Scroll handling, combined into one rAF-throttled pass. Previously this was two
@@ -143,6 +156,12 @@ window.DrNav = (function () {
                 document.getElementById('navItems')?.classList.remove('active');
                 document.getElementById('navToggle')?.classList.remove('open');
                 document.body.classList.remove('nav-open');
+                // The "more" dropdown opens on :hover OR :focus-within — a click gives
+                // the clicked <a> focus, which keeps :focus-within true (and the dropdown
+                // visibly open) even after the page has already navigated/scrolled away.
+                // Blurring it is harmless everywhere else this handler runs (mobile menu,
+                // plain top-level links) and is the only thing that actually closes it.
+                link.blur();
             }
         });
     }

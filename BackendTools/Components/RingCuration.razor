@@ -1,0 +1,111 @@
+@page "/ring-curation"
+@using BackendTools.Services
+@using Microsoft.AspNetCore.Components.Web
+@rendermode RenderMode.InteractiveServer
+@inject RingCurationService CurationService
+@inject IJSRuntime JS
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
+    <MudText Typo="Typo.h3" GutterBottom="true">Ring Curation</MudText>
+    <MudText Typo="Typo.subtitle1" Class="mb-6" Color="Color.Default">
+        Sends every /webdesign case-study image to Claude's vision API and asks it to rank each
+        project's images best-to-worst, plus an overall project quality rank — the same judgment
+        call behind the hero ring's <code>RingCuration</code> table. Run this again whenever
+        case-study images change, then paste the generated snippet into
+        <code>WebDesignPage.razor</code> yourself.
+    </MudText>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Run" Disabled="_running" Class="mb-6">
+        @(_running ? "Running…" : "Run curation")
+    </MudButton>
+
+    @if (!string.IsNullOrEmpty(_status))
+    {
+        <MudAlert Severity="@(_error ? Severity.Error : Severity.Info)" Class="mb-6">@_status</MudAlert>
+    }
+
+    @if (_result is not null)
+    {
+        <MudPaper Elevation="2" Class="pa-6 mb-6">
+            <MudText Typo="Typo.h6" GutterBottom="true">Rankings</MudText>
+            @foreach (var r in _result.Rankings.OrderBy(r => r.ProjectRank))
+            {
+                <MudText Typo="Typo.body1" Class="mt-3">
+                    <strong>#@r.ProjectRank</strong> — @r.Slug
+                </MudText>
+                <MudText Typo="Typo.body2" Color="Color.Default">
+                    image order (best first): @string.Join(", ", r.ImageIndexesBestFirst)
+                </MudText>
+            }
+        </MudPaper>
+
+        <MudPaper Elevation="2" Class="pa-6">
+            <div class="d-flex justify-space-between align-center mb-2">
+                <MudText Typo="Typo.h6">C# snippet</MudText>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="CopySnippet">Copy</MudButton>
+            </div>
+            <MudText Typo="Typo.body2" Class="mb-3" Color="Color.Default">
+                Paste this over the existing <code>RingCuration</code> array in
+                <code>src/BlazorApp/Pages/WebDesignPage.razor</code>.
+            </MudText>
+            <pre class="snippet-box">@_result.Snippet</pre>
+        </MudPaper>
+    }
+</MudContainer>
+
+<style>
+    .snippet-box {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 1rem;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: 'Cascadia Code', Consolas, monospace;
+        font-size: 0.85rem;
+        white-space: pre;
+    }
+</style>
+
+@code {
+    private bool _running;
+    private bool _error;
+    private string? _status;
+    private RingCurationResult? _result;
+
+    private async Task Run()
+    {
+        _running = true;
+        _error = false;
+        _status = null;
+        _result = null;
+        StateHasChanged();
+
+        try
+        {
+            _result = await CurationService.RunAsync(msg =>
+            {
+                _status = msg;
+                InvokeAsync(StateHasChanged);
+            });
+            _status = $"Done — ranked {_result.Rankings.Count} projects.";
+        }
+        catch (Exception ex)
+        {
+            _error = true;
+            _status = $"Failed: {ex.Message}";
+        }
+        finally
+        {
+            _running = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task CopySnippet()
+    {
+        if (_result is not null)
+        {
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", _result.Snippet);
+        }
+    }
+}

@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{555ADF87-3BD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp", "src\BlazorApp\BlazorApp.csproj", "{024FE23B-7509-45FE-824D-5B884F91DEA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPost-Generator", "BlogPost-Generator\BlogPost-Generator.csproj", "{E39EB061-2457-D957-C6BD-1941C224117D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendTools", "BackendTools\BackendTools.csproj", "{E39EB061-2457-D957-C6BD-1941C224117D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6A5FAC5A-94E8-467F-9D23-A2DC9EEC684E}"
 EndProject
