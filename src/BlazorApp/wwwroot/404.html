@@ -4,8 +4,12 @@
     <meta charset="utf-8" />
     <title>Redirect</title>
     <script>
-        // Redirect 404s to index.html so the Blazor router can handle them
-        var path = window.location.pathname;
+        // Redirect 404s to index.html so the Blazor router can handle them.
+        // Must stash search + hash alongside pathname, not just pathname —
+        // otherwise UTM params (and any other query string) are silently
+        // destroyed here before index.html's restore script ever runs,
+        // breaking campaign attribution for every deep-linked route.
+        var path = window.location.pathname + window.location.search + window.location.hash;
         sessionStorage.setItem('redirect', path);
         window.location.href = '/';
     </script>
