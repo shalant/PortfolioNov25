@@ -2423,7 +2423,12 @@ html[data-theme="light"] .dr-theme-scope .casual-hobby__detail,
 html[data-theme="light"] .dr-theme-scope .music-press__attribution,
 html[data-theme="light"] .dr-theme-scope .music-section-label,
 html[data-theme="light"] .dr-theme-scope .music-album__role,
-html[data-theme="light"] .dr-theme-scope .music-photo__caption {
+html[data-theme="light"] .dr-theme-scope .music-photo__caption,
+html[data-theme="light"] .dr-theme-scope .nav-dropdown-label,
+html[data-theme="light"] .dr-theme-scope .about-skills__label,
+html[data-theme="light"] .dr-theme-scope .arborkin-stat__label,
+html[data-theme="light"] .dr-theme-scope .arborkin-live-badge,
+html[data-theme="light"] .dr-theme-scope .wd-case__fact-label {
   color: rgba(var(--accent-rgb), 0.85);
 }
 
@@ -2433,6 +2438,46 @@ html[data-theme="light"] .dr-theme-scope .music-photo__caption {
    emphasized relative to everything else above. */
 html[data-theme="light"] .dr-theme-scope .site-footer__copy {
   color: rgba(var(--text-rgb), 0.6);
+}
+
+/* Same low-alpha-on-cream failure as the body-copy/label passes above,
+   found via a follow-up contrast audit (2026-09-04) that covered every
+   remaining `rgba(var(--text-rgb), <0.55)` declaration in this file —
+   these five weren't part of either earlier pass. Icons/UI controls need
+   the 3:1 non-text floor, not full body-text 4.5:1; 0.85 clears both with
+   headroom, matching the value already settled on everywhere else. */
+html[data-theme="light"] .dr-theme-scope .vsn-icon,
+html[data-theme="light"] .dr-theme-scope .site-footer__top,
+html[data-theme="light"] .dr-theme-scope .contact-dialog__close {
+  color: rgba(var(--text-rgb), 0.85);
+}
+
+html[data-theme="light"] .dr-theme-scope .arborkin-tagline,
+html[data-theme="light"] .dr-theme-scope .arborkin-problem-card p,
+html[data-theme="light"] .dr-theme-scope .webdesign-projects__note,
+html[data-theme="light"] .dr-theme-scope .contact-dialog__fallback,
+html[data-theme="light"] .dr-theme-scope .wd-case__ba-caption {
+  color: rgba(var(--text-rgb), 0.85);
+}
+
+/* .arborkin-*-shot figcaption: same hardcoded-dark-background bug the
+   Phase 3F pass fixed for .wd-case__*__figcaption (see the comment further
+   down this file) but never extended to ArborKin's own, earlier-built
+   figcaption styles — background stayed pinned to near-black
+   (rgba(10, 26, 46, ...)) while the text color correctly flipped to dark
+   navy in light mode, producing dark text on a dark panel (near-zero
+   contrast, worse than a plain low-alpha miss). Swapping the background to
+   --surface-rgb makes it theme-aware the same way .wd-case__shot figcaption
+   already is; the text alpha bump then behaves exactly like every other
+   caption on the page. */
+html[data-theme="light"] .dr-theme-scope .arborkin-hero-shot figcaption,
+html[data-theme="light"] .dr-theme-scope .arborkin-shot figcaption {
+  background: rgba(var(--surface-rgb), 0.6);
+  color: rgba(var(--text-rgb), 0.85);
+}
+
+html[data-theme="light"] .dr-theme-scope .wd-case__shot figcaption {
+  color: rgba(var(--text-rgb), 0.85);
 }
 
 .hero-cta {

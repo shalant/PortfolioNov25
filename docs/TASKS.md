@@ -1973,7 +1973,72 @@ Built on `feature/homepage-cta-webdesign` (uncommitted as of this entry).
 
 ---
 
-## Completed ✅
+## Overnight housekeeping (2026-09-04)
+**Status:** ✅ Complete
+**Effort:** ~1.5 hours
+**Context:** user asked "any tasks you can perform overnight" — same pattern as the 2026-08-16
+session. Picked safe, well-scoped items from `docs/PORTFOLIO_TODO.md` that didn't need a
+content/business decision only Doug could make.
+
+### Tasks
+- [x] Fixed the one oversized image flagged but never actually fixed in the Phase 0 round-2
+      follow-up: `images/Tc-logo-small.png` (1138×1087, 60,166 bytes, TC Industries logo shown at
+      34×34 via `.experience-list__logo`). Resized to 68×68 (2x display, matching the established
+      retina convention) and converted to WebP at quality 85 → 2,138 bytes (96% reduction). Updated
+      the two references (`experience.json`, `projects.json`), viewed the output before wiring in
+      (clean edges, no artifacts), deleted the old PNG.
+- [x] Re-checked item #11's "known gap" (`.blog-post-detail__content`'s hardcoded `#444`/`#2c3e50`
+      colors, flagged 2026-08-25 as not yet theme-aware) — the doc was stale. The file already uses
+      `var(--text)`/`var(--text-rgb)`/`var(--accent)` throughout; must have been fixed in an
+      unrelated later pass without this note being updated. No change needed.
+- [x] **Full light-mode contrast audit of every remaining low-alpha `rgba(var(--text-rgb), <0.55)`
+      declaration in `app.css`** — the item Phase 3E (2026-08-16) explicitly left as "a real gap if
+      a full AA pass is ever wanted." Validated the contrast formula (WCAG relative-luminance +
+      alpha-blend-over-background) against three of Phase 3E's own recorded measurements before
+      trusting it (0.55→2.9:1, 0.3→1.7:1, 0.75→4.9:1, all matched within rounding) — then applied it
+      to the ~31 candidate declarations found via grep. 11 were already covered by existing
+      light-mode overrides (Phase 3E/3F had fixed more than the doc's own running list credited).
+      Of the 20 remaining, **all 20 failed even the lenient 3:1 UI-component floor** (range
+      1.89–2.94:1) — this was a broader live bug than the doc's "~15 decorative labels" estimate
+      suggested.
+      - Fixed via new `html[data-theme="light"] .dr-theme-scope` overrides in `app.css`, following
+        the established split: small all-caps labels → `rgba(var(--accent-rgb), 0.85)` (matches
+        `.skills-category__label`'s precedent, ~3.6-4:1), everything else (icons, captions, body
+        copy, UI controls) → `rgba(var(--text-rgb), 0.85)` (~6.4-7:1).
+      - **Found a compounding bug while fixing figcaptions:** `.arborkin-hero-shot figcaption`,
+        `.arborkin-shot figcaption`, and `.wd-case__shot figcaption` (base rule) all had a
+        **hardcoded dark-navy background** (`rgba(10, 26/18, 46/32, alpha)`) that never got
+        migrated to a theme-aware token. In light mode this meant dark-navy text on a dark-navy
+        panel — near-total invisibility, worse than the low-alpha issue everything else had.
+        `.wd-case__shot figcaption` already had a light-mode background override elsewhere in the
+        file (`rgba(var(--surface-rgb), 0.6)`, from Phase 3F) that this pass's grep missed on first
+        pass; extended the same fix to the two ArborKin-named figcaptions.
+      - **Discovered 8 of the 20 "failing" selectors are dead CSS** — `.arborkin-tagline`,
+        `.arborkin-live-badge`, `.arborkin-hero-shot figcaption`, `.arborkin-shot figcaption`,
+        `.arborkin-problem-card p`, `.arborkin-stat__label`, `.about-skills__label`, and
+        `.webdesign-projects__note` exist only in `app.css`, referenced by zero `.razor` files
+        (confirmed via grep across `src/BlazorApp`) — the ArborKin case study now renders through
+        the generic `.wd-case__*` classes, and `about-skills__label`/`webdesign-projects__note`
+        have no live counterpart. Fixed them anyway (harmless — dead code, not a live bug) rather
+        than silently skip, but **left them in place rather than deleting** per the "don't remove
+        without asking" rule — this is the same class of accumulated orphaned CSS as the
+        `Consulting3/4/5/6`/`WebDesignPageOLD` orphaned components already known about elsewhere;
+        worth a real cleanup pass sometime, not done here.
+      - Live-verified the real fixes with `dotnet run` + Chrome automation in light mode: confirmed
+        actual rendered contrast via `getComputedStyle` (accounting for gradient backgrounds, which
+        a first pass of the verification script initially missed and mis-flagged one selector as
+        still-dark) for `.wd-case__fact-label` (3.68:1), `.wd-case__shot figcaption` (6.49:1),
+        `.nav-dropdown-label` (3.97:1), `.vsn-icon` (6.40:1), `.site-footer__top` (6.98:1),
+        `.contact-dialog__close`/`.contact-dialog__fallback` (6.40:1 each) — and screenshot-verified
+        the ArborKin case study's four screenshot captions and the "Sign-in" hero-shot caption,
+        both now clearly legible where they'd have been dark-on-dark before.
+- [x] Verified: `dotnet build` succeeds with 0 errors (0-2 pre-existing unrelated warnings,
+      build-cache-dependent). All edits scoped to `html[data-theme="light"] .dr-theme-scope`
+      overrides only — dark mode base rules untouched, not re-verified pixel-by-pixel but low risk
+      given the selector scoping is identical to dozens of already-shipped overrides in this file.
+
+**Branch:** `feature/overnight-housekeeping-sept4` (new branch, not pushed/merged — left for
+review, per usual).
 
 - [x] Consolidate documentation (deleted redundant docs)
 - [x] Set up branch-based workflow (pre-push hook)
