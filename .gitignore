@@ -169,6 +169,9 @@ DocProject/Help/html
 # Click-Once directory
 publish/
 
+# dotnet publish -o published (used for local prerender testing)
+published/
+
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
