@@ -42,6 +42,23 @@ jobs:
         html_path: published/wwwroot/index.html
         base_href: /
 
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install prerender tool deps
+      working-directory: tools/prerender
+      run: npm install
+
+    - name: Install Playwright Chromium
+      working-directory: tools/prerender
+      run: npx playwright install --with-deps chromium
+
+    - name: Prerender routes for crawlers
+      working-directory: tools/prerender
+      run: node prerender.mjs ../../published/wwwroot
+
     - name: Setup Pages
       uses: actions/configure-pages@v5
 
