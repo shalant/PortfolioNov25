@@ -2040,6 +2040,26 @@ content/business decision only Doug could make.
 **Branch:** `feature/overnight-housekeeping-sept4` (new branch, not pushed/merged — left for
 review, per usual).
 
+### Branch audit, same session: most local/remote branches are stale, 3 are intentionally orphaned
+Asked "is there an order to the PRs" while reviewing the above — audited every local/remote branch
+against `main` (`git branch --merged`/`--no-merged`). Of ~30 branches sitting in the repo, only 4
+have commits not yet in `main`; everything else is already merged and just never got deleted
+locally (safe to prune whenever, not done here — out of scope for what was asked).
+
+Of the 4 real outstanding branches, 3 are **deliberately left orphaned, not to be merged**:
+- `feature/blog-enhancements` (2026-07-23, `CLAUDE.md` only) and `feature/quality-hardening`
+  (2026-07-24, `CLAUDE.md` + `todo.md`) — both insert a "Testing/bUnit" section into the same spot
+  in `CLAUDE.md`, so they conflict with each other. More importantly, both predate almost
+  everything else in this file — `CLAUDE.md`'s structure has been rewritten multiple times since
+  (the current file has no Testing/bUnit section at all), so neither would apply as a clean,
+  meaningful merge even after resolving the conflict. Decision: not merging either.
+- `feature/cloudflare-pages-migration` (2026-08-15, `docs/TASKS.md` only) — proposes the Cloudflare
+  reverse-proxy/CSP approach that the Phase 0 section above (2026-08-15) already describes as
+  explicitly de-prioritized in favor of the image-optimization work that actually shipped. Content
+  is superseded, not just stale.
+- User's call (2026-09-05): keep all three as-is rather than merging or deleting — noted here so a
+  future session doesn't rediscover the same conflict/staleness and re-litigate it.
+
 - [x] Consolidate documentation (deleted redundant docs)
 - [x] Set up branch-based workflow (pre-push hook)
 - [x] Reorganize docs folder structure
