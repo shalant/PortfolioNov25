@@ -152,8 +152,36 @@ by the byte-count gap: the first pass's itemized findings summed to ~415 KiB aga
 498 KiB total for six items — the missing ~83 KiB was this image, sitting past where the
 extraction stopped). Referenced from `experience.json` (`TC Industries` entry) and the same
 orphaned `projects.json`.
-- [ ] Not yet fixed — flagged for a follow-up pass, same mechanical resize+WebP treatment as the
-      other six.
+- [x] Resolved by the time of this note (2026-09-05 session, checked before starting new work) —
+      `images/Tc-logo-small.webp` (68×65, 2,138 bytes) already exists and `experience.json` already
+      points at it. Fixed in an untracked prior session; this entry was just never checked off.
+
+## Follow-up: ArborKin screenshot cleanup (2026-09-05)
+**Status:** ✅ Complete
+**Why:** User asked what could be addressed unattended. Same mechanical PNG→WebP treatment as
+Phase 0/round 2, applied to `wwwroot/images/arborkin/` — the one image directory those earlier
+passes never touched, found via a fresh full-directory size scan.
+
+- [x] Converted the 4 screenshots actually referenced by `webdesign.json`'s ArborKin entry
+      (`familytree-hero.png`, `familytree-detaildrawer.png`, `familytree-hero__dark.png`,
+      `familytree-edit.png`) to WebP at quality 85 — no resize this time, since their native
+      resolution (1500–3765px wide) already down to `.wd-case__shot`'s real display width
+      (~1052px inside `.wd-case__container`'s 1180px max-width), unlike the icon-scale bugs Phase
+      0 fixed. Combined 2.35MB → 170KB (93% reduction). Viewed both hero variants directly
+      (Read tool image view) before wiring in — no visible artifacts.
+- [x] Found 3 more images in the same directory with zero references anywhere in the repo
+      (confirmed via full-repo grep): `familytree-add__dark.png`, `familytree-mediazone.png`,
+      `familytree-personlist.png` (~750KB combined, all pre-dating this session). Deleted as
+      confirmed-orphaned dead weight, same standard as Phase 3J's picture purge.
+- [x] Updated `webdesign.json`'s 4 image paths to the new `.webp` filenames. Confirmed via
+      full-repo grep that no reference to any of the 7 deleted `.png` files remains anywhere.
+- [x] Verified: `dotnet build` succeeds (0 errors, same 2 pre-existing unrelated
+      `Experience.razor` warnings). Not verified live in a browser — no dev server was running
+      this session; the image-quality check above (direct Read-tool viewing of both converted
+      files at full resolution) stands in for it, same as several prior sessions' "worth a visual
+      pass before merging" caveat.
+
+**Branch:** `feature/arborkin-image-cleanup-sept5`
 
 ---
 
