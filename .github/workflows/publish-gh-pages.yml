@@ -87,6 +87,8 @@ jobs:
     - name: Notify IndexNow (Bing/Yandex instant indexing)
       run: |
         URLS=$(grep -oP '(?<=<loc>)[^<]+' src/BlazorApp/wwwroot/sitemap.xml | jq -R -s -c 'split("\n")[:-1]')
-        curl -s -X POST https://api.indexnow.org/indexnow \
+        STATUS=$(curl -s -o /tmp/indexnow_response.txt -w "%{http_code}" -X POST https://api.indexnow.org/indexnow \
           -H "Content-Type: application/json; charset=utf-8" \
-          -d "{\"host\":\"dougrosenbergdev.com\",\"key\":\"420c300198134394a823abc04ef8edf8\",\"keyLocation\":\"https://dougrosenbergdev.com/420c300198134394a823abc04ef8edf8.txt\",\"urlList\":$URLS}"
+          -d "{\"host\":\"dougrosenbergdev.com\",\"key\":\"420c300198134394a823abc04ef8edf8\",\"keyLocation\":\"https://dougrosenbergdev.com/420c300198134394a823abc04ef8edf8.txt\",\"urlList\":$URLS}")
+        echo "IndexNow response: HTTP $STATUS"
+        cat /tmp/indexnow_response.txt
