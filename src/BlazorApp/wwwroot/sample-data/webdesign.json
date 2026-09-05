@@ -161,10 +161,10 @@
       "gitHubUrl": "https://github.com/shalant/FamilyTree",
       "images": [
         "images/arborkin/arborkin-login.webp",
-        "images/arborkin/familytree-hero.png",
-        "images/arborkin/familytree-detaildrawer.png",
-        "images/arborkin/familytree-hero__dark.png",
-        "images/arborkin/familytree-edit.png"
+        "images/arborkin/familytree-hero.webp",
+        "images/arborkin/familytree-detaildrawer.webp",
+        "images/arborkin/familytree-hero__dark.webp",
+        "images/arborkin/familytree-edit.webp"
       ],
       "imageCaptions": [
         "Sign-in — Google SSO or email/password, invite-only",
