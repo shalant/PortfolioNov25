@@ -2,6 +2,8 @@
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @inject HttpClient Http
+@inject IJSRuntime JS
+@implements IAsyncDisposable
 
 <PageTitle>Blog — Doug Rosenberg Dev</PageTitle>
 
@@ -236,14 +238,21 @@
         }
     }
 
-    private void SelectPost(BlogPost post)
+    private async Task SelectPost(BlogPost post)
     {
         SelectedPost = post;
+        await JS.InvokeVoidAsync("document.documentElement.classList.add", "modal-open");
     }
 
-    private void DeselectPost()
+    private async Task DeselectPost()
     {
         SelectedPost = null;
+        await JS.InvokeVoidAsync("document.documentElement.classList.remove", "modal-open");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await JS.InvokeVoidAsync("document.documentElement.classList.remove", "modal-open");
     }
 
     private List<BlogPost> GetFilteredPosts()
@@ -696,6 +705,15 @@
         opacity: 1;
     }
 
+    /* Header is position:sticky with z-index:1000 (see Header.razor.css) — this must
+       clear that outright rather than tie it, or the header paints over the modal's
+       top edge instead of the modal appearing above it. */
+    html.modal-open,
+    html.modal-open body {
+        overflow: hidden;
+        height: 100%;
+    }
+
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -706,7 +724,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000;
+        z-index: 1100;
         padding: 1rem;
         animation: fadeIn 0.3s ease;
     }
@@ -716,15 +734,22 @@
         to { opacity: 1; }
     }
 
-    .modal-dialog {
-        background: white;
+    /* Bootstrap's own stylesheet defines .modal-dialog { pointer-events: none } (it expects
+       a .modal-content child to re-enable it) — this markup has no such child, so without
+       this override the whole card is inert to the mouse: no scroll, no link clicks, no
+       close button. The compound selector beats Bootstrap's single-class specificity
+       regardless of stylesheet load order. */
+    .modal-overlay .modal-dialog {
+        background: var(--bg);
         border-radius: 12px;
         max-height: 90vh;
         overflow-y: auto;
+        overscroll-behavior: contain;
         max-width: 750px;
         width: 100%;
         position: relative;
         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        pointer-events: auto;
     }
 
     .modal-close {
@@ -735,7 +760,7 @@
         border: none;
         font-size: 1.5rem;
         cursor: pointer;
-        color: #999;
+        color: rgba(var(--text-rgb), 0.5);
         z-index: 10;
         width: 40px;
         height: 40px;
@@ -746,7 +771,7 @@
     }
 
     .modal-close:hover {
-        color: #333;
+        color: var(--text);
     }
 
     .blog-post-detail {
@@ -756,7 +781,7 @@
     .blog-post-detail__header {
         margin-bottom: 2rem;
         padding-bottom: 1.5rem;
-        border-bottom: 2px solid #f0f0f0;
+        border-bottom: 2px solid rgba(var(--text-rgb), 0.12);
     }
 
     .blog-post-detail__title-row {
@@ -769,7 +794,7 @@
     .blog-post-detail__header h1 {
         font-size: 2rem;
         font-weight: 700;
-        color: #2c3e50;
+        color: var(--text);
         margin: 0 0 0.75rem 0;
         line-height: 1.3;
     }
@@ -825,14 +850,14 @@
     }
 
     .blog-post-detail__header time {
-        color: #999;
+        color: rgba(var(--text-rgb), 0.5);
         font-size: 0.9rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
     .blog-post-detail__reading-time {
-        color: #1abc9c;
+        color: var(--accent);
         font-size: 0.9rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -855,7 +880,7 @@
 
     .blog-post-detail__content {
         line-height: 1.8;
-        color: #444;
+        color: rgba(var(--text-rgb), 0.85);
         font-size: 1rem;
     }
 
@@ -866,14 +891,14 @@
     .blog-post-detail__content h2 {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #2c3e50;
+        color: var(--text);
         margin: 2rem 0 1rem 0;
     }
 
     .blog-post-detail__content h3 {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #2c3e50;
+        color: var(--text);
         margin: 1.5rem 0 0.75rem 0;
     }
 
@@ -888,16 +913,16 @@
     }
 
     .blog-post-detail__content code {
-        background: #f4f4f4;
+        background: rgba(var(--text-rgb), 0.08);
         padding: 0.2em 0.4em;
         border-radius: 3px;
         font-family: var(--mono);
         font-size: 0.9em;
-        color: #d63384;
+        color: var(--text);
     }
 
     .blog-post-detail__content pre {
-        background: #f4f4f4;
+        background: rgba(var(--text-rgb), 0.06);
         padding: 1rem;
         border-radius: 6px;
         overflow-x: auto;
@@ -907,7 +932,7 @@
     .blog-post-detail__content pre code {
         background: none;
         padding: 0;
-        color: #333;
+        color: var(--text);
     }
 
     /* Defensive: this content is raw HTML from blog-posts.json, not
@@ -928,7 +953,7 @@
 
     .blog-post-detail__content strong {
         font-weight: 600;
-        color: #2c3e50;
+        color: var(--text);
     }
 
     .blog-post-detail__content em {
@@ -954,8 +979,8 @@
     }
 
     .blog-post-detail__toc {
-        background: #f9f9f9;
-        border-left: 4px solid #1abc9c;
+        background: rgba(var(--text-rgb), 0.04);
+        border-left: 4px solid var(--accent);
         padding: 1.5rem;
         margin: 2rem 0;
         border-radius: 4px;
@@ -963,7 +988,7 @@
 
     .toc-title {
         font-weight: 600;
-        color: #2c3e50;
+        color: var(--text);
         font-size: 0.95rem;
         margin-bottom: 1rem;
         text-transform: uppercase;
@@ -981,7 +1006,7 @@
     }
 
     .toc-link {
-        color: #1abc9c;
+        color: var(--accent);
         text-decoration: none;
         font-size: 0.9rem;
         transition: all 0.3s ease;
@@ -990,7 +1015,7 @@
     }
 
     .toc-link:hover {
-        color: #2c3e50;
+        color: var(--text);
         text-decoration: underline;
         padding-left: 0.25rem;
     }
@@ -998,13 +1023,13 @@
     .blog-post-detail__related {
         margin-top: 3rem;
         padding-top: 2rem;
-        border-top: 2px solid #f0f0f0;
+        border-top: 2px solid rgba(var(--text-rgb), 0.12);
     }
 
     .blog-post-detail__related h3 {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #2c3e50;
+        color: var(--text);
         margin: 0 0 1.5rem 0;
     }
 
@@ -1025,7 +1050,7 @@
     }
 
     .related-post-link {
-        color: #1abc9c;
+        color: var(--accent);
         text-decoration: none;
         font-weight: 500;
         transition: all 0.3s ease;
@@ -1033,12 +1058,12 @@
     }
 
     .related-post-link:hover {
-        color: #2c3e50;
+        color: var(--text);
         text-decoration: underline;
     }
 
     .related-post-meta {
-        color: #999;
+        color: rgba(var(--text-rgb), 0.5);
         font-size: 0.85rem;
         white-space: nowrap;
         margin-left: 1rem;
