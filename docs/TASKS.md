@@ -2094,6 +2094,74 @@ Of the 4 real outstanding branches, 3 are **deliberately left orphaned, not to b
 
 ---
 
+## SEO/GEO follow-up: real blog routes, broken social image, per-post metadata (2026-09-05)
+**Status:** ✅ Complete
+**Branch:** `feature/seo-geo-improvements-sept5`
+
+**Why:** User asked why the site isn't showing up in a normal Google search and why an abandoned
+Facebook page outranks it. Live investigation found: `site:dougrosenbergdev.com` returns zero
+results from the domain; the only existing backlink (GitHub profile) is `rel="nofollow"`; and
+`og:image`/schema `Person.image` both 404. Separately, user noticed blog posts only ever open in a
+modal at `/blog` — never their own URL — and asked whether each post should live at
+`/blog/{slug}`. Answer: yes, and it's a real SEO/GEO gap, not just a UX nicety — a modal-only post
+has no crawlable URL, no per-post meta tags, isn't in the sitemap, and can't be individually cited
+by an AI answer engine, no matter how good `llms.txt` is.
+
+### Fixed
+- [x] **Broken social/schema image (404 on both `og:image` and schema `Person.image`)** — pointed
+      both at the existing homepage hero portrait (`images/DrCorporateHacker.webp`) in `index.html`.
+- [x] **Weak `<title>`** — `Index.razor`'s `<PageTitle>Doug Rosenberg Dev</PageTitle>` was silently
+      overriding `index.html`'s much stronger static title once Blazor's `HeadOutlet` renders (and,
+      since prerendering shipped 2026-09-04, that weak title now gets baked into the actual served
+      static HTML for every visit). Rewrote every page's `<PageTitle>` to lead with the full name
+      "Douglas Rosenberg" and real keywords, matching the schema `Person.name` and `index.html`'s
+      OG title (`Index.razor`, `BlogArchive.razor`, `ConsultingPage.razor`, `ServicesPage.razor`,
+      `WebDesignPage.razor`, `WebDesignDetailPage.razor`).
+- [x] **New `/blog/{Slug}` route** (`Pages/BlogPostDetail.razor`) — same pattern as
+      `/webdesign/{Slug}`. Moved the full reading experience (header, share buttons, tag chips,
+      table of contents, images, content, related posts) out of `BlogPosts.razor`'s modal and onto
+      a real routed page; falls back to `<NotFound />` for an unknown slug. Adds per-post
+      `<HeadContent>` (description, OG/Twitter tags, canonical, `BlogPosting` JSON-LD via
+      `System.Text.Json` serialization of a `Dictionary<string, object?>` — anonymous-object syntax
+      can't produce literal `@context`/`@type` JSON-LD keys). Extracted the shared `BlogPost` model
+      to `Models/BlogPostModel.cs` (previously three near-duplicate private classes across
+      `BlogPosts.razor`/`BlogArchive.razor`/the old modal).
+- [x] **`BlogPosts.razor`** — removed all modal state (`SelectedPost`, `SelectPost`/`DeselectPost`,
+      the `modal-open` JS interop, `IAsyncDisposable`), post cards are now plain `<a href="/blog/
+      {id}">` links. **`BlogArchive.razor`** — its `NavigateToBlog` handler pointed at `/blog?post=
+      {id}`, a query param `BlogPosts.razor` never actually read (a pre-existing dead link, now
+      moot); archive entries link straight to `/blog/{id}`.
+- [x] **`tools/prerender/prerender.mjs`** — `buildRouteList()` now also reads `blog-posts.json` and
+      adds `/blog/{id}` for each post, same dynamic-discovery pattern already used for
+      `webdesign.json` slugs. No hardcoded list to maintain as new posts get added.
+- [x] **`sitemap.xml`** — added all 4 blog post URLs, plus `/services` and `/consulting`, which
+      were missing from the sitemap entirely (pre-existing gap, found while in there). Replaced the
+      `/#blog` fragment entry with the real `/blog` route.
+- [x] **`llms.txt`** — added a "Blog posts" section listing each post with its real URL and a
+      one-line summary, so an AI answer engine has a direct, individually-citable link per post
+      instead of only the generic `/blog` listing page.
+- [x] **IndexNow protocol** — generated a key (`wwwroot/420c300198134394a823abc04ef8edf8.txt`) and
+      added a step to `publish-gh-pages.yml`'s `deploy` job that POSTs the full sitemap URL list to
+      `api.indexnow.org` after every deploy to `main` — pings Bing/Yandex (and, via Bing's index,
+      Copilot's web grounding) immediately instead of waiting for a natural crawl.
+- [x] **ArborKin/FamilyTree repo README** — added a real (non-`nofollow`) backlink to the portfolio
+      and the ArborKin blog post. Opened as `shalant/FamilyTree` PR #26 rather than merged directly —
+      that repo's `master` requires a passing CI run per its own branch protection, and it's a live
+      production app (real family data), not this portfolio.
+- [x] Verified: `dotnet build` and `dotnet test` both pass (8/8, 0 errors). Live-tested in Chrome:
+      `/blog` cards link correctly, `/blog/blazor-wasm-geo-audit` renders full content with correct
+      tab title, TOC/related-posts/share buttons all work, `/blog/does-not-exist` renders `NotFound`
+      correctly, no console errors.
+
+**Not done / needs the user directly:** Bing Webmaster Tools signup + sitemap submission (separate
+account from Google Search Console); Search Console "Request Indexing" on key URLs now that
+prerendering + these fixes are live; a decision on whether to add the Facebook music page to the
+schema `Person.sameAs` array (would help Google merge it into the same Knowledge Graph entity as
+the dev site — a branding call, not a bug fix); directory listings (Clutch, GoodFirms) if leaning
+into the services-page positioning.
+
+---
+
 ## Notes
 
 **Design Philosophy:**  
@@ -2113,5 +2181,5 @@ Of the 4 real outstanding branches, 3 are **deliberately left orphaned, not to b
 
 ---
 
-**Last Updated:** 2026-09-01  
+**Last Updated:** 2026-09-05  
 **Next Review:** After Phase 1 complete

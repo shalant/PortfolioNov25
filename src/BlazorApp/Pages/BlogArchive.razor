@@ -1,10 +1,7 @@
 @page "/blog/archive"
-@using System.Text.Json
-@using System.Text.Json.Serialization
 @inject HttpClient Http
-@inject NavigationManager Navigation
 
-<PageTitle>Blog Archive — Doug Rosenberg Dev</PageTitle>
+<PageTitle>Blog Archive — Douglas Rosenberg</PageTitle>
 
 <div class="dr-theme-scope">
 <Header />
@@ -54,7 +51,7 @@
                                         {
                                             <li class="archive-post">
                                                 <div class="archive-post__date">@DateTime.Parse(post.Date).ToString("d")</div>
-                                                <a href="javascript:void(0)" @onclick="() => NavigateToBlog(post.Id)" class="archive-post__link">
+                                                <a href="@($"/blog/{post.Id}")" class="archive-post__link">
                                                     @post.Title
                                                 </a>
                                                 <span class="archive-post__reading-time">@post.ReadingTimeMinutes min</span>
@@ -123,15 +120,6 @@
         return new DateTime(2000, month, 1).ToString("MMMM");
     }
 
-    private void NavigateToBlog(string postId)
-    {
-        var post = AllPosts?.FirstOrDefault(p => p.Id == postId);
-        if (post != null)
-        {
-            Navigation.NavigateTo($"/blog?post={postId}");
-        }
-    }
-
     private class YearGroup
     {
         public int Year { get; set; }
@@ -142,21 +130,6 @@
     {
         public int Month { get; set; }
         public List<BlogPost> Posts { get; set; } = new();
-    }
-
-    private class BlogPost
-    {
-        [JsonPropertyName("id")]
-        public string Id { get; set; } = string.Empty;
-
-        [JsonPropertyName("title")]
-        public string Title { get; set; } = string.Empty;
-
-        [JsonPropertyName("date")]
-        public string Date { get; set; } = string.Empty;
-
-        [JsonPropertyName("readingTimeMinutes")]
-        public int ReadingTimeMinutes { get; set; }
     }
 }
 
