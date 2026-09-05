@@ -2,7 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /_framework/
-Disallow: /*.json
 
 # Sitemaps
 Sitemap: https://dougrosenbergdev.com/sitemap.xml

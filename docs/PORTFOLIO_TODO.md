@@ -36,6 +36,7 @@
 - **Fixed along the way:** canonical/OG/sitemap URLs were all pointing at `www.dougrosenbergdev.com`, which 301-redirects to the apex domain — this mismatch was blocking sitemap submission. Corrected everywhere to use the apex domain.
 - **Keyword targets:** "full-stack .NET developer", "Blazor consultant", "ERP systems", "Douglas Rosenberg"
 - **Remaining/known limitation:** this is a client-rendered Blazor WASM SPA, so per-page `<PageTitle>`/meta on `/consulting`, `/webdesign`, `/blog` only helps crawlers that execute JS — non-JS crawlers only ever see the root `index.html` meta tags. Not blocking, but worth knowing.
+- **GEO pass (2026-09-04):** added `wwwroot/llms.txt` — a plain-text bio/background/links summary per the emerging llms.txt convention, readable by AI answer engines without executing WASM. Also removed the blanket `Disallow: /*.json` line from `robots.txt`, which had been blocking crawlers from `wwwroot/sample-data/*.json` — the one place real bio/experience content exists as static, non-JS-dependent files. `/_framework/` stays disallowed separately. The deeper limitation above (per-page content still invisible to non-JS crawlers) isn't fixed by this — would need prerendering or a build-time static-snapshot step.
 
 ---
 
