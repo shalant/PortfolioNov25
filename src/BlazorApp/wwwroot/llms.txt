@@ -10,7 +10,8 @@ Blazor-focused .NET developer who turns sprawling enterprise systems into softwa
 - Core stack: C#, .NET, Blazor, ASP.NET, SQL Server, Azure, Syncfusion, Figma, Angular, Docker
 
 ## Pages
-- [Consulting](https://dougrosenbergdev.com/consulting): Engagement types and rates — custom web/app development, ERP & business systems consulting, AI-assisted development/modernization, ongoing support.
+- [Services](https://dougrosenbergdev.com/services): Engagement types and rates — custom web/app development, ERP & business systems consulting, AI-assisted development/modernization, ongoing support.
+- [Consulting](https://dougrosenbergdev.com/consulting): IT support and web/app development for small businesses — affordable support, cloud setup and backup, custom sites, ongoing maintenance.
 - [Web Design](https://dougrosenbergdev.com/webdesign): Portfolio and case studies.
 - [Blog](https://dougrosenbergdev.com/blog): Technical writing on Blazor, .NET, and software architecture.
 - [Résumé (PDF)](https://dougrosenbergdev.com/resume/DouglasRosenbergResumeAugust26.pdf)
