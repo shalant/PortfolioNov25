@@ -1,0 +1,12 @@
+{
+  "name": "portfolio-prerender",
+  "private": true,
+  "type": "module",
+  "description": "Build-time prerendering: snapshots each Blazor WASM route to static HTML so non-JS crawlers (search + AI) see real content instead of a loading spinner.",
+  "scripts": {
+    "prerender": "node prerender.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}
