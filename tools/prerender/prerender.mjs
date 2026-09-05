@@ -89,6 +89,14 @@ function buildRouteList(publishDir) {
     }
   }
 
+  const blogPostsPath = path.join(publishDir, 'sample-data', 'blog-posts.json');
+  if (fs.existsSync(blogPostsPath)) {
+    const posts = JSON.parse(fs.readFileSync(blogPostsPath, 'utf8'));
+    for (const post of posts ?? []) {
+      if (post.id) routes.push(`/blog/${post.id}`);
+    }
+  }
+
   routes.push('/'); // last, deliberately — see file header
   return routes;
 }
