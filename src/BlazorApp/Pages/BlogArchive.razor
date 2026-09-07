@@ -134,6 +134,11 @@
 }
 
 <style>
+    /* Same fix as BlogPosts.razor's #blog-hero - see its comment. */
+    #archive-hero {
+        min-height: 0;
+    }
+
     .archive-section {
         padding: 4rem 0;
         background: var(--art-deco-1) center / cover no-repeat fixed;

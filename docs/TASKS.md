@@ -2235,6 +2235,15 @@ three separate, independent bugs:
 Verified all three locally (`dotnet run`, both themes, direct deep-link loads simulating the
 prerendered-file scenario) before pushing. `dotnet build`/`dotnet test` (8/8) pass.
 
+**UI fix (2026-09-07):** User: "the blog header has soooooo much blank space." `.subpage-hero`
+(shared by `/blog`, `/blog/archive`, `/webdesign`, `/services`, `/consulting`) is `min-height: 80vh`
+— fine on Services/Consulting, which fill the right side with a portrait image + CTA, but `/blog`
+and `/blog/archive`'s heroes only ever had an eyebrow/title/subtitle, so 80vh read as mostly empty
+space both horizontally and vertically. Considered filling the space (portrait image, search/tags
+moved up, a "latest post" card) vs. just not forcing blog's text-only hero into a height built for
+a different layout — went with the latter: `#blog-hero`/`#archive-hero` now override
+`min-height: 0` so each hero sizes to its actual content instead.
+
 ## Notes
 
 **Design Philosophy:**  
