@@ -257,7 +257,7 @@ else
 <style>
     .blog-post-page-section {
         padding: 4rem 0;
-        background: url('/images/artDecoBackground1.webp') center / cover no-repeat fixed;
+        background: var(--art-deco-1) center / cover no-repeat fixed;
         position: relative;
         overflow: hidden;
     }
@@ -302,12 +302,24 @@ else
         gap: 2rem;
     }
 
+    /* app.css's bare `h1 { ... }` base rule (TYPOGRAPHY section) clips a silver
+       diagonal gradient to text via background-clip/-webkit-text-fill-color —
+       meant for hero-style headings, all of which explicitly opt out of it
+       (see .subpage-hero__title, .archive-header h1). This h1 has no class, so
+       it inherited that gradient unopted-out: mostly-transparent gradient text
+       on a light cream card read as a washed-out, half-invisible title. */
     .blog-post-detail__header h1 {
         font-size: 2rem;
         font-weight: 700;
         color: var(--text);
         margin: 0 0 0.75rem 0;
         line-height: 1.3;
+        background: none;
+        background-image: none;
+        background-clip: border-box;
+        -webkit-background-clip: border-box;
+        -webkit-text-fill-color: var(--text);
+        text-shadow: none;
     }
 
     .blog-post-detail__share {
