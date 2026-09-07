@@ -136,6 +136,16 @@ async function main() {
       });
       await page.waitForTimeout(300); // let any post-render CSS/entrance state settle
 
+      // Blazor's HeadOutlet renders <title> as a real DOM comment-anchor node followed by a
+      // text node (harmless live — document.title's getter only reads Text children, skipping
+      // the comment). But <title> is HTML's RCDATA content model: a literal "<!--!-->" is never
+      // parsed as a comment there, only as raw text. Serializing that DOM to a string and later
+      // re-parsing it as a static file turns the anchor into VISIBLE text prefixed onto every
+      // page's tab title. Round-tripping through document.title's setter collapses the element
+      // back to a single clean text node (the getter already strips the comment) before we
+      // serialize, so the static file parses the same way a live Blazor render does.
+      await page.evaluate(() => { document.title = document.title; });
+
       const html = await page.content();
       const outPath = outputPathFor(publishDir, route);
       fs.mkdirSync(path.dirname(outPath), { recursive: true });
