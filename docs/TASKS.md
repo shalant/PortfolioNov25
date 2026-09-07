@@ -2235,6 +2235,23 @@ three separate, independent bugs:
 Verified all three locally (`dotnet run`, both themes, direct deep-link loads simulating the
 prerendered-file scenario) before pushing. `dotnet build`/`dotnet test` (8/8) pass.
 
+**Bug fix (2026-09-07):** After the light-mode blog fixes above shipped, the browser tab on every
+page showed a literal `<!--!-` prefix before the real title (e.g. "‹!--!-→Douglas Rosenberg —
+..."), persisting even through a hard reload. Root cause: Blazor's `HeadOutlet`/`PageTitle`
+mechanism renders `<title>` as a real DOM comment-anchor node followed by a text node — harmless
+live, since `document.title`'s getter only reads Text children and skips the comment. But
+`tools/prerender/prerender.mjs` captures the *live DOM* (via Playwright's `page.content()`) and
+writes it to a static file, and `<title>` is HTML's RCDATA content model: a literal `<!--!-->`
+inside it is never parsed as a comment on reload, only as visible raw text. Worse, when live Blazor
+then boots on top of that corrupted static title, it doesn't recognize the mismatched structure as
+its own and appends a *second*, correctly-rendered title instead of fixing the first — and
+`document.title` always reflects the first title element in the document, so the corrupted one won
+permanently, not just as a flash. Fixed with one line in `prerender.mjs`: `document.title =
+document.title` right before `page.content()`, which round-trips through the title setter and
+collapses the element back to a single clean text node before serialization. Verified by running
+the actual publish → prerender pipeline locally and hard-reloading a static-served output file —
+single title tag, correct text, no leftover comment artifact.
+
 ## Notes
 
 **Design Philosophy:**  
