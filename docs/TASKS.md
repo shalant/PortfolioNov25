@@ -2162,6 +2162,35 @@ into the services-page positioning.
 
 ---
 
+## New blog post: rebuilding dougrosenberg.com from Blazor to Astro (2026-09-07)
+
+Added a 5th blog post, `rebuilding-musician-site-blazor-to-astro`, written from real work done
+this session on `dougrosenbergmusic` (a separate repo — my musician site, dougrosenberg.com,
+currently being migrated from Blazor WASM to Astro on Cloudflare). Same voice/structure as the
+existing GEO-audit and family-tree posts: first-person, technical, `<h2>` sections, honest about
+what's still unfinished rather than reading like launch marketing.
+
+- [x] `wwwroot/sample-data/blog-posts.json` — new entry prepended (newest-first, matching existing
+      order). No `images`/`tags`/`featured` used, matching the fact that none of the other 4 posts
+      populate those fields either — didn't want to introduce a new pattern unprompted. Validated
+      with a strict JSON parser after editing (this file has previously broken from raw control
+      characters embedded in a content string — see the Phase 3B/3D entries above — so re-validated
+      on purpose here, not just visually).
+- [x] `wwwroot/sitemap.xml` — added the new post's URL, bumped `/blog`'s `<lastmod>` to today.
+- [x] `wwwroot/llms.txt` — added the new post to the "Blog posts" section, same format as the rest.
+- [x] Verified live via `dotnet run` + Playwright screenshots (not just visual inspection): post
+      renders correctly on `/blog` (card, excerpt, "4 MIN READ"), on its own
+      `/blog/rebuilding-musician-site-blazor-to-astro` route (title, table of contents
+      auto-generated from the `<h2>`s, all sections, related posts), and on `/blog/archive`
+      (grouped correctly under September 2026). `dotnet build` and `dotnet test` both pass (8/8, 0
+      new errors/warnings).
+- **Not done:** no prerendered static HTML was regenerated for the new route — `tools/prerender/
+  prerender.mjs` runs as part of the actual publish workflow (`.github/workflows/
+  publish-gh-pages.yml`), not as a manual step here; it will pick up the new route automatically on
+  the next real deploy since it discovers routes from `blog-posts.json` dynamically.
+
+---
+
 ## Notes
 
 **Design Philosophy:**  
