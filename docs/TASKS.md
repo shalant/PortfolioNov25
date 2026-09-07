@@ -2189,6 +2189,14 @@ what's still unfinished rather than reading like launch marketing.
   publish-gh-pages.yml`), not as a manual step here; it will pick up the new route automatically on
   the next real deploy since it discovers routes from `blog-posts.json` dynamically.
 
+**Follow-up (2026-09-07):** added the 8 archived screenshots of the old dougrosenberg.com site as
+real static files under `wwwroot/images/blog/rebuilding-musician-site-blazor-to-astro/` (not
+base64 — plain paths in the post's `images` array, same as every other image reference on this
+site) plus a one-line caption at the top of `content` explaining what they are. `BlogPostDetail.razor`
+already had an unused `Images` rendering path (a stacked gallery above the article body) — this is
+the first post to actually populate it. Verified via `dotnet run` + Playwright: all 8 images return
+200 and render before the article text; `dotnet build`/`dotnet test` (8/8) still pass.
+
 ---
 
 ## Notes
