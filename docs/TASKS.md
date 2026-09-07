@@ -2199,6 +2199,16 @@ the first post to actually populate it. Verified via `dotnet run` + Playwright: 
 
 ---
 
+**Infra fix (2026-09-07):** PR #56's merge to `main` deployed nothing — the `publish-gh-pages.yml`
+`build` job's concurrency group was the bare string `"pages"`, shared across *every* branch
+(the workflow triggers on push to any branch, not just `main`). A push to the feature branch
+landed in the same group ~2 minutes before the merge-to-`main` push, and `cancel-in-progress: true`
+killed the `main` run mid-build (during Playwright install), so `deploy` never ran — the live site
+stayed on PR #55's commit until manually re-triggered via `workflow_dispatch`. Fixed by scoping the
+group per-ref (`"pages-${{ github.ref }}"`) so feature-branch CI can no longer cancel a production
+deploy in flight. (The `deploy` job itself was already gated to `main` only, so this was purely a
+`build`-job race — not a risk of deploying the wrong branch.)
+
 ## Notes
 
 **Design Philosophy:**  
