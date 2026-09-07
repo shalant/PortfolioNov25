@@ -2209,6 +2209,32 @@ group per-ref (`"pages-${{ github.ref }}"`) so feature-branch CI can no longer c
 deploy in flight. (The `deploy` job itself was already gated to `main` only, so this was purely a
 `build`-job race — not a risk of deploying the wrong branch.)
 
+**Bug fix (2026-09-07):** User reported "/blog looks weird in light mode." Investigation turned up
+three separate, independent bugs:
+1. `BlogPosts.razor`, `BlogPostDetail.razor`, `BlogArchive.razor` all hardcoded
+   `url('/images/artDecoBackground1.webp')` directly instead of the theme-aware `var(--art-deco-1)`
+   custom property every other page already uses — so light mode never swapped to the pre-made
+   `artDecoBackground1-light.webp` asset and showed the dark navy pattern through a 65% white
+   scrim (the reported "blue hue"). Fixed by switching all three to `var(--art-deco-1)`.
+2. Separately — and more severely — `index.html`'s `<script src="js/theme.js">` (theme
+   flash-prevention, runs before `<base href="/">` is parsed) resolved as relative-to-document
+   instead of relative-to-base. Harmless on `/` (they're the same URL there), but every
+   prerendered deep route (every blog post, `/blog`, `/webdesign/*`, ...) is a real static file at
+   its own path, so the request 404'd, `window.DrTheme` never got defined, and clicking the theme
+   toggle crashed the whole Blazor app (`JSException: Could not find 'DrTheme.toggle'`). Fixed by
+   making the script src root-relative (`/js/theme.js`).
+3. A pre-existing bare `h1 { background-clip: text; ... }` rule in `app.css` (TYPOGRAPHY section)
+   clips a silver diagonal gradient onto every unstyled `<h1>` — every other page's heading has its
+   own class that explicitly opts out (`.subpage-hero__title`, `.archive-header h1`, etc.) except
+   `BlogPostDetail.razor`'s bare `<h1>@post.Title</h1>` and `NotFound.razor`'s `<h1>Page Not
+   Found</h1>`, which inherited it — nearly-transparent gradient text is what actually produced the
+   "ghosted/washed-out title" the user's screenshot showed. Fixed both by adding the same
+   background/background-clip/-webkit-text-fill-color/text-shadow overrides already used
+   elsewhere.
+
+Verified all three locally (`dotnet run`, both themes, direct deep-link loads simulating the
+prerendered-file scenario) before pushing. `dotnet build`/`dotnet test` (8/8) pass.
+
 ## Notes
 
 **Design Philosophy:**  

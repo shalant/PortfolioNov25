@@ -31,8 +31,14 @@
     <!-- Sets data-theme on <html> before first paint (avoids a flash of the wrong theme).
          Must be a blocking script here in <head> — this has to run before Blazor boots and
          before CSS-driven paint, so unlike the rest of this app's JS interop it can't wait
-         for OnAfterRenderAsync. -->
-    <script src="js/theme.js"></script>
+         for OnAfterRenderAsync. Root-relative ("/js/theme.js"), not "js/theme.js" — this tag
+         sits above <base href="/"> below, so a relative src here resolves against the
+         document's own URL, not the base. On "/" that's a no-op, but every prerendered deep
+         route (every blog post, /blog, /webdesign/*, ...) is a real static file living at its
+         own path, so a relative src 404'd there: window.DrTheme never got defined, data-theme
+         silently stayed unset (masked by dark being the fallback look anyway), and clicking the
+         theme toggle crashed the whole app with a JSInterop "DrTheme.toggle not found" exception. -->
+    <script src="/js/theme.js"></script>
     <script>DrTheme.apply(DrTheme.resolve());</script>
 
     <!-- Open Graph / Social Media -->

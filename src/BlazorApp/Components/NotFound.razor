@@ -88,11 +88,18 @@
         line-height: 1;
     }
 
+    /* Same bare-h1 gradient leak as BlogPostDetail.razor's title — see its comment. */
     .notfound-content h1 {
         font-size: 2.5rem;
         color: var(--text);
         margin-bottom: 0.5rem;
         font-weight: 600;
+        background: none;
+        background-image: none;
+        background-clip: border-box;
+        -webkit-background-clip: border-box;
+        -webkit-text-fill-color: var(--text);
+        text-shadow: none;
     }
 
     .notfound-subtitle {
