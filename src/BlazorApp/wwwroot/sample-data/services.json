@@ -14,6 +14,9 @@
       ],
       "engagement": "Project-based, scoped after a free discovery call.",
       "priceRange": "$750 – $3,000 per project",
+      "minPrice": 750,
+      "maxPrice": 3000,
+      "priceUnit": "per project",
       "icon": "🖥️"
     },
     {
@@ -27,6 +30,9 @@
       ],
       "engagement": "Hourly or retainer, depending on scope and duration.",
       "priceRange": "$125 – $175 / hr",
+      "minPrice": 125,
+      "maxPrice": 175,
+      "priceUnit": "per hour",
       "icon": "🔧"
     },
     {
@@ -40,6 +46,9 @@
       ],
       "engagement": "Project-based or ongoing partnership.",
       "priceRange": "$100 – $150 / hr",
+      "minPrice": 100,
+      "maxPrice": 150,
+      "priceUnit": "per hour",
       "icon": "🤖"
     },
     {
@@ -53,6 +62,9 @@
       ],
       "engagement": "Monthly retainer.",
       "priceRange": "$300 – $800 / month",
+      "minPrice": 300,
+      "maxPrice": 800,
+      "priceUnit": "per month",
       "icon": "⚙️"
     }
   ]
