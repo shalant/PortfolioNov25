@@ -2296,6 +2296,17 @@ Verified locally: `dotnet build`/`dotnet test` (8/8) pass, both JSON files still
 through both directions of the arborkin ⇄ building-family-tree-blazor link plus the GEO-audit
 post's route links in a running `dotnet run` instance.
 
+**GEO fix (2026-09-08):** Follow-up to the traffic-acquisition/GEO discussion — `/services` already
+had real, specific pricing for all four offerings (`$750–$3,000/project`, `$125–$175/hr`,
+`$100–$150/hr`, `$300–$800/month`), visible on the page and present in the prerendered HTML.
+What it didn't have was structured data for it, so AI answer engines and rich-result surfaces had
+no machine-readable way to quote an exact rate. Added `MinPrice`/`MaxPrice`/`PriceUnit` fields to
+`ServiceOffering` (parallel to the existing human-readable `PriceRange` display string, not
+replacing it) and a `Person.makesOffer` → `Offer`/`PriceSpecification` JSON-LD block on
+`ServicesPage.razor`, one entry per offering. Verified locally: JSON-LD parses, all four offers
+present with correct min/max/unit, page itself unchanged visually. `dotnet build`/`dotnet test`
+(8/8) pass.
+
 ## Notes
 
 **Design Philosophy:**  

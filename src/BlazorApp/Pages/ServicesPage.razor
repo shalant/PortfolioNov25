@@ -3,6 +3,13 @@
 
 <PageTitle>Services — Douglas Rosenberg | Custom Web & ERP Development</PageTitle>
 
+@if (structuredData is not null)
+{
+    <HeadContent>
+        <script type="application/ld+json">@((MarkupString)structuredData)</script>
+    </HeadContent>
+}
+
 <div class="dr-theme-scope">
 <Header />
 
@@ -75,9 +82,39 @@
 
 @code {
     private ServicesModel? services;
+    private string? structuredData;
 
     protected override async Task OnInitializedAsync()
     {
         services = await Http.GetFromJsonAsync<ServicesModel>("sample-data/services.json");
+
+        if (services is not null)
+        {
+            structuredData = System.Text.Json.JsonSerializer.Serialize(new Dictionary<string, object?>
+            {
+                ["@context"] = "https://schema.org",
+                ["@type"] = "Person",
+                ["name"] = "Douglas Rosenberg",
+                ["url"] = "https://dougrosenbergdev.com",
+                ["makesOffer"] = services.Offerings.Select(svc => new Dictionary<string, object?>
+                {
+                    ["@type"] = "Offer",
+                    ["itemOffered"] = new Dictionary<string, object?>
+                    {
+                        ["@type"] = "Service",
+                        ["name"] = svc.Title,
+                        ["description"] = svc.Description
+                    },
+                    ["priceSpecification"] = new Dictionary<string, object?>
+                    {
+                        ["@type"] = "PriceSpecification",
+                        ["minPrice"] = svc.MinPrice,
+                        ["maxPrice"] = svc.MaxPrice,
+                        ["priceCurrency"] = "USD",
+                        ["unitText"] = svc.PriceUnit
+                    }
+                }).ToList()
+            });
+        }
     }
 }
