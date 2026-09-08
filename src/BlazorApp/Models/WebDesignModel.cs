@@ -38,6 +38,11 @@ public class WebDesignProject
     public string? BeforeImage { get; set; }
     public string? BeforeCaption { get; set; }
     public string? BeforeSourceUrl { get; set; }
+
+    /// <summary>Optional link to a blog post that's a deep dive on this project. Slug + display label are both
+    /// stored here (rather than looking the title up from blog-posts.json) so this page doesn't need a second fetch.</summary>
+    public string? RelatedBlogPostSlug { get; set; }
+    public string? RelatedBlogPostLabel { get; set; }
 }
 
 public class WebDesignHighlight

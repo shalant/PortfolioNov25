@@ -131,6 +131,12 @@
                         View on GitHub <span class="hero-btn__arrow" aria-hidden="true">↗</span>
                     </a>
                 }
+                @if (!string.IsNullOrEmpty(project.RelatedBlogPostSlug))
+                {
+                    <a href="@($"/blog/{project.RelatedBlogPostSlug}")" class="hero-btn hero-btn--ghost">
+                        @(project.RelatedBlogPostLabel ?? "Read the write-up") <span class="hero-btn__arrow" aria-hidden="true">→</span>
+                    </a>
+                }
             </div>
         </div>
     </section>

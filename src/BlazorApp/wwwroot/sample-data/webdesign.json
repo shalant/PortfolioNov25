@@ -101,7 +101,9 @@
         { "label": "Platform", "value": "Astro" },
         { "label": "Status", "value": "prototype, not yet live" },
         { "label": "Role", "value": "Design & build" }
-      ]
+      ],
+      "relatedBlogPostSlug": "rebuilding-musician-site-blazor-to-astro",
+      "relatedBlogPostLabel": "Read the rebuild write-up"
     },
     {
       "slug": "dougrosenberg-music",
@@ -147,7 +149,9 @@
         { "label": "Platform", "value": "Blazor WebAssembly" },
         { "label": "Industry", "value": "Musician / composer" },
         { "label": "Role", "value": "Design & full-stack build" }
-      ]
+      ],
+      "relatedBlogPostSlug": "rebuilding-musician-site-blazor-to-astro",
+      "relatedBlogPostLabel": "Read why this is being rebuilt in Astro"
     },
     {
       "slug": "arborkin",
@@ -196,7 +200,9 @@
         { "label": "xUnit tests", "value": "11" },
         { "label": "Azure services", "value": "3" },
         { "label": "full-stack build", "value": "solo" }
-      ]
+      ],
+      "relatedBlogPostSlug": "building-family-tree-blazor",
+      "relatedBlogPostLabel": "Read the technical deep dive"
     },
     {
       "slug": "sonus-construction",
