@@ -2274,6 +2274,28 @@ redirects, and of the remaining 8 "Not found (404)" entries, 5 are genuinely ret
 before this repo's SEO/prerendering fixes landed. Requested re-indexing for those 3 plus the newly
 sitemap'd case studies once this change deploys.
 
+**SEO/UX pass (2026-09-07):** Internal linking between blog posts and `/webdesign` case studies —
+the third item of a traffic-acquisition pass (alongside the Search Console/sitemap fix above and
+backlink outreach drafted for Sonus Construction/Hardware Etc, which the user is handling directly
+via Squarespace). Added genuine, content-grounded links (no fabricated connections):
+- Blog → case study: "rebuilding-musician-site-blazor-to-astro" links to both
+  `/webdesign/dougrosenberg-music` (the old build being discussed) and
+  `/webdesign/dougrosenberg-music-v2` (the rebuild); "building-family-tree-blazor" links to
+  `/webdesign/arborkin`; "building-portfolio" links to `/webdesign`.
+- Blog → blog: the musician-rebuild post's "the same structural mismatch I wrote about auditing on
+  *this* site" now actually links to `/blog/blazor-wasm-geo-audit`, which is what that sentence
+  already meant.
+- GEO-audit post → real routes: its literal `/consulting`, `/webdesign`, `/blog` mentions and "my
+  case studies" phrase are now real links instead of plain text/code spans.
+- Case study → blog (new, data-driven): added `RelatedBlogPostSlug`/`RelatedBlogPostLabel` to
+  `WebDesignProject` and a conditional "Read the write-up" button next to the existing
+  Visit/GitHub CTAs on `WebDesignDetailPage.razor`. Set for `dougrosenberg-music-v2`,
+  `dougrosenberg-music`, and `arborkin` — the three case studies with an actual companion post.
+
+Verified locally: `dotnet build`/`dotnet test` (8/8) pass, both JSON files still parse, and clicked
+through both directions of the arborkin ⇄ building-family-tree-blazor link plus the GEO-audit
+post's route links in a running `dotnet run` instance.
+
 ## Notes
 
 **Design Philosophy:**  
