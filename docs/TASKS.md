@@ -2307,6 +2307,19 @@ replacing it) and a `Person.makesOffer` → `Offer`/`PriceSpecification` JSON-LD
 present with correct min/max/unit, page itself unchanged visually. `dotnet build`/`dotnet test`
 (8/8) pass.
 
+**Bug fix (2026-09-08):** Found while continuing the traffic-acquisition pass — every blog post's
+`tags` key was entirely absent from `blog-posts.json` (not even an empty array), silently breaking
+two already-built features: the tag-filter chips on `/blog` (rendered nothing, since
+`GetAllTags()` had nothing to distinct over) and `BlogPostDetail.razor`'s "Related Posts" section,
+which fell back entirely to an unfiltered stop-word title-overlap heuristic (matching on "a", "the",
+"with", etc., so ordering was close to arbitrary). Added real, content-grounded tags to all 5 posts
+(Astro/Blazor/Performance/Case Study, SEO/GEO/Blazor/Web Development, etc. — no fabricated claims,
+just topical classification of what each post already covers) and wired `keywords` into
+`BlogPostDetail`'s existing `BlogPosting` JSON-LD from the same tags. Verified locally: the tag
+filter now renders and actually filters, "Related Posts" now surfaces genuinely on-topic posts
+ordered by real tag overlap, and the JSON-LD `keywords` array is present and correct. `dotnet
+build`/`dotnet test` (8/8) pass.
+
 ## Notes
 
 **Design Philosophy:**  
