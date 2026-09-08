@@ -2261,6 +2261,19 @@ moved up, a "latest post" card) vs. just not forcing blog's text-only hero into 
 a different layout — went with the latter: `#blog-hero`/`#archive-hero` now override
 `min-height: 0` so each hero sizes to its actual content instead.
 
+**SEO fix (2026-09-07):** Checking Google Search Console's Page Indexing report (as part of a
+traffic-acquisition pass) turned up that `sitemap.xml` is hand-maintained, not generated, and was
+missing 9 real URLs entirely: all 8 `/webdesign/{slug}` case study pages and `/blog/archive`. Google
+had never been told these exist via the sitemap — the case studies are the portfolio's actual "hire
+me" evidence, so this was a real gap, not a cosmetic one. Added all 9. Also confirmed via the same
+report that the other 17 "not indexed" URLs are non-issues: 6 are homepage `#anchor` fragments
+(correctly not indexed as duplicates of `/`), 3 are the expected `http://`/`www.` canonical
+redirects, and of the remaining 8 "Not found (404)" entries, 5 are genuinely retired old routes
+(`/contact`, `/portfolio`, `/HireMe`, plus their `www.` variants) — only 3 (`/blog`, `/services`,
+`/consulting`) were real, currently-live pages Google had stale 404 data for from an Aug 24-25 crawl,
+before this repo's SEO/prerendering fixes landed. Requested re-indexing for those 3 plus the newly
+sitemap'd case studies once this change deploys.
+
 ## Notes
 
 **Design Philosophy:**  
