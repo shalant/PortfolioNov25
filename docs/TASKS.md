@@ -2320,6 +2320,14 @@ filter now renders and actually filters, "Related Posts" now surfaces genuinely 
 ordered by real tag overlap, and the JSON-LD `keywords` array is present and correct. `dotnet
 build`/`dotnet test` (8/8) pass.
 
+**GEO fix (2026-09-08):** Added a location signal to the site-wide `Person` JSON-LD in `index.html`
+— `address` (`PostalAddress`: Chicago, IL, US) — so geo-scoped queries ("Chicago Blazor developer",
+"software engineer Chicago") have something to match against. Grounded in the site's own existing,
+already-public content rather than a new claim: the music bio page states outright "I performed,
+recorded, and taught in Chicago — not as a side project, but as a career," reinforced by "6 Chicago
+venues" in the performance stats and a Chicago Tribune press quote. City/region/country only, no
+street address. `dotnet build`/`dotnet test` (8/8) pass.
+
 ## Notes
 
 **Design Philosophy:**  
